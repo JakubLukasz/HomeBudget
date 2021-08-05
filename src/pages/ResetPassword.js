@@ -1,9 +1,8 @@
 import styled from "styled-components";
-import { devices } from "../assets/devices";
 import { useRef,useState } from 'react';
 import { useAuth } from '../contexts/AuthContext'
-import { Link,useHistory } from 'react-router-dom';
-import Error from './Error';
+import { Link } from 'react-router-dom';
+import Error from '../components/Error';
 
 const StyledSection = styled.section`
   width: 100vw;
@@ -70,44 +69,43 @@ const StyledButton = styled.button`
   margin-top:15px;
 `;
 
-const StyledSpan = styled.span`
-  display:block;
-  color: ${({theme}) => theme.color.darkGray};
-  font-size:1.2rem;
-  width:100%;
-  text-align:center;
-  margin:20px 0;
-  font-weight:600;
-`;
-
 const StyledLink = styled(Link)`
   color: ${({theme}) => theme.color.primary};
   font-weight:900;
+  font-size:1.2rem;
   text-decoration:none;
+  width:100%;
+  display:block;
+  text-align:center;
+  margin:10px 0;
 `;
 
-const Signup = (props) => {
-  const { signup } = useAuth();
+const StyledMessage = styled.span`
+  font-weight: 800;
+  width:100%;
+  display:block;
+  text-align:center;
+  margin:10px 0;
+`;
+
+const ResetPassword = () => {
+  const { resetPassword } = useAuth();
   const emailRef = useRef();
-  const passwordRef = useRef();
-  const confirmPasswordRef = useRef();
   const [isLoading,setIsLoading] = useState(false);
+  const [message,setMessage] = useState('');
   const [error,setError] = useState('');
-  const history = useHistory();
 
   const submitFormHandler = async (e) => {
     e.preventDefault();
-    if(passwordRef.current.value !== confirmPasswordRef.current.value){
-      return setError("Passwords are not the same")
-    }
 
     try{
       setError("");
+      setMessage("");
       setIsLoading(true);
-      await signup(emailRef.current.value,passwordRef.current.value)
-      history.push("/")
+      await resetPassword(emailRef.current.value)
+      setMessage('Check your email')
     } catch{
-      setError("Failed to create an account")
+      setError("Failed to reset password")
     }
     setIsLoading(false);
   }
@@ -115,23 +113,19 @@ const Signup = (props) => {
   return(
   <>
     <StyledSection>
-      <StyledHeading>Sign up</StyledHeading>
+      <StyledHeading>Reset Password</StyledHeading>
       <StyledFormContainer>
         <StyledForm onSubmit={submitFormHandler}>
         {error && <Error message={error}/>}
+        {message && <StyledMessage>{message}</StyledMessage>}
           <StyledLabel htmlFor="email">E-MAIL</StyledLabel>
           <StyledInput ref={emailRef} type="email" id="email" required />
-          <StyledLabel htmlFor="password">PASSWORD</StyledLabel>
-          <StyledInput ref={passwordRef}type="password" id="password" required />
-          <StyledLabel htmlFor="confirm-password">CONFIRM PASSWORD</StyledLabel>
-          <StyledInput ref={confirmPasswordRef}type="password" id="confirm-password" required />
-          <StyledButton disabled={isLoading} >SIGN UP</StyledButton>
-          <StyledSpan>already have an account? <StyledLink to="/login">Log In</StyledLink>
-</StyledSpan>
+          <StyledButton disabled={isLoading} >RESET</StyledButton>
+          <StyledLink to="/login">Log In</StyledLink>
         </StyledForm>
       </StyledFormContainer>
     </StyledSection>
   </>
 )}
 
-export default Signup;
+export default ResetPassword;

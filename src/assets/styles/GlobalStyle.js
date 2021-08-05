@@ -13,6 +13,10 @@ const GlobalStyle = createGlobalStyle`
         -moz-osx-font-smoothing: grayscale;
     }
 
+    body, input, textarea, button{
+        font-family: ${({theme}) => theme.font.family.montserrat};
+    }
+
     @font-face{
         font-family: "Montserrat";
         src: url(${MontserratExtraBold}) format('truetype');
