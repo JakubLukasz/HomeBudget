@@ -1,24 +1,30 @@
-import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Statistics from "../pages/Statistics/Statistics";
 import MyProfile from "../pages/MyProfile";
 import Main from "../pages/Main/Main";
-import AppNav from "../components/Nav/Nav";
-import styled from "styled-components";
+import AppNav from "../components/Nav";
 import Settings from "../pages/Settings/Settings";
-import Plans from "../pages/Plans/Plans";
-import Header from "../components/Header/Header";
-const StyledAppNav = styled(AppNav)``;
+import Header from "../components/Header";
+import { useAddBill } from "../contexts/AddBillContext";
+import AddBillPopup from "../components/AddBillPopup";
+import { useFirestore } from "../contexts/FirestoreContext";
+import SetupAccount from "../components/SetupAccount";
+import FixedExpenses from "../pages/FixedExpenses/FixedExpenses";
 
 const MainTemplate = () => {
+  const { isPopupOpen } = useAddBill();
+  const { isConfigured } = useFirestore();
   return (
     <section>
       <BrowserRouter>
+        {isPopupOpen && <AddBillPopup />}
+        {!isConfigured && <SetupAccount />}
         <Header />
         <Switch>
           <Route exact path="/" component={Main} />
         </Switch>
         <Switch>
-          <Route path="/plans" component={Plans} />
+          <Route path="/fixed-expenses" component={FixedExpenses} />
         </Switch>
         <Switch>
           <Route path="/statistics" component={Statistics} />
@@ -29,7 +35,7 @@ const MainTemplate = () => {
         <Switch>
           <Route path="/settings" component={Settings} />
         </Switch>
-        <StyledAppNav />
+        <AppNav />
       </BrowserRouter>
     </section>
   );

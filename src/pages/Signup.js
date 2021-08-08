@@ -3,9 +3,9 @@ import { useRef, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useFirestore } from "../contexts/FirestoreContext";
 import { Link, useHistory } from "react-router-dom";
-import Error from "../components/Error";
+import ErrorBox from "../components/ErrorBox";
 
-const StyledSection = styled.section`
+const Container = styled.section`
   width: 100vw;
   min-height: 100vh;
   display: flex;
@@ -14,13 +14,13 @@ const StyledSection = styled.section`
   align-items: center;
 `;
 
-const StyledForm = styled.form`
+const SignupForm = styled.form`
   font-family: ${({ theme }) => theme.font.family.montserrat};
   width: 100%;
   max-width: 700px;
 `;
 
-const StyledLabel = styled.label`
+const InputLabel = styled.label`
   display: block;
   font-family: ${({ theme }) => theme.font.family.montserrat};
   color: ${({ theme }) => theme.color.darkGray};
@@ -29,7 +29,7 @@ const StyledLabel = styled.label`
   margin: 3px 0;
 `;
 
-const StyledInput = styled.input`
+const InputField = styled.input`
   width: 100%;
   font-family: ${({ theme }) => theme.font.family.montserrat};
   font-size: 1.4rem;
@@ -42,7 +42,7 @@ const StyledInput = styled.input`
   margin-bottom: 15px;
 `;
 
-const StyledHeading = styled.h1`
+const Heading = styled.h1`
   font-family: ${({ theme }) => theme.font.family.montserrat};
   font-weight: 800;
   text-align: center;
@@ -50,14 +50,14 @@ const StyledHeading = styled.h1`
   margin: 80px 0;
 `;
 
-const StyledFormContainer = styled.div`
+const FormContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0 50px;
 `;
 
-const StyledButton = styled.button`
+const SubmitButton = styled.button`
   border: none;
   width: 100%;
   font-size: 1.7rem;
@@ -70,7 +70,7 @@ const StyledButton = styled.button`
   margin-top: 15px;
 `;
 
-const StyledSpan = styled.span`
+const LinkText = styled.span`
   display: block;
   color: ${({ theme }) => theme.color.darkGray};
   font-size: 1.2rem;
@@ -80,13 +80,13 @@ const StyledSpan = styled.span`
   font-weight: 600;
 `;
 
-const StyledLink = styled(Link)`
+const FormLink = styled(Link)`
   color: ${({ theme }) => theme.color.primary};
   font-weight: 900;
   text-decoration: none;
 `;
 
-const Signup = (props) => {
+const Signup = () => {
   const { signup } = useAuth();
   const { createUserData } = useFirestore();
   const emailRef = useRef();
@@ -118,39 +118,34 @@ const Signup = (props) => {
   };
 
   return (
-    <>
-      <StyledSection>
-        <StyledHeading>Sign up</StyledHeading>
-        <StyledFormContainer>
-          <StyledForm onSubmit={submitFormHandler}>
-            {error && <Error message={error} />}
-            <StyledLabel htmlFor="email">E-MAIL</StyledLabel>
-            <StyledInput ref={emailRef} type="email" id="email" required />
-            <StyledLabel htmlFor="password">PASSWORD</StyledLabel>
-            <StyledInput
-              ref={passwordRef}
-              type="password"
-              id="password"
-              required
-            />
-            <StyledLabel htmlFor="confirm-password">
-              CONFIRM PASSWORD
-            </StyledLabel>
-            <StyledInput
-              ref={confirmPasswordRef}
-              type="password"
-              id="confirm-password"
-              required
-            />
-            <StyledButton disabled={isLoading}>SIGN UP</StyledButton>
-            <StyledSpan>
-              already have an account?{" "}
-              <StyledLink to="/login">Log In</StyledLink>
-            </StyledSpan>
-          </StyledForm>
-        </StyledFormContainer>
-      </StyledSection>
-    </>
+    <Container>
+      <Heading>Sign up</Heading>
+      <FormContainer>
+        <SignupForm onSubmit={submitFormHandler}>
+          {error && <ErrorBox message={error} />}
+          <InputLabel htmlFor="email">E-MAIL</InputLabel>
+          <InputField ref={emailRef} type="email" id="email" required />
+          <InputLabel htmlFor="password">PASSWORD</InputLabel>
+          <InputField
+            ref={passwordRef}
+            type="password"
+            id="password"
+            required
+          />
+          <InputLabel htmlFor="confirm-password">CONFIRM PASSWORD</InputLabel>
+          <InputField
+            ref={confirmPasswordRef}
+            type="password"
+            id="confirm-password"
+            required
+          />
+          <SubmitButton disabled={isLoading}>SIGN UP</SubmitButton>
+          <LinkText>
+            already have an account? <FormLink to="/login">Log In</FormLink>
+          </LinkText>
+        </SignupForm>
+      </FormContainer>
+    </Container>
   );
 };
 

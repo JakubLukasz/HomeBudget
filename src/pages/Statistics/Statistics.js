@@ -1,12 +1,15 @@
 import styled from "styled-components";
 
-const StyledMain = styled.main`
+const Container = styled.main`
   background-color: ${({ theme }) => theme.color.lightPrimary};
-  min-height: 200vh;
+  min-height: 100vh;
+  font-size: 1rem;
+  margin-top: 10vh;
+  padding: 0 20px;
 `;
 
 const Statistics = () => {
-  return <StyledMain>Statistics</StyledMain>;
+  return <Container>Statistics</Container>;
 };
 
 export default Statistics;

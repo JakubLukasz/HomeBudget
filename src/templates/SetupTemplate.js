@@ -4,7 +4,7 @@ import GlobalStyles from "../assets/styles/GlobalStyle";
 
 const SetupTemplate = ({ children }) => (
   <>
-    <GlobalStyles theme={theme}/>
+    <GlobalStyles theme={theme} />
     <ThemeProvider theme={theme}>{children}</ThemeProvider>
   </>
 );

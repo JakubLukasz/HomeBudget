@@ -1,17 +1,15 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
-const StyledMain = styled.main`
-  background-color: ${({theme}) => theme.color.lightPrimary};
-  min-height:200vh;
-  
+const Container = styled.main`
+  background-color: ${({ theme }) => theme.color.white};
+  min-height: 100vh;
+  font-size: 1rem;
+  margin-top: 10vh;
+  padding: 0 20px;
 `;
 
 const MyProfile = () => {
-    return(
-        <StyledMain>
-            MyProfile
-        </StyledMain>
-    )
-}
+  return <Container>MyProfile</Container>;
+};
 
 export default MyProfile;

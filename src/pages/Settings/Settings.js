@@ -1,15 +1,15 @@
 import styled from "styled-components";
 
-const StyledMain = styled.main`
-  background-color: ${({ theme }) => theme.color.lightPrimary};
-  min-height: 200vh;
+const Container = styled.main`
+  background-color: ${({ theme }) => theme.color.white};
+  min-height: 100vh;
   font-size: 1rem;
-  padding: 1px 20px 0 20px;
-  margin: -1px 0 0 0;
+  margin-top: 10vh;
+  padding: 0 20px;
 `;
 
 const Settings = () => {
-  return <StyledMain>Settings</StyledMain>;
+  return <Container>Settings</Container>;
 };
 
 export default Settings;

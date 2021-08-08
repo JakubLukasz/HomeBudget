@@ -1,28 +1,34 @@
-import styled from 'styled-components';
-import Card from '../../components/Card';
-import TotalWrapper from './TotalWrapper';
-import TransactionsWrapper from './TransactionsWrapper';
+import styled from "styled-components";
+import Card from "../../components/Card";
+import TotalWrapper from "./TotalWrapper";
+import TransactionsWrapper from "./TransactionsWrapper";
+import { useEffect } from "react";
+import { useFirestore } from "../../contexts/FirestoreContext";
 
-const StyledMain = styled.main`
-  background-color: ${({theme}) => theme.color.lightPrimary};
-  min-height:200vh;
-  font-size:1rem;
-  padding:1px 20px 0 20px;
-  margin:-1px 0 0 0;
+const Container = styled.main`
+  background-color: ${({ theme }) => theme.color.lightPrimary};
+  min-height: 100vh;
+  font-size: 1rem;
+  margin-top: 10vh;
+  padding: 0 20px;
 `;
 
-
 const Main = () => {
-    return(
-        <StyledMain>
-          <Card title="TOTAL">
-            <TotalWrapper/>
-          </Card>
-          <Card title="TRANSACTIONS">
-            <TransactionsWrapper/>
-          </Card>         
-        </StyledMain>
-    )
-}
+  const { checkIsUserConfigured } = useFirestore();
+  useEffect(() => {
+    checkIsUserConfigured();
+  }, []);
+
+  return (
+    <Container>
+      <Card title="TOTAL">
+        <TotalWrapper />
+      </Card>
+      <Card title="TRANSACTIONS">
+        <TransactionsWrapper />
+      </Card>
+    </Container>
+  );
+};
 
 export default Main;

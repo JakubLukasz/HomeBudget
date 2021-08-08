@@ -1,12 +1,10 @@
 import styled from "styled-components";
-import { devices } from "../assets/devices";
 import { useRef, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { Link, useHistory } from "react-router-dom";
-import Error from "../components/Error";
-import { useFirestore } from "../contexts/FirestoreContext";
+import ErrorBox from "../components/ErrorBox";
 
-const StyledSection = styled.section`
+const Container = styled.section`
   width: 100vw;
   min-height: 100vh;
   display: flex;
@@ -15,14 +13,21 @@ const StyledSection = styled.section`
   align-items: center;
 `;
 
-const StyledForm = styled.form`
+const FormContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 50px;
+`;
+
+const LoginForm = styled.form`
   font-family: ${({ theme }) => theme.font.family.montserrat};
   width: 100%;
   max-width: 700px;
   margin-bottom: 70px;
 `;
 
-const StyledLabel = styled.label`
+const InputLabel = styled.label`
   display: block;
   font-family: ${({ theme }) => theme.font.family.montserrat};
   color: ${({ theme }) => theme.color.darkGray};
@@ -31,7 +36,7 @@ const StyledLabel = styled.label`
   margin: 3px 0;
 `;
 
-const StyledInput = styled.input`
+const InputField = styled.input`
   width: 100%;
   font-family: ${({ theme }) => theme.font.family.montserrat};
   font-size: 1.4rem;
@@ -44,7 +49,7 @@ const StyledInput = styled.input`
   margin-bottom: 15px;
 `;
 
-const StyledHeading = styled.h1`
+const Heading = styled.h1`
   font-family: ${({ theme }) => theme.font.family.montserrat};
   font-weight: 800;
   text-align: center;
@@ -52,14 +57,7 @@ const StyledHeading = styled.h1`
   margin-bottom: 70px;
 `;
 
-const StyledFormContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 50px;
-`;
-
-const StyledButton = styled.button`
+const SubmitButton = styled.button`
   border: none;
   width: 100%;
   font-size: 1.7rem;
@@ -72,7 +70,7 @@ const StyledButton = styled.button`
   margin-top: 15px;
 `;
 
-const StyledSpan = styled.span`
+const LinkText = styled.span`
   display: block;
   color: ${({ theme }) => theme.color.darkGray};
   font-size: 1.2rem;
@@ -82,16 +80,15 @@ const StyledSpan = styled.span`
   font-weight: 600;
 `;
 
-const StyledLink = styled(Link)`
+const FormLink = styled(Link)`
   color: ${({ theme }) => theme.color.primary};
   font-weight: 900;
   font-size: 1.2rem;
   text-decoration: none;
 `;
 
-const Login = (props) => {
+const Login = () => {
   const { login } = useAuth();
-  const { createUserData } = useFirestore();
   const emailRef = useRef();
   const passwordRef = useRef();
   const [isLoading, setIsLoading] = useState(false);
@@ -113,29 +110,29 @@ const Login = (props) => {
 
   return (
     <>
-      <StyledSection>
-        <StyledHeading>Log in</StyledHeading>
-        <StyledFormContainer>
-          <StyledForm onSubmit={submitFormHandler}>
-            {error && <Error message={error} />}
-            <StyledLabel htmlFor="email">E-MAIL</StyledLabel>
-            <StyledInput ref={emailRef} type="email" id="email" required />
-            <StyledLabel htmlFor="password">PASSWORD</StyledLabel>
-            <StyledInput
+      <Container>
+        <Heading>Log in</Heading>
+        <FormContainer>
+          <LoginForm onSubmit={submitFormHandler}>
+            {error && <ErrorBox message={error} />}
+            <InputLabel htmlFor="email">E-MAIL</InputLabel>
+            <InputField ref={emailRef} type="email" id="email" required />
+            <InputLabel htmlFor="password">PASSWORD</InputLabel>
+            <InputField
               ref={passwordRef}
               type="password"
               id="password"
               required
             />
-            <StyledLink to="/reset-password">Forgot password?</StyledLink>
-            <StyledButton disabled={isLoading}>LOG IN</StyledButton>
-            <StyledSpan>
+            <FormLink to="/reset-password">Forgot password?</FormLink>
+            <SubmitButton disabled={isLoading}>LOG IN</SubmitButton>
+            <LinkText>
               Want to create an account?{" "}
-              <StyledLink to="/signup">Sign up</StyledLink>
-            </StyledSpan>
-          </StyledForm>
-        </StyledFormContainer>
-      </StyledSection>
+              <FormLink to="/signup">Sign up</FormLink>
+            </LinkText>
+          </LoginForm>
+        </FormContainer>
+      </Container>
     </>
   );
 };

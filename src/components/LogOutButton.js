@@ -1,10 +1,10 @@
 import styled from "styled-components";
-import Icon from "../Icon";
-import logOutIcon from "../../assets/images/log-out.svg";
-import { useAuth } from "../../contexts/AuthContext";
+import Icon from "./Icon";
+import logOutIcon from "../assets/images/log-out.svg";
+import { useAuth } from "../contexts/AuthContext";
 import { useHistory } from "react-router-dom";
 
-const StyledButton = styled.button`
+const LogOffButton = styled.button`
   background: none;
   border: none;
   padding: 10px;
@@ -15,13 +15,13 @@ const StyledButton = styled.button`
   align-items: center;
 `;
 
-const StyledIcon = styled(Icon)`
+const ButtonIcon = styled(Icon)`
   width: auto;
   height: 30px;
   fill: ${({ theme }) => theme.color.darkGray};
 `;
 
-const StyledSpan = styled.span`
+const ButtonText = styled.span`
   font-weight: 600;
   font-size: 1.2rem;
   color: ${({ theme }) => theme.color.darkGray};
@@ -31,6 +31,7 @@ const StyledSpan = styled.span`
 const LogOutButton = () => {
   const { logout } = useAuth();
   const history = useHistory();
+
   const logOutHandler = async () => {
     try {
       await logout();
@@ -41,10 +42,10 @@ const LogOutButton = () => {
   };
 
   return (
-    <StyledButton onClick={logOutHandler}>
-      <StyledIcon src={logOutIcon} />
-      <StyledSpan>Log Out</StyledSpan>
-    </StyledButton>
+    <LogOffButton onClick={logOutHandler}>
+      <ButtonIcon src={logOutIcon} />
+      <ButtonText>Log Out</ButtonText>
+    </LogOffButton>
   );
 };
 

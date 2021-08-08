@@ -1,9 +1,9 @@
 import { createGlobalStyle } from "styled-components";
-import MontserratExtraBold from '../fonts/Montserrat-ExtraBold.ttf';
-import MontserratBold from '../fonts/Montserrat-Bold.ttf';
+import MontserratExtraBold from "../fonts/Montserrat-ExtraBold.ttf";
+import MontserratBold from "../fonts/Montserrat-Bold.ttf";
 import MontserratSemiBold from "../fonts/Montserrat-SemiBold.ttf";
-import MontserratMedium from '../fonts/Montserrat-Medium.ttf';
-import MontserratRegular from '../fonts/Montserrat-Regular.ttf';
+import MontserratMedium from "../fonts/Montserrat-Medium.ttf";
+import MontserratRegular from "../fonts/Montserrat-Regular.ttf";
 import MontserratLight from "../fonts/Montserrat-Light.ttf";
 
 const GlobalStyle = createGlobalStyle`
@@ -13,8 +13,8 @@ const GlobalStyle = createGlobalStyle`
         -moz-osx-font-smoothing: grayscale;
     }
 
-    body, input, textarea, button{
-        font-family: ${({theme}) => theme.font.family.montserrat};
+    body, input, textarea, button,select{
+        font-family: ${({ theme }) => theme.font.family.montserrat};
     }
 
     @font-face{
