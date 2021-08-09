@@ -4,15 +4,7 @@ import Transaction from "./Transaction";
 import { useFirestore } from "../../contexts/FirestoreContext";
 
 const Container = styled.div`
-  min-height: 350px;
-`;
-
-const EmptyMessage = styled.p`
-  width: 100%;
-  margin: auto auto;
-  text-align: center;
-  font-size: 1.5rem;
-  font-weight: 700;
+  min-height: 50px;
 `;
 
 const TransactionsWrapper = () => {
@@ -25,7 +17,6 @@ const TransactionsWrapper = () => {
 
   return (
     <Container>
-      {!transactions.length && <EmptyMessage>Empty...</EmptyMessage>}
       {transactions.map((transactionInfo) => (
         <Transaction
           key={`${transactionInfo.title} ${transactionInfo.date}`}

@@ -15,6 +15,7 @@ const Container = styled.main`
 
 const Main = () => {
   const { checkIsUserConfigured } = useFirestore();
+
   useEffect(() => {
     checkIsUserConfigured();
   }, []);

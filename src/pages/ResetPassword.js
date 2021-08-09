@@ -22,7 +22,7 @@ const ResetForm = styled.form`
 const InputLabel = styled.label`
   display: block;
   font-family: ${({ theme }) => theme.font.family.montserrat};
-  color: ${({ theme }) => theme.color.darkGray};
+  color: ${({ theme }) => theme.color.secondary};
   font-size: 1rem;
   font-weight: 700;
   margin: 3px 0;
@@ -33,7 +33,7 @@ const InputField = styled.input`
   font-family: ${({ theme }) => theme.font.family.montserrat};
   font-size: 1.4rem;
   font-weight: 800;
-  background: ${({ theme }) => theme.color.gray};
+  background: ${({ theme }) => theme.color.lightSecondary};
   border: none;
   border-radius: 7px;
   outline: none;

@@ -18,13 +18,13 @@ const LogOffButton = styled.button`
 const ButtonIcon = styled(Icon)`
   width: auto;
   height: 30px;
-  fill: ${({ theme }) => theme.color.darkGray};
+  fill: ${({ theme }) => theme.color.secondary};
 `;
 
 const ButtonText = styled.span`
   font-weight: 600;
   font-size: 1.2rem;
-  color: ${({ theme }) => theme.color.darkGray};
+  color: ${({ theme }) => theme.color.secondary};
   margin: 10px 0 0 0;
 `;
 

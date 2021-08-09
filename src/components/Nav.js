@@ -33,14 +33,14 @@ const LinkIcon = styled(Icon)`
   width: auto;
   height: 30px;
   svg {
-    fill: ${({ theme }) => theme.color.darkGray};
+    fill: ${({ theme }) => theme.color.secondary};
   }
 `;
 
 const LinkTitle = styled.span`
   font-weight: 600;
   font-size: 1.2rem;
-  color: ${({ theme }) => theme.color.darkGray};
+  color: ${({ theme }) => theme.color.secondary};
   margin: 10px 0 0 0;
 `;
 

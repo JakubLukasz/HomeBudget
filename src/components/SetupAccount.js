@@ -30,7 +30,7 @@ const SetupForm = styled.form`
 `;
 
 const Title = styled.p`
-  color: ${({ theme }) => theme.color.darkGray};
+  color: ${({ theme }) => theme.color.secondary};
   font-size: 1rem;
   font-weight: 700;
   margin: 3px 0;
@@ -41,7 +41,7 @@ const UserInput = styled.input`
   font-family: ${({ theme }) => theme.font.family.montserrat};
   font-size: 1.4rem;
   font-weight: 800;
-  background: ${({ theme }) => theme.color.gray};
+  background: ${({ theme }) => theme.color.lightSecondary};
   border: none;
   border-radius: 7px;
   outline: none;
@@ -65,7 +65,7 @@ const Currency = styled.select`
   padding: 10px;
   margin-left: 10px;
   border-radius: 7px;
-  background-color: ${({ theme }) => theme.color.gray};
+  background-color: ${({ theme }) => theme.color.lightSecondary};
   border: none;
   font-weight: 800;
 `;
@@ -93,6 +93,7 @@ const SetupAccount = () => {
       await setupUserData({
         firstname: firstnameRef.current.value,
         earnings: earningsRef.current.value,
+        moneyLeft: earningsRef.current.value,
         currency: currencyRef.current.value,
         isConfigured: true,
       });

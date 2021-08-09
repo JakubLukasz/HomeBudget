@@ -11,7 +11,7 @@ const Container = styled.div`
 `;
 
 const Title = styled.span`
-  color: ${({ theme }) => theme.color.darkGray};
+  color: ${({ theme }) => theme.color.secondary};
   font-weight: 800;
 `;
 

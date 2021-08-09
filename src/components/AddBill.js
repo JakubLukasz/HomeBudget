@@ -23,7 +23,7 @@ const ButtonIcon = styled(Icon)`
 const ButtonText = styled.span`
   font-weight: 600;
   font-size: 1.2rem;
-  color: ${({ theme }) => theme.color.darkGray};
+  color: ${({ theme }) => theme.color.secondary};
   margin: 10px 0 0 0;
 `;
 

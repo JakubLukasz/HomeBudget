@@ -64,7 +64,7 @@ const InputField = styled.input`
   font-family: ${({ theme }) => theme.font.family.montserrat};
   font-size: 1.4rem;
   font-weight: 800;
-  background: ${({ theme }) => theme.color.gray};
+  background: ${({ theme }) => theme.color.lightSecondary};
   border: none;
   border-radius: 7px;
   outline: none;

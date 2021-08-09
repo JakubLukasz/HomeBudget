@@ -18,7 +18,7 @@ const Category = styled(Icon)`
 const CategoryContainer = styled.div`
   margin-right: 20px;
   border-radius: 50%;
-  background-color: ${({ theme }) => theme.color.gray};
+  background-color: ${({ theme }) => theme.color.lightSecondary};
   padding: 10px;
 `;
 
