@@ -8,10 +8,10 @@ const Heading = styled.h1`
 
 const MoneyLeft = styled.span``;
 
-const TotalWrapper = () => {
+const TotalWrapper = ({ moneyLeft, currency }) => {
   return (
     <Heading>
-      <MoneyLeft>5000</MoneyLeft> zł
+      <MoneyLeft>{moneyLeft}</MoneyLeft> {currency}
     </Heading>
   );
 };

@@ -1,10 +1,40 @@
 import styled from "styled-components";
-import Icon from "./Icon";
-import logOutIcon from "../assets/images/log-out.svg";
 import { useAuth } from "../contexts/AuthContext";
 import { useHistory } from "react-router-dom";
+import { devices } from "../assets/devices";
+import logOutIcon from "../assets/images/log-out.svg";
+import Icon from "./Icon";
 
-const LogOffButton = styled.button`
+const LinkIcon = styled(Icon)`
+  width: auto;
+  height: 25px;
+  svg,
+  path {
+    fill: ${({ theme }) => theme.color.secondary};
+  }
+
+  @media ${devices.mobileM} {
+    height: 30px;
+  }
+
+  @media ${devices.tablet} {
+    height: 40px;
+  }
+`;
+
+const LinkTitle = styled.span`
+  font-weight: 600;
+  color: ${({ theme }) => theme.color.secondary};
+  font-size: 1rem;
+  margin: 10px 0 0 0;
+
+  @media ${devices.mobileM} {
+    font-size: 1.2rem;
+  }
+`;
+
+const NavButton = styled.button`
+  position: relative;
   background: none;
   border: none;
   padding: 10px;
@@ -13,19 +43,6 @@ const LogOffButton = styled.button`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-`;
-
-const ButtonIcon = styled(Icon)`
-  width: auto;
-  height: 30px;
-  fill: ${({ theme }) => theme.color.secondary};
-`;
-
-const ButtonText = styled.span`
-  font-weight: 600;
-  font-size: 1.2rem;
-  color: ${({ theme }) => theme.color.secondary};
-  margin: 10px 0 0 0;
 `;
 
 const LogOutButton = () => {
@@ -40,12 +57,11 @@ const LogOutButton = () => {
       console.error("error");
     }
   };
-
   return (
-    <LogOffButton onClick={logOutHandler}>
-      <ButtonIcon src={logOutIcon} />
-      <ButtonText>Log Out</ButtonText>
-    </LogOffButton>
+    <NavButton onClick={logOutHandler}>
+      <LinkIcon src={logOutIcon} />
+      <LinkTitle>Log Out</LinkTitle>
+    </NavButton>
   );
 };
 

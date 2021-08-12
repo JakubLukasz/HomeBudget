@@ -52,22 +52,27 @@ const UserInput = styled.input`
 const EarningsContainer = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
   margin-bottom: 15px;
 `;
 
 const EarningsInput = styled(UserInput)`
-  width: 70%;
+  flex: 7;
   margin: 0;
 `;
 
 const Currency = styled.select`
   padding: 10px;
-  margin-left: 10px;
+  flex: 1;
+  margin-left: 20px;
   border-radius: 7px;
   background-color: ${({ theme }) => theme.color.lightSecondary};
   border: none;
   font-weight: 800;
+
+  &:focus,
+  &:hover {
+    outline: none;
+  }
 `;
 
 const SubmitButton = styled.button`
@@ -82,18 +87,24 @@ const SubmitButton = styled.button`
   margin-top: 15px;
 `;
 
+const CurrencyOption = styled.option`
+  background: ${({ theme }) => theme.color.lightSecondary};
+`;
+
 const SetupAccount = () => {
   const { setupUserData, setIsConfigured } = useFirestore();
   const firstnameRef = useRef();
   const earningsRef = useRef();
   const currencyRef = useRef();
+  const dateRef = useRef();
   const setupAccountHandler = async (e) => {
     e.preventDefault();
     try {
       await setupUserData({
         firstname: firstnameRef.current.value,
-        earnings: earningsRef.current.value,
-        moneyLeft: earningsRef.current.value,
+        earnings: parseFloat(earningsRef.current.value),
+        moneyLeft: parseFloat(earningsRef.current.value),
+        payday: dateRef.current.value,
         currency: currencyRef.current.value,
         isConfigured: true,
       });
@@ -123,11 +134,13 @@ const SetupAccount = () => {
             required
           ></EarningsInput>
           <Currency name="currency" ref={currencyRef}>
-            <option value="zł">zł</option>
-            <option value="€">€</option>
-            <option value="$">$</option>
+            <CurrencyOption value="zł">zł</CurrencyOption>
+            <CurrencyOption value="€">€</CurrencyOption>
+            <CurrencyOption value="$">$</CurrencyOption>
           </Currency>
         </EarningsContainer>
+        <Title htmlFor="date">PAYDAY</Title>
+        <UserInput ref={dateRef} type="date" name="date"></UserInput>
         <SubmitButton type="submit">DONE</SubmitButton>
       </SetupForm>
     </SetupAccountContainer>

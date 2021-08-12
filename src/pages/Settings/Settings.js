@@ -4,8 +4,7 @@ const Container = styled.main`
   background-color: ${({ theme }) => theme.color.white};
   min-height: 200vh;
   font-size: 1rem;
-  margin-top: 11vh;
-  padding: 0 20px;
+  padding: 10px 20px 0;
 `;
 
 const Title = styled.span`

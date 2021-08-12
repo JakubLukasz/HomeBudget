@@ -2,10 +2,14 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import Icon from "./Icon";
 import AddBill from "./AddBill";
-import LogOutButton from "./LogOutButton";
 import statsIcon from "../assets/images/stats.svg";
 import settingsIcon from "../assets/images/settings.svg";
 import planIcon from "../assets/images/plan.svg";
+import moreIcon from "../assets/images/more.svg";
+import Logo from "../assets/images/logo.svg";
+import { devices } from "../assets/devices";
+import { useState } from "react";
+import LogOutButton from "./LogOutButton";
 
 const Navigation = styled.nav`
   display: flex;
@@ -31,20 +35,61 @@ const NavLink = styled(Link)`
 
 const LinkIcon = styled(Icon)`
   width: auto;
-  height: 30px;
-  svg {
+  height: 25px;
+  svg,
+  path {
     fill: ${({ theme }) => theme.color.secondary};
+  }
+
+  @media ${devices.mobileM} {
+    height: 30px;
+  }
+
+  @media ${devices.tablet} {
+    height: 40px;
   }
 `;
 
 const LinkTitle = styled.span`
   font-weight: 600;
-  font-size: 1.2rem;
   color: ${({ theme }) => theme.color.secondary};
+  font-size: 1rem;
   margin: 10px 0 0 0;
+
+  @media ${devices.mobileM} {
+    font-size: 1.2rem;
+  }
+`;
+
+const NavButton = styled.button`
+  background: none;
+  border: none;
+  padding: 10px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const SubNav = styled.nav`
+  display: none;
+  position: absolute;
+  bottom: 100%;
+  background-color: white;
+
+  &.open {
+    display: block;
+  }
+`;
+
+const MoreContainer = styled.div`
+  position: relative;
 `;
 
 const AppNav = () => {
+  const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
+
   return (
     <Navigation>
       <NavLink to="/statistics">
@@ -56,11 +101,23 @@ const AppNav = () => {
         <LinkTitle>Expenses</LinkTitle>
       </NavLink>
       <AddBill />
-      <NavLink to="/settings">
-        <LinkIcon src={settingsIcon} />
-        <LinkTitle>Settings</LinkTitle>
+      <NavLink to="/">
+        <LinkIcon src={Logo} />
+        <LinkTitle>Home</LinkTitle>
       </NavLink>
-      <LogOutButton />
+      <MoreContainer>
+        <NavButton onClick={() => setIsSubMenuOpen((snapshot) => !snapshot)}>
+          <LinkIcon src={moreIcon} />
+          <LinkTitle>More</LinkTitle>
+        </NavButton>
+        <SubNav className={isSubMenuOpen && "open"}>
+          <LogOutButton />
+          <NavLink to="/settings">
+            <LinkIcon src={settingsIcon} />
+            <LinkTitle>Settings</LinkTitle>
+          </NavLink>
+        </SubNav>
+      </MoreContainer>
     </Navigation>
   );
 };

@@ -1,13 +1,17 @@
 import styled from "styled-components";
 import Icon from "../../components/Icon";
-import TestIcon from "../../assets/images/plan.svg";
+import { devices } from "../../assets/devices";
 
 const Container = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin: 20px 0 30px;
-  padding: 0 10px;
+  padding: 0px 5px;
+
+  @media ${devices.mobileM} {
+    padding: 0px 10px;
+  }
 `;
 
 const Category = styled(Icon)`
@@ -29,6 +33,13 @@ const MainHeader = styled.header`
 
 const Title = styled.h2`
   margin: 0;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 100px;
+
+  @media ${devices.mobileM} {
+  }
 `;
 
 const Date = styled.span`
@@ -41,12 +52,19 @@ const Price = styled.span`
   font-weight: 700;
 `;
 
-const Transaction = ({ title, amount, date, category }) => {
+const Transaction = ({
+  title,
+  amount,
+  date,
+  categoryTitle,
+  categorySrc,
+  isSpent,
+}) => {
   return (
     <Container>
       <MainHeader>
         <CategoryContainer>
-          <Category src={TestIcon} />
+          <Category src={categorySrc} />
         </CategoryContainer>
         <header>
           <Title>{title}</Title>
@@ -54,8 +72,12 @@ const Transaction = ({ title, amount, date, category }) => {
         </header>
       </MainHeader>
       <div>
-        <Price>
-          <span>{amount}</span> zł
+        <Price isSpent>
+          <span>
+            {isSpent ? "-" : "+"}
+            {amount}
+          </span>{" "}
+          zł
         </Price>
       </div>
     </Container>

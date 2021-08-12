@@ -10,7 +10,6 @@ export const useFirestore = () => {
 
 export const FirestoreContextProvider = ({ children }) => {
   const [isConfigured, setIsConfigured] = useState(true);
-  const [transactions, setTransactions] = useState([]);
   const { currentUser } = useAuth();
 
   const createUserData = ({ email, uid }) => {
@@ -28,29 +27,16 @@ export const FirestoreContextProvider = ({ children }) => {
     userRef.update(setupData);
   };
 
-  const checkIsUserConfigured = async () => {
+  const getUserData = async () => {
     const userRef = db.collection("users").doc(currentUser.uid);
     const doc = await userRef.get();
-    const data = doc.data().isConfigured;
-    setIsConfigured(data);
+    return doc.data();
   };
 
-  const getTransactions = () => {
-    const transactionsRef = db
-      .collection("users")
-      .doc(currentUser.uid)
-      .collection("transactions");
-    const unsubscribe = transactionsRef.onSnapshot((snapshot) => {
-      if (snapshot.size) {
-        const tmp = [];
-        snapshot.forEach((doc) => tmp.push(doc.data()));
-        tmp.sort((a, b) => {
-          return new Date(a.date) - new Date(b.date);
-        });
-        setTransactions(tmp);
-      }
-    });
-    return unsubscribe;
+  const checkIsUserConfigured = async () => {
+    const data = await getUserData();
+    const { isConfigured } = data;
+    setIsConfigured(isConfigured);
   };
 
   const ctx = {
@@ -59,8 +45,7 @@ export const FirestoreContextProvider = ({ children }) => {
     setIsConfigured,
     setupUserData,
     checkIsUserConfigured,
-    transactions,
-    getTransactions,
+    getUserData,
   };
 
   return (

@@ -1,6 +1,7 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import { db } from "../services/firebase";
 import { useAuth } from "../contexts/AuthContext";
+import { useFirestore } from "./FirestoreContext";
 
 const AddBillContext = createContext({});
 
@@ -10,8 +11,10 @@ export const useAddBill = () => {
 
 export const AddBillContextProvider = ({ children }) => {
   const { currentUser } = useAuth();
+  const { getUserData } = useFirestore();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [bill, setBill] = useState({});
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [isSubmited, setIsSubmited] = useState(false);
 
   const addNewBill = (bill) => {
@@ -20,6 +23,16 @@ export const AddBillContextProvider = ({ children }) => {
       .doc(currentUser.uid)
       .collection("transactions");
     transactionsRef.add(bill);
+    updateTotal(bill);
+  };
+
+  const updateTotal = async ({ amount, isSpent }) => {
+    const { moneyLeft } = await getUserData();
+    const userRef = db.collection("users").doc(currentUser.uid);
+    const value = isSpent ? moneyLeft - amount : moneyLeft + amount;
+    userRef.update({
+      moneyLeft: value,
+    });
   };
 
   useEffect(() => {
@@ -31,6 +44,8 @@ export const AddBillContextProvider = ({ children }) => {
     setIsPopupOpen,
     setBill,
     setIsSubmited,
+    selectedCategory,
+    setSelectedCategory,
   };
 
   return (
