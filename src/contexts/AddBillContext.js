@@ -13,9 +13,7 @@ export const AddBillContextProvider = ({ children }) => {
   const { currentUser } = useAuth();
   const { getUserData } = useFirestore();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [bill, setBill] = useState({});
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [isSubmited, setIsSubmited] = useState(false);
 
   const addNewBill = (bill) => {
     const transactionsRef = db
@@ -24,6 +22,14 @@ export const AddBillContextProvider = ({ children }) => {
       .collection("transactions");
     transactionsRef.add(bill);
     updateTotal(bill);
+  };
+
+  const addNewExpense = (expense) => {
+    const expensesRef = db
+      .collection("users")
+      .doc(currentUser.uid)
+      .collection("expenses");
+    expensesRef.add(expense);
   };
 
   const updateTotal = async ({ amount, isSpent }) => {
@@ -35,17 +41,13 @@ export const AddBillContextProvider = ({ children }) => {
     });
   };
 
-  useEffect(() => {
-    if (isSubmited) addNewBill(bill);
-  }, [bill]);
-
   const ctx = {
     isPopupOpen,
     setIsPopupOpen,
-    setBill,
-    setIsSubmited,
+    addNewBill,
     selectedCategory,
     setSelectedCategory,
+    addNewExpense,
   };
 
   return (

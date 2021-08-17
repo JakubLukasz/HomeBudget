@@ -3,7 +3,6 @@ import Statistics from "../pages/Statistics/Statistics";
 import MyProfile from "../pages/MyProfile";
 import Main from "../pages/Main/Main";
 import AppNav from "../components/Nav";
-import Settings from "../pages/Settings/Settings";
 import { useAddBill } from "../contexts/AddBillContext";
 import AddBillPopup from "../components/AddBillPopup";
 import { useFirestore } from "../contexts/FirestoreContext";
@@ -33,9 +32,6 @@ const MainTemplate = () => {
         </Switch>
         <Switch>
           <Route path="/myprofile" component={MyProfile} />
-        </Switch>
-        <Switch>
-          <Route path="/settings" component={Settings} />
         </Switch>
         <AppNav />
       </BrowserRouter>

@@ -6,6 +6,7 @@ import SelectCategoryPopup from "./SelectCategoryPopup";
 import Icon from "./Icon";
 import { devices } from "../assets/devices";
 import FormError from "./FormError";
+import { useFirestore } from "../contexts/FirestoreContext";
 
 const Popup = styled.div`
   width: 94vw;
@@ -21,9 +22,24 @@ const Popup = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  padding: 15px 15px;
   border-radius: 15px;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
+
+  @media ${devices.tablet} {
+    width: 500px;
+    top: 50%;
+    left: 50%;
+    right: auto;
+    bottom: auto;
+    transform: translate(-50%, -50%);
+  }
+`;
+
+const PopupMain = styled.main`
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 15px 15px;
 
   @media ${devices.mobileM} {
     padding: 30px 25px;
@@ -32,17 +48,18 @@ const Popup = styled.div`
   @media ${devices.mobileL} {
     padding: 30px 40px;
   }
+
+  @media ${devices.tablet} {
+    padding: 15px 20px;
+  }
 `;
 
 const CloseButton = styled.button`
   position: absolute;
   top: 25px;
   right: 25px;
-  border: none;
-  background: none;
   width: 30px;
   height: 30px;
-  cursor: pointer;
 `;
 
 const Heading = styled.h1`
@@ -54,6 +71,10 @@ const Heading = styled.h1`
 
   @media ${devices.mobileM} {
     margin: 20px 0;
+  }
+
+  @media ${devices.laptop} {
+    margin: 0;
   }
 `;
 
@@ -82,19 +103,20 @@ const InputField = styled.input`
   background: ${({ theme }) => theme.color.lightSecondary};
   border: none;
   border-radius: 7px;
-  outline: none;
   padding: 10px 15px;
   margin-bottom: 15px;
 
   @media ${devices.mobileM} {
     margin-bottom: 20px;
   }
+
+  @media ${devices.laptop} {
+    margin-bottom: 5px;
+  }
 `;
 
 const SwitchContainer = styled.div`
   width: 100%;
-  background: none;
-  border: none;
   font-weight: 900;
   border: 2px solid ${({ theme }) => theme.color.primary};
   border-radius: 7px;
@@ -104,38 +126,46 @@ const SwitchContainer = styled.div`
   @media ${devices.mobileM} {
     margin-bottom: 20px;
   }
+
+  @media ${devices.laptop} {
+    margin-bottom: 10px;
+  }
 `;
 
 const SwitchButton = styled.button`
-  border: none;
-  background: none;
   width: 50%;
   padding: 10px 0;
+  font-size: 1.2rem;
   font-weight: 900;
-  background-color: white;
-  color: ${({ theme }) => theme.color.primary};
+  background-color: ${({ theme, isSpent }) =>
+    isSpent ? "white" : theme.color.primary};
+  color: ${({ theme, isSpent }) => (isSpent ? theme.color.primary : "white")};
   transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out;
-
-  &.clicked {
-    background-color: ${({ theme }) => theme.color.primary};
-    color: white;
-  }
 `;
 
 const MoneyInputContainer = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: flex-start;
 `;
 
 const Currency = styled.div`
   color: #ffffff;
   background-color: black;
   font-weight: 700;
-  display: none;
+  margin-left: 10px;
+  font-size: 1.4rem;
+  padding: 10px 15px;
+  display: flex;
+  align-items: center;
+  border-radius: 7px;
+  justify-content: center;
+  background-color: ${({ theme }) => theme.color.lightSecondary};
+  color: black;
+  font-weight: 900;
 `;
 
 const SubmitButton = styled.button`
-  border: none;
   width: 100%;
   font-size: 1.7rem;
   font-weight: 800;
@@ -148,6 +178,10 @@ const SubmitButton = styled.button`
   @media ${devices.mobileM} {
     margin-top: 30px;
   }
+
+  @media ${devices.laptop} {
+    margin-top: 5px;
+  }
 `;
 
 const CategoryContainer = styled.div`
@@ -159,6 +193,10 @@ const CategoryContainer = styled.div`
   @media ${devices.mobileM} {
     margin-bottom: 20px;
   }
+
+  @media ${devices.laptop} {
+    margin-bottom: 5px;
+  }
 `;
 
 const SelectCategory = styled.button`
@@ -166,12 +204,10 @@ const SelectCategory = styled.button`
   font-family: ${({ theme }) => theme.font.family.montserrat};
   font-size: 1.2rem;
   font-weight: 800;
-  background: ${({ theme }) => theme.color.primary};
+  background-color: ${({ theme }) => theme.color.primary};
   color: #ffffff;
-  border: none;
   border-radius: 7px;
   margin-left: 10px;
-  outline: none;
   padding: 10px 15px;
 
   @media ${devices.mobileL} {
@@ -205,21 +241,23 @@ const AddBillPopup = () => {
   const [isSpent, setIsSpent] = useState(true);
   const [isSelectCategoryOpen, setIsSelectCategoryOpen] = useState(false);
   const [isFormCorect, setIsFormCorect] = useState(true);
-  const {
-    setIsPopupOpen,
-    setBill,
-    setIsSubmited,
-    selectedCategory,
-    setSelectedCategory,
-  } = useAddBill();
+  const [currency, setCurrency] = useState("");
+  const { getCurrency } = useFirestore();
+  const { setIsPopupOpen, addNewBill, selectedCategory, setSelectedCategory } =
+    useAddBill();
   const titleRef = useRef();
   const categoryRef = useRef();
   const dateRef = useRef();
   const amountRef = useRef();
 
   useEffect(() => {
-    setIsSubmited(false);
+    CurrencyHandler();
   }, []);
+
+  const CurrencyHandler = async () => {
+    const currencyValue = await getCurrency();
+    setCurrency(currencyValue);
+  };
 
   const addBillHandler = (e) => {
     e.preventDefault();
@@ -229,29 +267,29 @@ const AddBillPopup = () => {
       dateRef.current.value !== "" &&
       amountRef.current.value !== ""
     ) {
-      setBill({
+      addNewBill({
         title: titleRef.current.value,
         categoryTitle: categoryRef.current.innerText,
         categorySrc: selectedCategory.src,
         date: dateRef.current.value,
+        year: dateRef.current.value.split("-")[0],
+        month: dateRef.current.value.split("-")[1],
+        day: dateRef.current.value.split("-")[2],
         amount: parseFloat(amountRef.current.value),
         isSpent: isSpent,
+        currency: currency,
       });
       setSelectedCategory("");
-      setIsSubmited(true);
       setIsPopupOpen((snapshot) => !snapshot);
     } else {
       setIsFormCorect(false);
     }
   };
 
-  const selectCategoryHandler = () => {
+  const selectCategoryHandler = () =>
     setIsSelectCategoryOpen((snapshot) => !snapshot);
-  };
 
-  const changeSwitchColor = () => {
-    setIsSpent((snapshot) => !snapshot);
-  };
+  const changeSwitchColor = () => setIsSpent((snapshot) => !snapshot);
 
   const closePopupHandler = () => {
     setSelectedCategory("");
@@ -260,60 +298,66 @@ const AddBillPopup = () => {
 
   return (
     <Popup>
-      {isSelectCategoryOpen && (
-        <SelectCategoryPopup
-          setIsSelectCategoryOpen={setIsSelectCategoryOpen}
-        />
-      )}
-      {!isFormCorect && <FormError setIsFormCorect={setIsFormCorect} />}
-      <CloseButton onClick={closePopupHandler}>
-        <Icon src={closeIcon} />
-      </CloseButton>
-      <Heading>BILL</Heading>
-      <PopupForm onSubmit={addBillHandler}>
-        <InputLabel htmlFor="title">TITLE</InputLabel>
-        <InputField
-          ref={titleRef}
-          type="text"
-          id="title"
-          name="title"
-        ></InputField>
-        <InputLabel htmlFor="category">CATEGORY</InputLabel>
-        <CategoryContainer>
-          <CategoryView ref={categoryRef}>
-            {selectedCategory.title
-              ? selectedCategory.title
-              : "Not Selected..."}
-          </CategoryView>
-          <SelectCategory type="button" onClick={selectCategoryHandler}>
-            SELECT CATEGORY
-          </SelectCategory>
-        </CategoryContainer>
-        <InputLabel htmlFor="date">DATE OF PURCHASE</InputLabel>
-        <InputField ref={dateRef} type="date" name="date"></InputField>
-        <InputLabel htmlFor="amount">AMOUNT</InputLabel>
-        <MoneyInputContainer>
-          <InputField ref={amountRef} type="number" name="amount"></InputField>
-          <Currency>$</Currency>
-        </MoneyInputContainer>
-        <SwitchContainer>
-          <SwitchButton
-            type="button"
-            onClick={changeSwitchColor}
-            className={isSpent && "clicked"}
-          >
-            SPENT
-          </SwitchButton>
-          <SwitchButton
-            type="button"
-            onClick={changeSwitchColor}
-            className={!isSpent && "clicked"}
-          >
-            EARNED
-          </SwitchButton>
-        </SwitchContainer>
-        <SubmitButton type="submit">ADD BILL</SubmitButton>
-      </PopupForm>
+      <PopupMain>
+        {isSelectCategoryOpen && (
+          <SelectCategoryPopup
+            setIsSelectCategoryOpen={setIsSelectCategoryOpen}
+          />
+        )}
+        {!isFormCorect && <FormError setIsFormCorect={setIsFormCorect} />}
+        <CloseButton onClick={closePopupHandler}>
+          <Icon src={closeIcon} />
+        </CloseButton>
+        <Heading>BILL</Heading>
+        <PopupForm onSubmit={addBillHandler}>
+          <InputLabel htmlFor="title">TITLE</InputLabel>
+          <InputField
+            ref={titleRef}
+            type="text"
+            id="title"
+            name="title"
+          ></InputField>
+          <InputLabel htmlFor="category">CATEGORY</InputLabel>
+          <CategoryContainer>
+            <CategoryView ref={categoryRef}>
+              {selectedCategory.title
+                ? selectedCategory.title
+                : "Not Selected..."}
+            </CategoryView>
+            <SelectCategory type="button" onClick={selectCategoryHandler}>
+              SELECT CATEGORY
+            </SelectCategory>
+          </CategoryContainer>
+          <InputLabel htmlFor="date">DATE OF PURCHASE</InputLabel>
+          <InputField ref={dateRef} type="date" name="date"></InputField>
+          <InputLabel htmlFor="amount">AMOUNT</InputLabel>
+          <MoneyInputContainer>
+            <InputField
+              ref={amountRef}
+              type="number"
+              name="amount"
+            ></InputField>
+            <Currency>{currency}</Currency>
+          </MoneyInputContainer>
+          <SwitchContainer>
+            <SwitchButton
+              isSpent={isSpent}
+              type="button"
+              onClick={changeSwitchColor}
+            >
+              SPENT
+            </SwitchButton>
+            <SwitchButton
+              isSpent={!isSpent}
+              type="button"
+              onClick={changeSwitchColor}
+            >
+              EARNED
+            </SwitchButton>
+          </SwitchContainer>
+          <SubmitButton type="submit">ADD BILL</SubmitButton>
+        </PopupForm>
+      </PopupMain>
     </Popup>
   );
 };

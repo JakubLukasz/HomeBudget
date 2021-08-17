@@ -30,7 +30,7 @@ const Text = styled.p`
   margin-top: 30px;
 `;
 
-const FormError = ({ setIsFormCorect }) => {
+const FormError = ({ setIsFormCorect, message }) => {
   useEffect(() => {
     setTimeout(() => {
       setIsFormCorect(true);
@@ -40,7 +40,7 @@ const FormError = ({ setIsFormCorect }) => {
     <Container>
       <TextContainer>
         <Heading>ERROR</Heading>
-        <Text>You must complete all the fields</Text>
+        <Text>{message ? message : "You must complete all the fields"}</Text>
       </TextContainer>
     </Container>
   );

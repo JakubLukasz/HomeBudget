@@ -6,13 +6,12 @@ import previousIcon from "../assets/images/previous.svg";
 import { useAddBill } from "../contexts/AddBillContext";
 
 const Popup = styled.div`
-  width: 94vw;
   background-color: ${({ theme }) => theme.color.white};
-  position: fixed;
-  top: 3vw;
-  bottom: 3vw;
-  left: 3vw;
-  right: 3vw;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   color: black;
   z-index: 9999;
   display: flex;
@@ -48,11 +47,15 @@ const Heading = styled.h1`
   font-family: ${({ theme }) => theme.font.family.montserrat};
   font-weight: 800;
   text-align: center;
-  font-size: 4rem;
+  font-size: 2.5rem;
   margin: 10px 0;
 
   @media ${devices.mobileM} {
     margin: 40px 0 20px;
+  }
+
+  @media ${devices.laptop} {
+    margin: 10px 0;
   }
 `;
 
@@ -66,10 +69,15 @@ const CategoryButton = styled.button`
   border-radius: 7px;
   margin-top: 12px;
   background-color: ${({ theme }) => theme.color.lightSecondary};
+
+  @media ${devices.laptop} {
+    padding: 8px;
+    margin-top: 7px;
+  }
 `;
 
 const CategoryIcon = styled(Icon)`
-  height: 20px;
+  height: 2rem;
   width: auto;
   fill: white;
 `;
@@ -78,6 +86,10 @@ const IconContainer = styled.div`
   background-color: ${({ theme }) => theme.color.primary};
   padding: 10px;
   border-radius: 50%;
+
+  @media ${devices.laptop} {
+    padding: 5px;
+  }
 `;
 
 const CategorySpan = styled.span`
@@ -95,7 +107,6 @@ const SubCategoryPopup = ({
   const { setSelectedCategory } = useAddBill();
   const closeHandler = () => setIsSubCategoryPopupOpen((snapshot) => !snapshot);
   const selectCategory = (e) => {
-    console.log(e.target);
     closeHandler();
     setIsSelectCategoryOpen((snapshot) => !snapshot);
     setSelectedCategory({ title: e.target.innerText, src });
@@ -106,7 +117,7 @@ const SubCategoryPopup = ({
       <CloseButton onClick={closeHandler}>
         <Icon src={previousIcon} />
       </CloseButton>
-      <Heading>Select Category</Heading>
+      <Heading>Select</Heading>
       {subCategories.map((category) => (
         <CategoryButton key={category} onClick={selectCategory}>
           <IconContainer>

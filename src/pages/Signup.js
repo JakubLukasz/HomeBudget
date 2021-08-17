@@ -3,8 +3,7 @@ import { useRef, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useFirestore } from "../contexts/FirestoreContext";
 import { Link, useHistory } from "react-router-dom";
-import ErrorBox from "../components/ErrorBox";
-
+import FormError from "../components/FormError";
 const Container = styled.section`
   width: 100vw;
   min-height: 100vh;
@@ -122,7 +121,7 @@ const Signup = () => {
       <Heading>Sign up</Heading>
       <FormContainer>
         <SignupForm onSubmit={submitFormHandler}>
-          {error && <ErrorBox message={error} />}
+          {error && <FormError message={error} />}
           <InputLabel htmlFor="email">E-MAIL</InputLabel>
           <InputField ref={emailRef} type="email" id="email" required />
           <InputLabel htmlFor="password">PASSWORD</InputLabel>

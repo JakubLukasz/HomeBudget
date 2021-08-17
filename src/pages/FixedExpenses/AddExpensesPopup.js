@@ -3,6 +3,9 @@ import { devices } from "../../assets/devices";
 import closeIcon from "../../assets/images/close.svg";
 import Icon from "../../components/Icon";
 import { useEffect, useRef, useState } from "react";
+import { useAddBill } from "../../contexts/AddBillContext";
+import FormError from "../../components/FormError";
+import { useFirestore } from "../../contexts/FirestoreContext";
 
 const Popup = styled.div`
   width: 94vw;
@@ -28,6 +31,16 @@ const Popup = styled.div`
 
   @media ${devices.mobileL} {
     padding: 30px 40px;
+  }
+
+  @media ${devices.tablet} {
+    width: 500px;
+    top: 50%;
+    left: 50%;
+    right: auto;
+    bottom: auto;
+    transform: translate(-50%, -50%);
+    padding: 15px 20px;
   }
 `;
 
@@ -88,33 +101,6 @@ const PopupForm = styled.form`
   height: 100%;
 `;
 
-const DateInput = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  margin-bottom: 15px;
-`;
-
-const DateEl = styled.button`
-  display: inline;
-  border: none;
-  background: none;
-  outline: none;
-  height: 25px;
-  width: 25px;
-  background-color: ${({ theme }) => theme.color.regularPrimary};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 0 5px 5px 0;
-  font-size: 1.2rem;
-  font-weight: 900;
-  color: #ffffff;
-
-  &.clicked {
-    background-color: ${({ theme }) => theme.color.primary};
-  }
-`;
-
 const SubmitButton = styled.button`
   border: none;
   width: 100%;
@@ -125,55 +111,143 @@ const SubmitButton = styled.button`
   border-radius: 7px;
   padding: 10px 15px;
   margin-top: 10px;
+  cursor: pointer;
 
   @media ${devices.mobileM} {
     margin-top: 30px;
   }
 `;
 
+const CheckboxLabel = styled.label`
+  font-size: 1.6rem;
+  font-weight: 900;
+`;
+
+const Checkbox = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+`;
+
+const CheckboxInput = styled.input`
+  cursor: pointer;
+`;
+
+const SwitchContainer = styled.div`
+  width: 100%;
+  background: none;
+  border: none;
+  font-weight: 900;
+  border: 2px solid ${({ theme }) => theme.color.primary};
+  border-radius: 7px;
+  overflow: hidden;
+  margin: 10px 0 15px;
+
+  @media ${devices.mobileM} {
+    margin-bottom: 20px;
+  }
+
+  @media ${devices.laptop} {
+    margin-bottom: 10px;
+  }
+`;
+
+const SwitchButton = styled.button`
+  border: none;
+  background: none;
+  width: 50%;
+  padding: 10px 0;
+  font-size: 1.2rem;
+  font-weight: 900;
+  background-color: white;
+  color: ${({ theme }) => theme.color.primary};
+  transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out;
+
+  &.clicked {
+    background-color: ${({ theme }) => theme.color.primary};
+    color: white;
+  }
+`;
+
 const AddExpensesPopup = ({ setIsExpensesPopupOpen }) => {
-  useEffect(() => {
-    generateDate();
-  }, []);
-  const [months, setMonths] = useState(null);
-  const [selectedMonths, setSelectedMonths] = useState([]);
-  const [isMonthClicked, setIsMonthClicked] = useState(false);
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  const [checkedMonths, setCheckedMonths] = useState(
+    new Array(months.length).fill(false)
+  );
+  const [isSpent, setIsSpent] = useState(true);
+  const [isFormCorect, setIsFormCorect] = useState(true);
+  const [currency, setCurrency] = useState("");
+
+  const { addNewExpense } = useAddBill();
+  const { getUserData } = useFirestore();
+
   const titleRef = useRef();
   const amountRef = useRef();
   const dayRef = useRef();
+
+  useEffect(() => {
+    getCurrency();
+  }, []);
+
+  const getCurrency = async () => {
+    const { currency } = await getUserData();
+    setCurrency(currency);
+  };
+
+  const changeSwitchColor = () => {
+    setIsSpent((snapshot) => !snapshot);
+  };
+
+  const handleOnChange = (position) => {
+    const updatedCheckedMonths = checkedMonths.map((item, index) =>
+      index === position ? !item : item
+    );
+
+    setCheckedMonths(updatedCheckedMonths);
+  };
 
   const closePopupHandler = () => {
     setIsExpensesPopupOpen(false);
   };
 
-  const generateDate = () => {
-    const month = [];
-    for (let j = 1; j <= 12; j++) {
-      month.push(j);
-    }
-    setMonths(month);
-  };
-
   const AddExpense = (e) => {
     e.preventDefault();
-    console.log(selectedMonths);
-  };
-
-  const chooseMonth = (e) => {
-    const monthValue = parseInt(e.target.innerText);
-    if (e.target.classList.contains("clicked")) {
-      setSelectedMonths((oldArray) =>
-        oldArray.splice(selectedMonths.indexOf(monthValue), 1)
-      );
+    if (
+      titleRef.current.value !== "" &&
+      dayRef.current.value <= "28" &&
+      dayRef.current.value >= "1" &&
+      checkedMonths.filter((month) => month === true).length >= 1 && // number of checked months
+      amountRef.current.value !== ""
+    ) {
+      addNewExpense({
+        title: titleRef.current.value,
+        months: checkedMonths,
+        dayOfCollection: parseFloat(dayRef.current.value),
+        amount: parseFloat(amountRef.current.value),
+        isSpent: isSpent,
+        currency: currency,
+      });
+      closePopupHandler();
     } else {
-      setSelectedMonths((oldArray) => [...oldArray, monthValue]);
+      setIsFormCorect(false);
     }
-    e.target.classList.toggle("clicked");
-    // setIsMonthClicked((snapshot) => !snapshot);
   };
 
   return (
     <Popup>
+      {!isFormCorect && <FormError setIsFormCorect={setIsFormCorect} />}
       <Heading>Add Expenses</Heading>
       <CloseButton onClick={closePopupHandler}>
         <Icon src={closeIcon} />
@@ -193,21 +267,41 @@ const AddExpensesPopup = ({ setIsExpensesPopupOpen }) => {
           id="amount"
           name="amount"
         ></InputField>
-        <InputLabel>DAY OF COLLECTION ( 1-28 )</InputLabel>
+        <InputLabel>DAY OF COLLECTION ( 1 - 28 )</InputLabel>
         <InputField ref={dayRef} type="number" id="day" name="day"></InputField>
-        <InputLabel>MONTH OF COLLECTION</InputLabel>
-        <DateInput>
-          {months &&
-            months.map((monthNumber) => (
-              <DateEl
-                onClick={chooseMonth}
-                className={isMonthClicked && "clicked"}
-              >
-                {monthNumber}
-              </DateEl>
-            ))}
-        </DateInput>
-        <SubmitButton type="submit">Add Expense</SubmitButton>
+        <InputLabel>MONTH OF COLLECTION ( 1 - 12 )</InputLabel>
+        <Checkbox>
+          {months.map((month, index) => (
+            <div key={month}>
+              <CheckboxInput
+                type="checkbox"
+                id={month}
+                name="month"
+                value={month}
+                checked={checkedMonths[index]}
+                onChange={() => handleOnChange(index)}
+              ></CheckboxInput>
+              <CheckboxLabel>{month}</CheckboxLabel>
+            </div>
+          ))}
+        </Checkbox>
+        <SwitchContainer>
+          <SwitchButton
+            type="button"
+            onClick={changeSwitchColor}
+            className={isSpent && "clicked"}
+          >
+            SPENT
+          </SwitchButton>
+          <SwitchButton
+            type="button"
+            onClick={changeSwitchColor}
+            className={!isSpent && "clicked"}
+          >
+            EARNED
+          </SwitchButton>
+        </SwitchContainer>
+        <SubmitButton type="submit">ADD EXPENSE</SubmitButton>
       </PopupForm>
     </Popup>
   );

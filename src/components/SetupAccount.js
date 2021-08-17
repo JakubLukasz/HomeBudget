@@ -139,8 +139,8 @@ const SetupAccount = () => {
             <CurrencyOption value="$">$</CurrencyOption>
           </Currency>
         </EarningsContainer>
-        <Title htmlFor="date">PAYDAY</Title>
-        <UserInput ref={dateRef} type="date" name="date"></UserInput>
+        <Title htmlFor="date">PAYDAY (1-28)</Title>
+        <UserInput ref={dateRef} type="text" name="date"></UserInput>
         <SubmitButton type="submit">DONE</SubmitButton>
       </SetupForm>
     </SetupAccountContainer>

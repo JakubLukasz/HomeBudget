@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import Icon from "../../components/Icon";
 import { devices } from "../../assets/devices";
 
 const Container = styled.div`
@@ -17,22 +16,6 @@ const Container = styled.div`
     padding: 0px 10px;
     margin: 15px 0;
   }
-`;
-
-const Category = styled(Icon)`
-  height: 20px;
-  width: auto;
-
-  @media ${devices.latpop} {
-    height: 15px;
-  }
-`;
-
-const CategoryContainer = styled.div`
-  margin-right: 20px;
-  border-radius: 50%;
-  background-color: ${({ theme }) => theme.color.lightSecondary};
-  padding: 10px;
 `;
 
 const MainHeader = styled.header`
@@ -56,34 +39,26 @@ const Title = styled.h2`
   }
 `;
 
-const Date = styled.span`
-  font-size: 1.2rem;
-  font-weight: 500;
-`;
-
 const Price = styled.span`
   color: ${({ isSpent }) => (isSpent ? "red" : "green")};
   font-size: 1.3rem;
   font-weight: 700;
 `;
 
-const Transaction = ({
-  title,
+const Expense = ({
   amount,
-  date,
-  currency,
-  categorySrc,
+  dayOfCollection,
+  months,
+  title,
   isSpent,
+  currency,
 }) => {
+  console.log(title);
   return (
     <Container>
       <MainHeader>
-        <CategoryContainer>
-          <Category src={categorySrc} />
-        </CategoryContainer>
         <header>
           <Title>{title}</Title>
-          <Date>{date}</Date>
         </header>
       </MainHeader>
       <div>
@@ -99,4 +74,4 @@ const Transaction = ({
   );
 };
 
-export default Transaction;
+export default Expense;

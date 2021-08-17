@@ -18,6 +18,13 @@ const GlobalStyle = createGlobalStyle`
         font-family: ${({ theme }) => theme.font.family.montserrat};
     }
 
+    button{
+        background: none;
+        border: none;
+        cursor: pointer;
+        outline: none;
+    }
+
     @font-face{
         font-family: "Montserrat";
         src: url(${MontserratExtraBold}) format('truetype');
@@ -31,8 +38,28 @@ const GlobalStyle = createGlobalStyle`
     html{
         font-size:62.5%;
 
+        @media ${devices.mobileM}{
+
+        }
+
+        @media ${devices.mobileL}{
+            
+        }
+
         @media ${devices.tablet}{
-            font-size:90%;
+            font-size:75%;
+        }
+
+        @media ${devices.tabletVer}{
+            font-size:95%;
+        }
+
+        @media ${devices.laptop}{
+            font-size:45%;
+        }
+
+        @media ${devices.laptopL}{
+            font-size:62.5%;
         }
     }
 

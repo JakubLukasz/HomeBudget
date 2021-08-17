@@ -5,28 +5,22 @@ import { useAddBill } from "../contexts/AddBillContext";
 import { devices } from "../assets/devices";
 
 const AddButton = styled.button`
-  background: none;
-  border: none;
   padding: 10px;
   width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  @media ${devices.laptop} {
+    order: -1;
+  }
 `;
 
 const ButtonIcon = styled(Icon)`
   width: auto;
-  height: 25px;
+  height: 2.5rem;
   fill: ${({ theme }) => theme.color.primary};
-
-  @media ${devices.mobileM} {
-    height: 30px;
-  }
-
-  @media ${devices.tablet} {
-    height: 40px;
-  }
 `;
 
 const ButtonText = styled.span`

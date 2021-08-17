@@ -7,18 +7,10 @@ import Icon from "./Icon";
 
 const LinkIcon = styled(Icon)`
   width: auto;
-  height: 25px;
+  height: 2.5rem;
   svg,
   path {
     fill: ${({ theme }) => theme.color.secondary};
-  }
-
-  @media ${devices.mobileM} {
-    height: 30px;
-  }
-
-  @media ${devices.tablet} {
-    height: 40px;
   }
 `;
 
@@ -43,6 +35,7 @@ const NavButton = styled.button`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 `;
 
 const LogOutButton = () => {
