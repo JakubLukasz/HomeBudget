@@ -7,7 +7,7 @@ import { useFirestore } from "../../contexts/FirestoreContext";
 
 const Container = styled.main`
   background-color: ${({ theme }) => theme.color.white};
-  min-height: 200vh;
+  min-height: 100vh;
   font-size: 1rem;
   padding: 10px 20px 10vh;
 
@@ -34,17 +34,42 @@ const AddNewFixedExpense = styled.button`
   align-items: center;
   justify-content: center;
   margin: 10px 0;
+
+  @media ${devices.tabletVerL} {
+    max-width: 400px;
+  }
+
+  @media ${devices.laptop} {
+    max-width: 400px;
+  }
+`;
+
+const Expenses = styled.div`
+  @media ${devices.tabletVerL} {
+    max-width: 400px;
+  }
+
+  @media ${devices.laptop} {
+    max-width: 400px;
+  }
 `;
 
 const FixedExpenses = () => {
   const [isExpensesPopupOpen, setIsExpensesPopupOpen] = useState(false);
-  const { expensesListener } = useFirestore();
+  const { getExpenses } = useFirestore();
   const [expenses, setExpenses] = useState([]);
 
-  useEffect(() => {
-    const { unsubscribe, tmp } = expensesListener();
+  const init = async () => {
+    const docs = await getExpenses();
+    let tmp = [];
+    docs.forEach((doc) => {
+      tmp.push(doc.data());
+    });
     setExpenses(tmp);
-    return () => unsubscribe();
+  };
+
+  useEffect(() => {
+    init();
   }, []);
 
   const addNewFixedExpenseHandler = () => setIsExpensesPopupOpen(true);
@@ -55,9 +80,11 @@ const FixedExpenses = () => {
         <AddExpensesPopup setIsExpensesPopupOpen={setIsExpensesPopupOpen} />
       )}
       <Title>FIXED EXPENSES</Title>
-      {expenses.map((expenseVal) => (
-        <Expense {...expenseVal} />
-      ))}
+      <Expenses>
+        {expenses.map((expenseVal) => (
+          <Expense key={Math.random()} {...expenseVal} />
+        ))}
+      </Expenses>
       <AddNewFixedExpense onClick={addNewFixedExpenseHandler}>
         ADD EXPENSE
       </AddNewFixedExpense>

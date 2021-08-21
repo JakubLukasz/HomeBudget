@@ -7,15 +7,18 @@ const Container = styled.div`
   align-items: center;
   margin: 20px 0 30px;
   padding: 0px 5px;
+  background-color: ${({ theme }) => theme.color.lightSecondary};
+  padding: 15px 20px;
+  border-radius: 15px;
 
-  @media ${devices.mobileM} {
+  /* @media ${devices.mobileM} {
     padding: 0px 10px;
   }
 
   @media ${devices.laptop} {
     padding: 0px 10px;
     margin: 15px 0;
-  }
+  } */
 `;
 
 const MainHeader = styled.header`
@@ -53,7 +56,6 @@ const Expense = ({
   isSpent,
   currency,
 }) => {
-  console.log(title);
   return (
     <Container>
       <MainHeader>

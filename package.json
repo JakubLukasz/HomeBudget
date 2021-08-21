@@ -1,6 +1,6 @@
 {
-  "name": "home-budgett",
-  "version": "0.1.0",
+  "name": "daily_profit",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "chart.js": "^3.5.0",
@@ -8,13 +8,11 @@
     "firebase": "^8.8.1",
     "react": "^17.0.2",
     "react-chartjs-2": "^3.0.4",
-    "react-datepicker": "^4.2.0",
     "react-dom": "^17.0.2",
     "react-inlinesvg": "^2.3.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
-    "styled-components": "^5.3.0",
-    "svgo": "^2.3.1"
+    "styled-components": "^5.3.0"
   },
   "scripts": {
     "start": "react-scripts start",

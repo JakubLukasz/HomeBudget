@@ -11,7 +11,7 @@ const TransactionsWrapper = ({ transactions, total }) => {
       {transactions.map((transactionInfo) => (
         <Transaction
           {...total}
-          key={`${transactionInfo.title} ${transactionInfo.date}`}
+          key={`${transactionInfo.title} ${transactionInfo.date} ${transactionInfo.amount} ${transactionInfo.categoryTitle}`}
           {...transactionInfo}
         />
       ))}

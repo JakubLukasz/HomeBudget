@@ -2,9 +2,8 @@ import styled from "styled-components";
 import Card from "../../components/Card";
 import { useEffect, useState } from "react";
 import { devices } from "../../assets/devices";
-import Graph from "./Graph";
+import { Doughnut } from "react-chartjs-2";
 import { useFirestore } from "../../contexts/FirestoreContext";
-import { useGraph } from "../../contexts/GraphContext";
 
 const Container = styled.main`
   background-color: ${({ theme }) => theme.color.lightPrimary};
@@ -63,23 +62,85 @@ const StyledCard = styled(Card)`
   }
 `;
 
+const DoughnutGraph = styled(Doughnut)`
+  padding: 20px;
+`;
+
 const Statistics = () => {
-  const { transactionsListener } = useFirestore();
-  const { setTransactions, earnedDoughnutData, spendDoughnutData } = useGraph();
+  const { getTransactions } = useFirestore();
+  const [transactions, setTransactions] = useState([]);
+  const [earnedData, setEarnedData] = useState();
+  const [spentData, setSpentData] = useState();
+
+  const generateRandomColor = () => {
+    let randomColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
+    return randomColor;
+  };
+
+  const colors = [
+    "#58A9CC",
+    "#e87a13",
+    "#66e028",
+    "#b71cd6",
+    "#5c47e6",
+    "#e0e332",
+    "#e32f29",
+    "#21de6a",
+  ].concat(generateRandomColor);
+
+  const cos = async () => {
+    const docs = await getTransactions();
+    let tmp = [];
+    docs.forEach((doc) => {
+      tmp.push(doc.data());
+    });
+    setTransactions(tmp);
+  };
 
   useEffect(() => {
-    const { unsubscribe, tmp } = transactionsListener();
-    setTransactions(tmp);
-    return () => unsubscribe();
+    let earnedTransactions = transactions.filter(
+      ({ isSpent }) => isSpent !== true
+    );
+    let spentTransactions = transactions.filter(
+      ({ isSpent }) => isSpent === true
+    );
+    let spentLabels = spentTransactions.map((data) => data.title);
+    let earnedLabels = earnedTransactions.map((data) => data.title);
+    let spentDataset = spentTransactions.map((data) => data.amount);
+    let earnedDataset = earnedTransactions.map((data) => data.amount);
+    setEarnedData({
+      labels: earnedLabels,
+      datasets: [
+        {
+          data: earnedDataset,
+          backgroundColor: colors,
+          hoverOffset: 4,
+        },
+      ],
+    });
+    setSpentData({
+      labels: spentLabels,
+      datasets: [
+        {
+          data: spentDataset,
+          backgroundColor: colors,
+          hoverOffset: 4,
+        },
+      ],
+    });
+  }, [transactions]);
+
+  useEffect(() => {
+    cos();
   }, []);
 
   return (
     <Container>
       <StyledCard title="SPENT GRAPH">
-        {spendDoughnutData && <Graph data={spendDoughnutData} />}
+        {spentData && <DoughnutGraph data={spentData} />}
       </StyledCard>
       <StyledCard title="EARNED GRAPH">
-        {earnedDoughnutData && <Graph data={earnedDoughnutData} />}
+        {earnedData && <DoughnutGraph data={earnedData} />}
       </StyledCard>
     </Container>
   );

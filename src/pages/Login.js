@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useRef, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { Link, useHistory } from "react-router-dom";
-import FormError from "../components/FormError";
+import ErrorBox from "../components/ErrorBox";
 
 const Container = styled.section`
   width: 100vw;
@@ -114,7 +114,7 @@ const Login = () => {
         <Heading>Log in</Heading>
         <FormContainer>
           <LoginForm onSubmit={submitFormHandler}>
-            {error && <FormError message={error} />}
+            {error && <ErrorBox message={error} />}
             <InputLabel htmlFor="email">E-MAIL</InputLabel>
             <InputField ref={emailRef} type="email" id="email" required />
             <InputLabel htmlFor="password">PASSWORD</InputLabel>

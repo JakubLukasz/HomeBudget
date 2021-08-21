@@ -138,8 +138,8 @@ const SwitchButton = styled.button`
   font-size: 1.2rem;
   font-weight: 900;
   background-color: ${({ theme, isSpent }) =>
-    isSpent ? "white" : theme.color.primary};
-  color: ${({ theme, isSpent }) => (isSpent ? theme.color.primary : "white")};
+    isSpent ? theme.color.primary : "white"};
+  color: ${({ theme, isSpent }) => (isSpent ? "white" : theme.color.primary)};
   transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out;
 `;
 
@@ -251,10 +251,10 @@ const AddBillPopup = () => {
   const amountRef = useRef();
 
   useEffect(() => {
-    CurrencyHandler();
+    currencyHandler();
   }, []);
 
-  const CurrencyHandler = async () => {
+  const currencyHandler = async () => {
     const currencyValue = await getCurrency();
     setCurrency(currencyValue);
   };

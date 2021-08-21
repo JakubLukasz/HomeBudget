@@ -67,6 +67,24 @@ export const FirestoreContextProvider = ({ children }) => {
     return { unsubscribe, data };
   };
 
+  const getExpenses = async () => {
+    const expensesRef = db
+      .collection("users")
+      .doc(currentUser.uid)
+      .collection("expenses");
+    const docs = await expensesRef.get();
+    return docs;
+  };
+
+  const getTransactions = async () => {
+    const transactionsRef = db
+      .collection("users")
+      .doc(currentUser.uid)
+      .collection("transactions");
+    const docs = await transactionsRef.get();
+    return docs;
+  };
+
   const getUserData = async () => {
     const userRef = db.collection("users").doc(currentUser.uid);
     const doc = await userRef.get();
@@ -95,6 +113,8 @@ export const FirestoreContextProvider = ({ children }) => {
     userListener,
     expensesListener,
     getCurrency,
+    getTransactions,
+    getExpenses,
   };
 
   return (
