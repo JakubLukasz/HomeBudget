@@ -1,0 +1,37 @@
+{
+  "files": {
+    "main.js": "/static/js/main.80671bc9.chunk.js",
+    "main.js.map": "/static/js/main.80671bc9.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.a6ba9af0.js",
+    "runtime-main.js.map": "/static/js/runtime-main.a6ba9af0.js.map",
+    "static/js/2.2061e98e.chunk.js": "/static/js/2.2061e98e.chunk.js",
+    "static/js/2.2061e98e.chunk.js.map": "/static/js/2.2061e98e.chunk.js.map",
+    "index.html": "/index.html",
+    "static/js/2.2061e98e.chunk.js.LICENSE.txt": "/static/js/2.2061e98e.chunk.js.LICENSE.txt",
+    "static/media/Montserrat-Bold.079ca05d.ttf": "/static/media/Montserrat-Bold.079ca05d.ttf",
+    "static/media/Montserrat-ExtraBold.1944c8d1.ttf": "/static/media/Montserrat-ExtraBold.1944c8d1.ttf",
+    "static/media/Montserrat-Light.02afb26f.ttf": "/static/media/Montserrat-Light.02afb26f.ttf",
+    "static/media/Montserrat-Medium.e2d60bc4.ttf": "/static/media/Montserrat-Medium.e2d60bc4.ttf",
+    "static/media/Montserrat-Regular.3cd78665.ttf": "/static/media/Montserrat-Regular.3cd78665.ttf",
+    "static/media/Montserrat-SemiBold.fa8441f3.ttf": "/static/media/Montserrat-SemiBold.fa8441f3.ttf",
+    "static/media/add.b03e3495.svg": "/static/media/add.b03e3495.svg",
+    "static/media/car.82e689ee.svg": "/static/media/car.82e689ee.svg",
+    "static/media/close.07d98d42.svg": "/static/media/close.07d98d42.svg",
+    "static/media/fees.703e9e8b.svg": "/static/media/fees.703e9e8b.svg",
+    "static/media/food.2c5f0456.svg": "/static/media/food.2c5f0456.svg",
+    "static/media/home.205e5c86.svg": "/static/media/home.205e5c86.svg",
+    "static/media/log-out.2612ff68.svg": "/static/media/log-out.2612ff68.svg",
+    "static/media/logo.5dc1477d.svg": "/static/media/logo.5dc1477d.svg",
+    "static/media/person.78b64d9f.svg": "/static/media/person.78b64d9f.svg",
+    "static/media/plan.ca7b217a.svg": "/static/media/plan.ca7b217a.svg",
+    "static/media/previous.c7597fb1.svg": "/static/media/previous.c7597fb1.svg",
+    "static/media/shoppingBag.d6665971.svg": "/static/media/shoppingBag.d6665971.svg",
+    "static/media/square.d725d725.svg": "/static/media/square.d725d725.svg",
+    "static/media/stats.b3c43989.svg": "/static/media/stats.b3c43989.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.a6ba9af0.js",
+    "static/js/2.2061e98e.chunk.js",
+    "static/js/main.80671bc9.chunk.js"
+  ]
+}
