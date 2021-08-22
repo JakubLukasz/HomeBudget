@@ -27,10 +27,7 @@ const App = () => (
                 <Route path="/login" component={Login} />
               </Switch>
               <Switch>
-                <PrivateRoute
-                  path="/reset-password"
-                  component={ResetPassword}
-                />
+                <Route path="/reset-password" component={ResetPassword} />
               </Switch>
             </BrowserRouter>
           </SetupTemplate>

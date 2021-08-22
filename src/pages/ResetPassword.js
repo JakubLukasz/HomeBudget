@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useRef, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { Link } from "react-router-dom";
-import FormError from "../components/FormError";
+import AuthError from "../components/AuthError";
 
 const Container = styled.section`
   width: 100vw;
@@ -116,7 +116,7 @@ const ResetPassword = () => {
         <Heading>Reset Password</Heading>
         <FormContainer>
           <ResetForm onSubmit={submitFormHandler}>
-            {error && <FormError message={error} />}
+            {error && <AuthError message={error} />}
             {message && <MessageBox>{message}</MessageBox>}
             <InputLabel htmlFor="email">E-MAIL</InputLabel>
             <InputField ref={emailRef} type="email" id="email" required />

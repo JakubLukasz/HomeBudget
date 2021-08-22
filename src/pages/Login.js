@@ -2,11 +2,12 @@ import styled from "styled-components";
 import { useRef, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { Link, useHistory } from "react-router-dom";
-import ErrorBox from "../components/ErrorBox";
+import AuthError from "../components/AuthError";
+import { devices } from "../assets/devices";
 
 const Container = styled.section`
   width: 100vw;
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -25,6 +26,14 @@ const LoginForm = styled.form`
   width: 100%;
   max-width: 700px;
   margin-bottom: 70px;
+
+  @media ${devices.tablet} {
+    min-width: 300px;
+  }
+
+  @media ${devices.tabletVer} {
+    min-width: 300px;
+  }
 `;
 
 const InputLabel = styled.label`
@@ -109,31 +118,28 @@ const Login = () => {
   };
 
   return (
-    <>
-      <Container>
-        <Heading>Log in</Heading>
-        <FormContainer>
-          <LoginForm onSubmit={submitFormHandler}>
-            {error && <ErrorBox message={error} />}
-            <InputLabel htmlFor="email">E-MAIL</InputLabel>
-            <InputField ref={emailRef} type="email" id="email" required />
-            <InputLabel htmlFor="password">PASSWORD</InputLabel>
-            <InputField
-              ref={passwordRef}
-              type="password"
-              id="password"
-              required
-            />
-            <FormLink to="/reset-password">Forgot password?</FormLink>
-            <SubmitButton disabled={isLoading}>LOG IN</SubmitButton>
-            <LinkText>
-              Want to create an account?{" "}
-              <FormLink to="/signup">Sign up</FormLink>
-            </LinkText>
-          </LoginForm>
-        </FormContainer>
-      </Container>
-    </>
+    <Container>
+      <Heading>Log in</Heading>
+      <FormContainer>
+        <LoginForm onSubmit={submitFormHandler}>
+          {error && <AuthError message={error} />}
+          <InputLabel htmlFor="email">E-MAIL</InputLabel>
+          <InputField ref={emailRef} type="email" id="email" required />
+          <InputLabel htmlFor="password">PASSWORD</InputLabel>
+          <InputField
+            ref={passwordRef}
+            type="password"
+            id="password"
+            required
+          />
+          <FormLink to="/reset-password">Forgot password?</FormLink>
+          <SubmitButton disabled={isLoading}>LOG IN</SubmitButton>
+          <LinkText>
+            Want to create an account? <FormLink to="/signup">Sign up</FormLink>
+          </LinkText>
+        </LoginForm>
+      </FormContainer>
+    </Container>
   );
 };
 

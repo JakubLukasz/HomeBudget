@@ -5,8 +5,8 @@ import closeIcon from "../assets/images/close.svg";
 import SelectCategoryPopup from "./SelectCategoryPopup";
 import Icon from "./Icon";
 import { devices } from "../assets/devices";
-import FormError from "./FormError";
 import { useFirestore } from "../contexts/FirestoreContext";
+import ErrorBox from "./ErrorBox";
 
 const Popup = styled.div`
   width: 94vw;
@@ -240,7 +240,7 @@ const CategoryView = styled.p`
 const AddBillPopup = () => {
   const [isSpent, setIsSpent] = useState(true);
   const [isSelectCategoryOpen, setIsSelectCategoryOpen] = useState(false);
-  const [isFormCorect, setIsFormCorect] = useState(true);
+  const [isErrorBoxOpen, setIsErrorBoxOpen] = useState(false);
   const [currency, setCurrency] = useState("");
   const { getCurrency } = useFirestore();
   const { setIsPopupOpen, addNewBill, selectedCategory, setSelectedCategory } =
@@ -282,7 +282,7 @@ const AddBillPopup = () => {
       setSelectedCategory("");
       setIsPopupOpen((snapshot) => !snapshot);
     } else {
-      setIsFormCorect(false);
+      setIsErrorBoxOpen(true);
     }
   };
 
@@ -304,12 +304,12 @@ const AddBillPopup = () => {
             setIsSelectCategoryOpen={setIsSelectCategoryOpen}
           />
         )}
-        {!isFormCorect && <FormError setIsFormCorect={setIsFormCorect} />}
         <CloseButton onClick={closePopupHandler}>
           <Icon src={closeIcon} />
         </CloseButton>
         <Heading>BILL</Heading>
         <PopupForm onSubmit={addBillHandler}>
+          {isErrorBoxOpen && <ErrorBox setIsErrorBoxOpen={setIsErrorBoxOpen} />}
           <InputLabel htmlFor="title">TITLE</InputLabel>
           <InputField
             ref={titleRef}
@@ -336,6 +336,7 @@ const AddBillPopup = () => {
               ref={amountRef}
               type="number"
               name="amount"
+              step="0.01"
             ></InputField>
             <Currency>{currency}</Currency>
           </MoneyInputContainer>

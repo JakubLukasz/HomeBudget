@@ -5,7 +5,7 @@ const Container = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 20px 0 30px;
+  margin: 10px 0;
   padding: 0px 5px;
   background-color: ${({ theme }) => theme.color.lightSecondary};
   padding: 15px 20px;

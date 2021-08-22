@@ -4,6 +4,7 @@ import AddExpensesPopup from "./AddExpensesPopup";
 import { devices } from "../../assets/devices";
 import Expense from "./Expense";
 import { useFirestore } from "../../contexts/FirestoreContext";
+import { useLoading } from "../../contexts/LoadingContext";
 
 const Container = styled.main`
   background-color: ${({ theme }) => theme.color.white};
@@ -58,6 +59,7 @@ const FixedExpenses = () => {
   const [isExpensesPopupOpen, setIsExpensesPopupOpen] = useState(false);
   const { getExpenses } = useFirestore();
   const [expenses, setExpenses] = useState([]);
+  const { setIsLoading } = useLoading();
 
   const init = async () => {
     const docs = await getExpenses();
@@ -66,9 +68,11 @@ const FixedExpenses = () => {
       tmp.push(doc.data());
     });
     setExpenses(tmp);
+    setIsLoading(false);
   };
 
   useEffect(() => {
+    setIsLoading(true);
     init();
   }, []);
 

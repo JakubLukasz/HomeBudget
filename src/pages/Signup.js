@@ -3,20 +3,38 @@ import { useRef, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useFirestore } from "../contexts/FirestoreContext";
 import { Link, useHistory } from "react-router-dom";
-import FormError from "../components/FormError";
+import AuthError from "../components/AuthError";
+import { devices } from "../assets/devices";
+
 const Container = styled.section`
   width: 100vw;
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
+`;
+
+const FormContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 50px;
 `;
 
 const SignupForm = styled.form`
   font-family: ${({ theme }) => theme.font.family.montserrat};
   width: 100%;
   max-width: 700px;
+  margin-bottom: 70px;
+
+  @media ${devices.tablet} {
+    min-width: 300px;
+  }
+
+  @media ${devices.tabletVer} {
+    min-width: 300px;
+  }
 `;
 
 const InputLabel = styled.label`
@@ -24,7 +42,6 @@ const InputLabel = styled.label`
   font-family: ${({ theme }) => theme.font.family.montserrat};
   color: ${({ theme }) => theme.color.secondary};
   font-size: 1rem;
-  font-weight: 700;
   margin: 3px 0;
 `;
 
@@ -46,14 +63,7 @@ const Heading = styled.h1`
   font-weight: 800;
   text-align: center;
   font-size: 4rem;
-  margin: 80px 0;
-`;
-
-const FormContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 50px;
+  margin-bottom: 70px;
 `;
 
 const SubmitButton = styled.button`
@@ -82,17 +92,18 @@ const LinkText = styled.span`
 const FormLink = styled(Link)`
   color: ${({ theme }) => theme.color.primary};
   font-weight: 900;
+  font-size: 1.2rem;
   text-decoration: none;
 `;
 
 const Signup = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
   const { signup } = useAuth();
   const { createUserData } = useFirestore();
   const emailRef = useRef();
   const passwordRef = useRef();
   const confirmPasswordRef = useRef();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
   const history = useHistory();
 
   const submitFormHandler = async (e) => {
@@ -121,7 +132,7 @@ const Signup = () => {
       <Heading>Sign up</Heading>
       <FormContainer>
         <SignupForm onSubmit={submitFormHandler}>
-          {error && <FormError message={error} />}
+          {error && <AuthError message={error} />}
           <InputLabel htmlFor="email">E-MAIL</InputLabel>
           <InputField ref={emailRef} type="email" id="email" required />
           <InputLabel htmlFor="password">PASSWORD</InputLabel>

@@ -15,7 +15,9 @@ export const AuthContextProvider = ({ children }) => {
   };
 
   const login = (email, password) => {
-    return auth.signInWithEmailAndPassword(email, password);
+    return auth.setPersistence("local").then(() => {
+      return auth.signInWithEmailAndPassword(email, password);
+    });
   };
 
   const logout = () => auth.signOut();

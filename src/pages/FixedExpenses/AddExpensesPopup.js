@@ -4,7 +4,7 @@ import closeIcon from "../../assets/images/close.svg";
 import Icon from "../../components/Icon";
 import { useEffect, useRef, useState } from "react";
 import { useAddBill } from "../../contexts/AddBillContext";
-import FormError from "../../components/FormError";
+import ErrorBox from "../../components/ErrorBox";
 import { useFirestore } from "../../contexts/FirestoreContext";
 
 const Popup = styled.div`
@@ -184,10 +184,10 @@ const AddExpensesPopup = ({ setIsExpensesPopupOpen }) => {
     "December",
   ];
   const [checkedMonths, setCheckedMonths] = useState(
-    new Array(months.length).fill(false)
+    new Array(months.length).fill(true)
   );
   const [isSpent, setIsSpent] = useState(true);
-  const [isFormCorect, setIsFormCorect] = useState(true);
+  const [isErrorBoxOpen, setIsErrorBoxOpen] = useState(false);
   const [currency, setCurrency] = useState("");
 
   const { addNewExpense } = useAddBill();
@@ -241,18 +241,18 @@ const AddExpensesPopup = ({ setIsExpensesPopupOpen }) => {
       });
       closePopupHandler();
     } else {
-      setIsFormCorect(false);
+      setIsErrorBoxOpen(true);
     }
   };
 
   return (
     <Popup>
-      {!isFormCorect && <FormError setIsFormCorect={setIsFormCorect} />}
       <Heading>Add Expenses</Heading>
       <CloseButton onClick={closePopupHandler}>
         <Icon src={closeIcon} />
       </CloseButton>
       <PopupForm onSubmit={AddExpense}>
+        {isErrorBoxOpen && <ErrorBox setIsErrorBoxOpen={setIsErrorBoxOpen} />}
         <InputLabel htmlFor="title">TITLE</InputLabel>
         <InputField
           ref={titleRef}
@@ -266,6 +266,7 @@ const AddExpensesPopup = ({ setIsExpensesPopupOpen }) => {
           type="number"
           id="amount"
           name="amount"
+          step="0.01"
         ></InputField>
         <InputLabel>DAY OF COLLECTION ( 1 - 28 )</InputLabel>
         <InputField ref={dayRef} type="number" id="day" name="day"></InputField>

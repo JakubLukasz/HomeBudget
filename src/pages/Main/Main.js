@@ -74,11 +74,13 @@ const Main = () => {
     transactionsListener,
     userListener,
     getExpenses,
+    isConfigured,
   } = useFirestore();
 
   const fillUser = async () => {
     const data = await getUserData();
     setTotal(data);
+    setIsLoading(false);
   };
 
   const handleExpense = ({ amount, months, isSpent, dayOfCollection }) => {
@@ -118,9 +120,13 @@ const Main = () => {
   }, []);
 
   useEffect(() => {
+    setIsLoading(true);
     checkIsUserConfigured();
-    fillUser();
   }, []);
+
+  useEffect(() => {
+    if (isConfigured) fillUser();
+  }, [isConfigured]);
 
   useEffect(() => {
     checkExpenses();
