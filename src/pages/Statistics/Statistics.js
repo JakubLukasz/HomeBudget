@@ -69,8 +69,8 @@ const DoughnutGraph = styled(Doughnut)`
 const Statistics = () => {
   const { getTransactions } = useFirestore();
   const [transactions, setTransactions] = useState([]);
-  const [earnedData, setEarnedData] = useState();
-  const [spentData, setSpentData] = useState();
+  const [earnedData, setEarnedData] = useState({});
+  const [spentData, setSpentData] = useState({});
 
   const generateRandomColor = () => {
     let randomColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
@@ -78,6 +78,8 @@ const Statistics = () => {
   };
 
   const colors = [
+    "#011627",
+    "#2a3f63",
     "#58A9CC",
     "#e87a13",
     "#66e028",
@@ -88,7 +90,7 @@ const Statistics = () => {
     "#21de6a",
   ].concat(generateRandomColor);
 
-  const cos = async () => {
+  const loadTransactions = async () => {
     const docs = await getTransactions();
     let tmp = [];
     docs.forEach((doc) => {
@@ -97,42 +99,60 @@ const Statistics = () => {
     setTransactions(tmp);
   };
 
+  const groupArrayByCategory = (array) => {
+    const result = [];
+    array.reduce(function (res, value) {
+      if (!res[value.categoryTitle]) {
+        res[value.categoryTitle] = {
+          categoryTitle: value.categoryTitle,
+          amount: 0,
+        };
+        result.push(res[value.categoryTitle]);
+      }
+      res[value.categoryTitle].amount += value.amount;
+      return res;
+    }, {});
+
+    return result;
+  };
+
   useEffect(() => {
-    let earnedTransactions = transactions.filter(
-      ({ isSpent }) => isSpent !== true
-    );
-    let spentTransactions = transactions.filter(
-      ({ isSpent }) => isSpent === true
-    );
-    let spentLabels = spentTransactions.map((data) => data.title);
-    let earnedLabels = earnedTransactions.map((data) => data.title);
-    let spentDataset = spentTransactions.map((data) => data.amount);
-    let earnedDataset = earnedTransactions.map((data) => data.amount);
-    setEarnedData({
-      labels: earnedLabels,
+    loadTransactions();
+  }, []);
+
+  useEffect(() => {
+    const earnedTransactions = [];
+    const spentTransactions = [];
+    transactions.forEach(({ isSpent, categoryTitle, amount }) => {
+      if (isSpent) {
+        spentTransactions.push({ categoryTitle, amount });
+      } else {
+        earnedTransactions.push({ categoryTitle, amount });
+      }
+    });
+    const spentObject = groupArrayByCategory(spentTransactions);
+    const earnedObject = groupArrayByCategory(earnedTransactions);
+    setSpentData({
+      labels: spentObject.map(({ categoryTitle }) => categoryTitle),
       datasets: [
         {
-          data: earnedDataset,
+          data: spentObject.map(({ amount }) => amount),
           backgroundColor: colors,
           hoverOffset: 4,
         },
       ],
     });
-    setSpentData({
-      labels: spentLabels,
+    setEarnedData({
+      labels: earnedObject.map(({ categoryTitle }) => categoryTitle),
       datasets: [
         {
-          data: spentDataset,
+          data: earnedObject.map(({ amount }) => amount),
           backgroundColor: colors,
           hoverOffset: 4,
         },
       ],
     });
   }, [transactions]);
-
-  useEffect(() => {
-    cos();
-  }, []);
 
   return (
     <Container>

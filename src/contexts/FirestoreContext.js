@@ -102,6 +102,14 @@ export const FirestoreContextProvider = ({ children }) => {
     setIsConfigured(isConfigured);
   };
 
+  const executePayday = (value, todaysPayment) => {
+    const userRef = db.collection("users").doc(currentUser.uid);
+    userRef.update({
+      moneyLeft: value,
+      lastPayday: todaysPayment,
+    });
+  };
+
   const ctx = {
     createUserData,
     isConfigured,
@@ -115,6 +123,7 @@ export const FirestoreContextProvider = ({ children }) => {
     getCurrency,
     getTransactions,
     getExpenses,
+    executePayday,
   };
 
   return (

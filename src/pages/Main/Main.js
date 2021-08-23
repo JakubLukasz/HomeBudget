@@ -75,12 +75,21 @@ const Main = () => {
     userListener,
     getExpenses,
     isConfigured,
+    executePayday,
   } = useFirestore();
 
   const fillUser = async () => {
     const data = await getUserData();
     setTotal(data);
     setIsLoading(false);
+  };
+
+  const getCurrentDate = () => {
+    const today = new Date();
+    const currentDay = String(today.getDate()).padStart(2, "0");
+    const currentMonth = String(today.getMonth() + 1).padStart(2, "0");
+    const currentYear = String(today.getFullYear());
+    return { currentDay, currentMonth, currentYear };
   };
 
   const handleExpense = ({ amount, months, isSpent, dayOfCollection }) => {
@@ -90,11 +99,8 @@ const Main = () => {
         else return index + 1;
       }
     });
-    const cleanMonths = tmp.filter((element) => element !== undefined);
-    const today = new Date();
-    const currentDay = String(today.getDate()).padStart(2, "0");
     const expenseDay = String(dayOfCollection);
-    const currentMonth = String(today.getMonth() + 1).padStart(2, "0");
+    const cleanMonths = tmp.filter((element) => element !== undefined);
     // not finished
   };
 
@@ -105,6 +111,15 @@ const Main = () => {
       tmp.push(doc.data());
     });
     tmp.forEach((expense) => handleExpense(expense));
+  };
+
+  const initPayday = async () => {
+    const { lastPayday, earnings, moneyLeft, payday } = await getUserData();
+    const { currentDay, currentMonth, currentYear } = getCurrentDate();
+    const todaysPayment = `${currentMonth}-${currentYear}`;
+    if (currentDay >= payday && lastPayday !== todaysPayment) {
+      executePayday(moneyLeft + earnings, todaysPayment);
+    }
   };
 
   useEffect(() => {
@@ -127,6 +142,10 @@ const Main = () => {
   useEffect(() => {
     if (isConfigured) fillUser();
   }, [isConfigured]);
+
+  useEffect(() => {
+    initPayday();
+  }, []);
 
   useEffect(() => {
     checkExpenses();
