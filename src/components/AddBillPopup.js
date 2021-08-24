@@ -7,6 +7,7 @@ import Icon from "./Icon";
 import { devices } from "../assets/devices";
 import { useFirestore } from "../contexts/FirestoreContext";
 import ErrorBox from "./ErrorBox";
+import { uniqueKey } from "../helpers/uniqueKey";
 
 const Popup = styled.div`
   width: 94vw;
@@ -242,13 +243,34 @@ const AddBillPopup = () => {
   const [isSelectCategoryOpen, setIsSelectCategoryOpen] = useState(false);
   const [isErrorBoxOpen, setIsErrorBoxOpen] = useState(false);
   const [currency, setCurrency] = useState("");
-  const { getCurrency } = useFirestore();
+  const [randomId, setRandomId] = useState(null);
+  const { getCurrency, getTransactions } = useFirestore();
   const { setIsPopupOpen, addNewBill, selectedCategory, setSelectedCategory } =
     useAddBill();
   const titleRef = useRef();
   const categoryRef = useRef();
   const dateRef = useRef();
   const amountRef = useRef();
+
+  const checkId = (transactions) => {
+    const randomId = uniqueKey();
+    transactions.forEach(({ id }) => {
+      if (id === randomId) {
+        return checkId(transactions);
+      }
+    });
+    return randomId;
+  };
+
+  const generateKey = async () => {
+    const transactions = await getTransactions();
+    const generatedId = checkId(transactions);
+    setRandomId(generatedId);
+  };
+
+  useEffect(() => {
+    generateKey();
+  }, []);
 
   useEffect(() => {
     currencyHandler();
@@ -268,6 +290,7 @@ const AddBillPopup = () => {
       amountRef.current.value !== ""
     ) {
       addNewBill({
+        id: randomId,
         title: titleRef.current.value,
         categoryTitle: categoryRef.current.innerText,
         categorySrc: selectedCategory.src,

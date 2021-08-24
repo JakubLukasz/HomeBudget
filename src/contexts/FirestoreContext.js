@@ -27,62 +27,26 @@ export const FirestoreContextProvider = ({ children }) => {
     userRef.update(setupData);
   };
 
-  const transactionsListener = () => {
-    const transactionsRef = db
-      .collection("users")
-      .doc(currentUser.uid)
-      .collection("transactions");
-    const tmp = [];
-    const unsubscribe = transactionsRef.onSnapshot((snapshot) => {
-      if (snapshot.size) {
-        snapshot.forEach((doc) => tmp.push(doc.data()));
-        tmp.sort((a, b) => {
-          return new Date(b.date) - new Date(a.date);
-        });
-      }
-    });
-    return { unsubscribe, tmp };
-  };
-
-  const expensesListener = () => {
-    const expensesRef = db
-      .collection("users")
-      .doc(currentUser.uid)
-      .collection("expenses");
-    const tmp = [];
-    const unsubscribe = expensesRef.onSnapshot((snapshot) => {
-      if (snapshot.size) {
-        snapshot.forEach((doc) => tmp.push(doc.data()));
-      }
-    });
-    return { unsubscribe, tmp };
-  };
-
-  const userListener = () => {
-    const userRef = db.collection("users").doc(currentUser.uid);
-    let data;
-    const unsubscribe = userRef.onSnapshot((doc) => {
-      data = doc.data();
-    });
-    return { unsubscribe, data };
-  };
-
   const getExpenses = async () => {
+    const tmp = [];
     const expensesRef = db
       .collection("users")
       .doc(currentUser.uid)
       .collection("expenses");
     const docs = await expensesRef.get();
-    return docs;
+    docs.forEach((doc) => tmp.push(doc.data()));
+    return tmp;
   };
 
   const getTransactions = async () => {
+    const tmp = [];
     const transactionsRef = db
       .collection("users")
       .doc(currentUser.uid)
       .collection("transactions");
     const docs = await transactionsRef.get();
-    return docs;
+    docs.forEach((doc) => tmp.push(doc.data()));
+    return tmp;
   };
 
   const getUserData = async () => {
@@ -117,9 +81,6 @@ export const FirestoreContextProvider = ({ children }) => {
     setupUserData,
     checkIsUserConfigured,
     getUserData,
-    transactionsListener,
-    userListener,
-    expensesListener,
     getCurrency,
     getTransactions,
     getExpenses,

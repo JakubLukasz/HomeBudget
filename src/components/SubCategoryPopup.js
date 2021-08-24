@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { devices } from "../assets/devices";
-import { useSate } from "react";
 import Icon from "./Icon";
 import previousIcon from "../assets/images/previous.svg";
 import { useAddBill } from "../contexts/AddBillContext";

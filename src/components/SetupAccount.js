@@ -103,7 +103,7 @@ const SetupAccount = () => {
       await setupUserData({
         firstname: firstnameRef.current.value,
         earnings: parseFloat(earningsRef.current.value),
-        moneyLeft: parseFloat(earningsRef.current.value),
+        moneyLeft: 0,
         payday: dateRef.current.value,
         currency: currencyRef.current.value,
         isConfigured: true,

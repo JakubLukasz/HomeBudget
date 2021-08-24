@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { devices } from "../../assets/devices";
 import { useFirestore } from "../../contexts/FirestoreContext";
 import { useLoading } from "../../contexts/LoadingContext";
+import { db } from "../../services/firebase";
+import { useAuth } from "../../contexts/AuthContext";
 
 const Container = styled.main`
   background-color: ${({ theme }) => theme.color.lightPrimary};
@@ -71,12 +73,12 @@ const Main = () => {
   const {
     checkIsUserConfigured,
     getUserData,
-    transactionsListener,
     userListener,
     getExpenses,
     isConfigured,
     executePayday,
   } = useFirestore();
+  const { currentUser } = useAuth();
 
   const fillUser = async () => {
     const data = await getUserData();
@@ -105,12 +107,8 @@ const Main = () => {
   };
 
   const checkExpenses = async () => {
-    const docs = await getExpenses();
-    let tmp = [];
-    docs.forEach((doc) => {
-      tmp.push(doc.data());
-    });
-    tmp.forEach((expense) => handleExpense(expense));
+    const respExpenses = await getExpenses();
+    respExpenses.forEach((expense) => handleExpense(expense));
   };
 
   const initPayday = async () => {
@@ -123,14 +121,24 @@ const Main = () => {
   };
 
   useEffect(() => {
-    const { unsubscribe, tmp } = transactionsListener();
-    setTransactions(tmp);
+    const transactionsRef = db
+      .collection("users")
+      .doc(currentUser.uid)
+      .collection("transactions");
+    const unsubscribe = transactionsRef.onSnapshot((snapshot) => {
+      const tmp = [];
+      if (snapshot.size) {
+        snapshot.forEach((doc) => tmp.push(doc.data()));
+        tmp.sort((a, b) => new Date(b.date) - new Date(a.date));
+        setTransactions(tmp);
+      }
+    });
     return () => unsubscribe();
   }, []);
 
   useEffect(() => {
-    const { unsubscribe, data } = userListener();
-    setTotal(data);
+    const userRef = db.collection("users").doc(currentUser.uid);
+    const unsubscribe = userRef.onSnapshot((doc) => setTotal(doc.data()));
     return () => unsubscribe();
   }, []);
 

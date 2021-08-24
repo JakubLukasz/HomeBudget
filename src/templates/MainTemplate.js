@@ -1,6 +1,5 @@
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Statistics from "../pages/Statistics/Statistics";
-import MyProfile from "../pages/MyProfile";
 import Main from "../pages/Main/Main";
 import AppNav from "../components/Nav";
 import { useAddBill } from "../contexts/AddBillContext";
@@ -29,9 +28,6 @@ const MainTemplate = () => {
         </Switch>
         <Switch>
           <Route path="/statistics" component={Statistics} />
-        </Switch>
-        <Switch>
-          <Route path="/myprofile" component={MyProfile} />
         </Switch>
         <AppNav />
       </BrowserRouter>

@@ -9,11 +9,7 @@ const TransactionsWrapper = ({ transactions, total }) => {
   return (
     <Container>
       {transactions.map((transactionInfo) => (
-        <Transaction
-          {...total}
-          key={`${transactionInfo.title} ${transactionInfo.date} ${transactionInfo.amount} ${transactionInfo.categoryTitle}`}
-          {...transactionInfo}
-        />
+        <Transaction {...total} key={transactionInfo.id} {...transactionInfo} />
       ))}
     </Container>
   );

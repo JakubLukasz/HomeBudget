@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { useAddBill } from "../../contexts/AddBillContext";
 import ErrorBox from "../../components/ErrorBox";
 import { useFirestore } from "../../contexts/FirestoreContext";
+import { uniqueKey } from "../../helpers/uniqueKey";
 
 const Popup = styled.div`
   width: 94vw;
@@ -189,13 +190,34 @@ const AddExpensesPopup = ({ setIsExpensesPopupOpen }) => {
   const [isSpent, setIsSpent] = useState(true);
   const [isErrorBoxOpen, setIsErrorBoxOpen] = useState(false);
   const [currency, setCurrency] = useState("");
+  const [randomId, setRandomId] = useState(null);
 
   const { addNewExpense } = useAddBill();
-  const { getUserData } = useFirestore();
+  const { getUserData, getExpenses } = useFirestore();
 
   const titleRef = useRef();
   const amountRef = useRef();
   const dayRef = useRef();
+
+  const checkId = (expenses) => {
+    const randomId = uniqueKey();
+    expenses.forEach(({ id }) => {
+      if (id === randomId) {
+        return checkId(expenses);
+      }
+    });
+    return randomId;
+  };
+
+  const generateKey = async () => {
+    const expenses = await getExpenses();
+    const generatedId = checkId(expenses);
+    setRandomId(generatedId);
+  };
+
+  useEffect(() => {
+    generateKey();
+  }, []);
 
   useEffect(() => {
     getCurrency();
@@ -232,6 +254,7 @@ const AddExpensesPopup = ({ setIsExpensesPopupOpen }) => {
       amountRef.current.value !== ""
     ) {
       addNewExpense({
+        id: randomId,
         title: titleRef.current.value,
         months: checkedMonths,
         dayOfCollection: parseFloat(dayRef.current.value),

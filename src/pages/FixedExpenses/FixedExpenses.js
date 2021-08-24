@@ -5,6 +5,8 @@ import { devices } from "../../assets/devices";
 import Expense from "./Expense";
 import { useFirestore } from "../../contexts/FirestoreContext";
 import { useLoading } from "../../contexts/LoadingContext";
+import { db } from "../../services/firebase";
+import { useAuth } from "../../contexts/AuthContext";
 
 const Container = styled.main`
   background-color: ${({ theme }) => theme.color.white};
@@ -60,20 +62,32 @@ const FixedExpenses = () => {
   const { getExpenses } = useFirestore();
   const [expenses, setExpenses] = useState([]);
   const { setIsLoading } = useLoading();
+  const { currentUser } = useAuth();
 
   const init = async () => {
-    const docs = await getExpenses();
-    let tmp = [];
-    docs.forEach((doc) => {
-      tmp.push(doc.data());
-    });
-    setExpenses(tmp);
+    const respExpenses = await getExpenses();
+    setExpenses(respExpenses);
     setIsLoading(false);
   };
 
   useEffect(() => {
     setIsLoading(true);
     init();
+  }, []);
+
+  useEffect(() => {
+    const expensesRef = db
+      .collection("users")
+      .doc(currentUser.uid)
+      .collection("expenses");
+    const unsubscribe = expensesRef.onSnapshot((snapshot) => {
+      const tmp = [];
+      if (snapshot.size) {
+        snapshot.forEach((doc) => tmp.push(doc.data()));
+        setExpenses(tmp);
+      }
+    });
+    return () => unsubscribe();
   }, []);
 
   const addNewFixedExpenseHandler = () => setIsExpensesPopupOpen(true);
@@ -86,7 +100,7 @@ const FixedExpenses = () => {
       <Title>FIXED EXPENSES</Title>
       <Expenses>
         {expenses.map((expenseVal) => (
-          <Expense key={Math.random()} {...expenseVal} />
+          <Expense key={expenseVal.id} {...expenseVal} />
         ))}
       </Expenses>
       <AddNewFixedExpense onClick={addNewFixedExpenseHandler}>
