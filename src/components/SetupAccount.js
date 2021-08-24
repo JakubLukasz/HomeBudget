@@ -107,7 +107,7 @@ const SetupAccount = () => {
         payday: dateRef.current.value,
         currency: currencyRef.current.value,
         isConfigured: true,
-        lastPayment: null,
+        lastPayday: null,
       });
       setIsConfigured(true);
     } catch {
