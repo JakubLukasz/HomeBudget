@@ -2,7 +2,7 @@ import styled from "styled-components";
 import Card from "../../components/Card";
 import { useEffect, useState } from "react";
 import { devices } from "../../assets/devices";
-import { Doughnut } from "react-chartjs-2";
+import { Doughnut, Line } from "react-chartjs-2";
 import { useFirestore } from "../../contexts/FirestoreContext";
 
 const Container = styled.main`
@@ -69,8 +69,8 @@ const DoughnutGraph = styled(Doughnut)`
 const Statistics = () => {
   const { getTransactions } = useFirestore();
   const [transactions, setTransactions] = useState([]);
-  const [earnedData, setEarnedData] = useState({});
-  const [spentData, setSpentData] = useState({});
+  const [earnedCategoryData, setEarnedCategoryData] = useState({});
+  const [spentCategoryData, setSpentCategoryData] = useState({});
 
   const generateRandomColor = () => {
     let randomColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
@@ -92,16 +92,12 @@ const Statistics = () => {
 
   const loadTransactions = async () => {
     const docs = await getTransactions();
-    let tmp = [];
-    docs.forEach((doc) => {
-      tmp.push(doc.data());
-    });
-    setTransactions(tmp);
+    setTransactions(docs);
   };
 
   const groupArrayByCategory = (array) => {
     const result = [];
-    array.reduce(function (res, value) {
+    array.reduce((res, value) => {
       if (!res[value.categoryTitle]) {
         res[value.categoryTitle] = {
           categoryTitle: value.categoryTitle,
@@ -130,23 +126,23 @@ const Statistics = () => {
         earnedTransactions.push({ categoryTitle, amount });
       }
     });
-    const spentObject = groupArrayByCategory(spentTransactions);
-    const earnedObject = groupArrayByCategory(earnedTransactions);
-    setSpentData({
-      labels: spentObject.map(({ categoryTitle }) => categoryTitle),
+    const spentCategoryObject = groupArrayByCategory(spentTransactions);
+    const earnedCategoryObject = groupArrayByCategory(earnedTransactions);
+    setSpentCategoryData({
+      labels: spentCategoryObject.map(({ categoryTitle }) => categoryTitle),
       datasets: [
         {
-          data: spentObject.map(({ amount }) => amount),
+          data: spentCategoryObject.map(({ amount }) => amount),
           backgroundColor: colors,
           hoverOffset: 4,
         },
       ],
     });
-    setEarnedData({
-      labels: earnedObject.map(({ categoryTitle }) => categoryTitle),
+    setEarnedCategoryData({
+      labels: earnedCategoryObject.map(({ categoryTitle }) => categoryTitle),
       datasets: [
         {
-          data: earnedObject.map(({ amount }) => amount),
+          data: earnedCategoryObject.map(({ amount }) => amount),
           backgroundColor: colors,
           hoverOffset: 4,
         },
@@ -157,10 +153,10 @@ const Statistics = () => {
   return (
     <Container>
       <StyledCard title="SPENT GRAPH">
-        {spentData && <DoughnutGraph data={spentData} />}
+        {spentCategoryData && <DoughnutGraph data={spentCategoryData} />}
       </StyledCard>
       <StyledCard title="EARNED GRAPH">
-        {earnedData && <DoughnutGraph data={earnedData} />}
+        {earnedCategoryData && <DoughnutGraph data={earnedCategoryData} />}
       </StyledCard>
     </Container>
   );
