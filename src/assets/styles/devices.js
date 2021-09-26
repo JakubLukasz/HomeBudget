@@ -2,7 +2,7 @@ export const devices = {
   mobileS: `(min-width: 320px)`,
   mobileM: `(min-width: 375px)`,
   mobileL: `(min-width: 425px)`,
-  tablet: `(min-width: 768px) and (orientation: landscape)`,
+  tablet: `(min-width: 768px)`,
   tabletVer: `(min-width: 768px) and (orientation: portrait)`,
   tabletL: `(min-width: 1024px) and (orientation: landscape)`,
   tabletVerL: `(min-width: 1024px) and (orientation: portrait)`,

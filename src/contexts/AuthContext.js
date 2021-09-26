@@ -1,11 +1,8 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import { auth } from "../services/firebase";
+import React, { createContext, useEffect, useState } from 'react';
+import { auth } from '../services/firebase';
+import PropTypes from 'prop-types';
 
-const AuthContext = createContext({});
-
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
+export const AuthContext = createContext({});
 
 export const AuthContextProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState();
@@ -15,9 +12,7 @@ export const AuthContextProvider = ({ children }) => {
   };
 
   const login = (email, password) => {
-    return auth.setPersistence("local").then(() => {
-      return auth.signInWithEmailAndPassword(email, password);
-    });
+    return auth.signInWithEmailAndPassword(email, password);
   };
 
   const logout = () => auth.signOut();
@@ -26,7 +21,6 @@ export const AuthContextProvider = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => setCurrentUser(user));
-
     return () => unsubscribe();
   }, []);
 
@@ -41,4 +35,8 @@ export const AuthContextProvider = ({ children }) => {
   return (
     <AuthContext.Provider value={authCtx}>{children}</AuthContext.Provider>
   );
+};
+
+AuthContextProvider.propTypes = {
+  children: PropTypes.node,
 };

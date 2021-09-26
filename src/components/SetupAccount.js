@@ -1,15 +1,18 @@
-import styled from "styled-components";
-import { useRef } from "react";
-import { useFirestore } from "../contexts/FirestoreContext";
+import styled from 'styled-components';
+import React, { useState } from 'react';
+import { useFirestore } from '../hooks/useFirestore';
+import { devices } from '../assets/styles/devices';
+import { useForm } from 'react-hook-form';
+import Logo from './Logo';
 
-const SetupAccountContainer = styled.div`
+const Container = styled.div`
   width: 100vw;
   height: 100vh;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 9999;
-  background-color: ${({ theme }) => theme.color.white};
+  background-color: #ffffff;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -17,42 +20,48 @@ const SetupAccountContainer = styled.div`
 `;
 
 const Heading = styled.h1`
-  font-weight: 800;
+  font-weight: ${({ theme }) => theme.font.weight.regular};
   text-align: center;
-  font-size: 4rem;
-  margin: 0 0 70px 0;
+  font-size: 2rem;
+  margin: 10px 0 70px;
 `;
 
 const SetupForm = styled.form`
-  font-family: ${({ theme }) => theme.font.family.montserrat};
-  margin-bottom: 70px;
-  padding: 50px;
+  width: 100%;
+  padding: 0 40px;
+  max-width: 500px;
+
+  @media ${devices.tablet} {
+    min-width: 300px;
+  }
+
+  @media ${devices.tabletVer} {
+    min-width: 300px;
+  }
 `;
 
-const Title = styled.p`
+const Title = styled.label`
+  display: block;
   color: ${({ theme }) => theme.color.secondary};
   font-size: 1rem;
-  font-weight: 700;
-  margin: 3px 0;
+  font-weight: ${({ theme }) => theme.font.weight.semiBold};
+  margin: 23px 0 3px 0;
 `;
 
 const UserInput = styled.input`
   width: 100%;
-  font-family: ${({ theme }) => theme.font.family.montserrat};
   font-size: 1.4rem;
-  font-weight: 800;
+  font-weight: ${({ theme }) => theme.font.weight.medium};
   background: ${({ theme }) => theme.color.lightSecondary};
   border: none;
   border-radius: 7px;
   outline: none;
   padding: 10px 15px;
-  margin-bottom: 15px;
 `;
 
 const EarningsContainer = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 15px;
 `;
 
 const EarningsInput = styled(UserInput)`
@@ -67,7 +76,7 @@ const Currency = styled.select`
   border-radius: 7px;
   background-color: ${({ theme }) => theme.color.lightSecondary};
   border: none;
-  font-weight: 800;
+  font-weight: ${({ theme }) => theme.font.weight.medium};
 
   &:focus,
   &:hover {
@@ -79,72 +88,113 @@ const SubmitButton = styled.button`
   border: none;
   width: 100%;
   font-size: 1.7rem;
-  font-weight: 800;
+  font-weight: ${({ theme }) => theme.font.weight.semiBold};
   background-color: ${({ theme }) => theme.color.primary};
-  color: ${({ theme }) => theme.color.white};
+  color: #ffffff;
   border-radius: 7px;
   padding: 10px 15px;
-  margin-top: 15px;
+  margin-top: 23px;
 `;
 
 const CurrencyOption = styled.option`
   background: ${({ theme }) => theme.color.lightSecondary};
 `;
 
+const Error = styled.p`
+  font-size: 1.1rem;
+  font-weight: ${({ theme }) => theme.font.weight.medium};
+  color: #ff0033;
+  margin: 5px 0 0;
+`;
+
+const FormErrorMessage = styled.p`
+  font-size: 1.4rem;
+  font-weight: ${({ theme }) => theme.font.weight.medium};
+  color: #e04f5f;
+`;
+
 const SetupAccount = () => {
   const { setupUserData, setIsConfigured } = useFirestore();
-  const firstnameRef = useRef();
-  const earningsRef = useRef();
-  const currencyRef = useRef();
-  const dateRef = useRef();
-  const setupAccountHandler = async (e) => {
-    e.preventDefault();
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm();
+  const [formError, setFormError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const onSubmit = async ({ firstname, earnings, currency, payday }) => {
     try {
+      setFormError('');
+      setIsLoading(true);
       await setupUserData({
-        firstname: firstnameRef.current.value,
-        earnings: parseFloat(earningsRef.current.value),
+        firstname,
+        earnings: parseFloat(earnings),
         moneyLeft: 0,
-        payday: dateRef.current.value,
-        currency: currencyRef.current.value,
+        payday,
+        currency,
         isConfigured: true,
         lastPayday: null,
       });
       setIsConfigured(true);
-    } catch {
-      console.log("error");
+    } catch (error) {
+      setFormError(error.message);
     }
+    setIsLoading(false);
   };
 
   return (
-    <SetupAccountContainer>
+    <Container>
+      <Logo />
       <Heading>Setup Account</Heading>
-      <SetupForm onSubmit={setupAccountHandler}>
+      <SetupForm onSubmit={handleSubmit(onSubmit)}>
+        {formError && <FormErrorMessage>{formError}</FormErrorMessage>}
         <Title>FIRST NAME</Title>
         <UserInput
-          ref={firstnameRef}
+          {...register('firstname', { required: 'Firstname is required' })}
           type="text"
-          name="first-name"
-          required
+          name="firstname"
         ></UserInput>
+        {errors.firstname && <Error>{errors.firstname.message}</Error>}
         <Title>MONTHLY EARNINGS (NO TAXES)</Title>
         <EarningsContainer>
           <EarningsInput
-            ref={earningsRef}
-            type="number"
+            {...register('earnings', {
+              required: 'Earnings are required',
+              valueAsNumber: true,
+            })}
+            type="text"
             name="earnings"
-            required
           ></EarningsInput>
-          <Currency name="currency" ref={currencyRef}>
+          <Currency {...register('currency')} name="currency">
             <CurrencyOption value="zł">zł</CurrencyOption>
             <CurrencyOption value="€">€</CurrencyOption>
             <CurrencyOption value="$">$</CurrencyOption>
           </Currency>
         </EarningsContainer>
-        <Title htmlFor="date">PAYDAY (1-28)</Title>
-        <UserInput ref={dateRef} type="text" name="date"></UserInput>
-        <SubmitButton type="submit">DONE</SubmitButton>
+        {errors.earnings && <Error>{errors.earnings.message}</Error>}
+        <Title htmlFor="payday">PAYDAY (1-28)</Title>
+        <UserInput
+          {...register('payday', {
+            required: 'Payday is required',
+            min: {
+              value: 1,
+              message: 'You must choose a number between 1 and 28',
+            },
+            max: {
+              value: 28,
+              message: 'You must choose a number between 1 and 28',
+            },
+          })}
+          type="text"
+          name="payday"
+        ></UserInput>
+        {errors.payday && <Error>{errors.payday.message}</Error>}
+        <SubmitButton disabled={isLoading} type="submit">
+          DONE
+        </SubmitButton>
       </SetupForm>
-    </SetupAccountContainer>
+    </Container>
   );
 };
 

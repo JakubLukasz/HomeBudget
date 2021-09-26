@@ -1,46 +1,42 @@
-import styled from "styled-components";
-import { useState, useEffect } from "react";
-import AddExpensesPopup from "./AddExpensesPopup";
-import { devices } from "../../assets/devices";
-import Expense from "./Expense";
-import { useFirestore } from "../../contexts/FirestoreContext";
-import { useLoading } from "../../contexts/LoadingContext";
-import { db } from "../../services/firebase";
-import { useAuth } from "../../contexts/AuthContext";
+import styled from 'styled-components';
+import React, { useState, useEffect } from 'react';
+import AddExpensesModal from '../components/modals/AddExpensesModal';
+import { devices } from '../assets/styles/devices';
+import Expense from '../components/Expense';
+import { useFirestore } from '../hooks/useFirestore';
+import { useLoading } from '../hooks/useLoading';
+import { db } from '../services/firebase';
+import { useAuth } from '../hooks/useAuth';
 
 const Container = styled.main`
   background-color: ${({ theme }) => theme.color.white};
-  min-height: 100vh;
+  flex: 1;
+  overflow: auto;
   font-size: 1rem;
-  padding: 10px 20px 10vh;
+  padding: 10px 20px 0;
 
-  @media ${devices.laptop} {
-    margin-left: 80px;
-  }
+  /* @media ${devices.laptop} {
+    height: var(--app-height);
+  } */
 `;
 
 const Title = styled.span`
   color: ${({ theme }) => theme.color.secondary};
   padding: 10px 0;
-  font-weight: 800;
+  font-weight: ${({ theme }) => theme.font.weight.semiBold};
 `;
 
 const AddNewFixedExpense = styled.button`
-  width: 100%;
   background-color: ${({ theme }) => theme.color.primary};
   border-radius: 15px;
   display: flex;
   font-size: 1.7rem;
   color: white;
-  padding: 10px 15px;
+  padding: 20px;
   font-weight: bold;
   align-items: center;
   justify-content: center;
   margin: 10px 0;
-
-  @media ${devices.tabletVerL} {
-    max-width: 400px;
-  }
 
   @media ${devices.laptop} {
     max-width: 400px;
@@ -48,17 +44,18 @@ const AddNewFixedExpense = styled.button`
 `;
 
 const Expenses = styled.div`
-  @media ${devices.tabletVerL} {
-    max-width: 400px;
-  }
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 15px;
+  margin-top: 15px;
 
-  @media ${devices.laptop} {
-    max-width: 400px;
+  @media ${devices.tablet} {
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   }
 `;
 
 const FixedExpenses = () => {
-  const [isExpensesPopupOpen, setIsExpensesPopupOpen] = useState(false);
+  const [isExpensesModalOpen, setIsExpensesModalOpen] = useState(false);
   const { getExpenses } = useFirestore();
   const [expenses, setExpenses] = useState([]);
   const { setIsLoading } = useLoading();
@@ -77,25 +74,24 @@ const FixedExpenses = () => {
 
   useEffect(() => {
     const expensesRef = db
-      .collection("users")
+      .collection('users')
       .doc(currentUser.uid)
-      .collection("expenses");
+      .collection('expenses');
     const unsubscribe = expensesRef.onSnapshot((snapshot) => {
       const tmp = [];
-      if (snapshot.size) {
-        snapshot.forEach((doc) => tmp.push(doc.data()));
-        setExpenses(tmp);
-      }
+      console.log(snapshot.size);
+      snapshot.forEach((doc) => tmp.push(doc.data()));
+      setExpenses(tmp);
     });
     return () => unsubscribe();
   }, []);
 
-  const addNewFixedExpenseHandler = () => setIsExpensesPopupOpen(true);
+  const addNewFixedExpenseHandler = () => setIsExpensesModalOpen(true);
 
   return (
     <Container>
-      {isExpensesPopupOpen && (
-        <AddExpensesPopup setIsExpensesPopupOpen={setIsExpensesPopupOpen} />
+      {isExpensesModalOpen && (
+        <AddExpensesModal setIsExpensesModalOpen={setIsExpensesModalOpen} />
       )}
       <Title>FIXED EXPENSES</Title>
       <Expenses>

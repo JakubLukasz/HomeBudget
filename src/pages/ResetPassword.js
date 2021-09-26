@@ -1,131 +1,160 @@
-import styled from "styled-components";
-import { useRef, useState } from "react";
-import { useAuth } from "../contexts/AuthContext";
-import { Link } from "react-router-dom";
-import AuthError from "../components/AuthError";
+import styled from 'styled-components';
+import React, { useState } from 'react';
+import { useAuth } from '../hooks/useAuth';
+import { useForm } from 'react-hook-form';
+import { Link } from 'react-router-dom';
+import { devices } from '../assets/styles/devices';
+import Logo from '../components/Logo';
 
 const Container = styled.section`
-  width: 100vw;
-  min-height: 100vh;
+  height: var(--app-height);
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
 `;
 
 const ResetForm = styled.form`
-  font-family: ${({ theme }) => theme.font.family.montserrat};
   width: 100%;
-  max-width: 700px;
+  padding: 0 20px;
+  max-width: 500px;
+
+  @media ${devices.mobileM} {
+    padding: 0 40px;
+  }
+
+  @media ${devices.tablet} {
+    min-width: 300px;
+  }
 `;
 
 const InputLabel = styled.label`
   display: block;
-  font-family: ${({ theme }) => theme.font.family.montserrat};
   color: ${({ theme }) => theme.color.secondary};
   font-size: 1rem;
-  font-weight: 700;
-  margin: 3px 0;
+  font-weight: ${({ theme }) => theme.font.weight.semiBold};
+  margin: 23px 0 3px 0;
 `;
 
 const InputField = styled.input`
   width: 100%;
-  font-family: ${({ theme }) => theme.font.family.montserrat};
   font-size: 1.4rem;
-  font-weight: 800;
+  font-weight: ${({ theme }) => theme.font.weight.medium};
   background: ${({ theme }) => theme.color.lightSecondary};
   border: none;
   border-radius: 7px;
   outline: none;
   padding: 10px 15px;
-  margin-bottom: 15px;
 `;
 
 const Heading = styled.h1`
-  font-family: ${({ theme }) => theme.font.family.montserrat};
-  font-weight: 800;
+  font-weight: ${({ theme }) => theme.font.weight.regular};
   text-align: center;
-  font-size: 4rem;
-  margin: 80px 0;
-`;
+  font-size: 2rem;
+  margin: 10px 0 30px;
 
-const FormContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 50px;
+  @media ${devices.mobileM} {
+    margin: 10px 0 70px;
+  }
 `;
 
 const SubmitButton = styled.button`
-  border: none;
   width: 100%;
   font-size: 1.7rem;
-  font-weight: 800;
+  font-weight: ${({ theme }) => theme.font.weight.semiBold};
   background-color: ${({ theme }) => theme.color.primary};
-  color: ${({ theme }) => theme.color.white};
-  font-family: ${({ theme }) => theme.font.family.montserrat};
+  color: #ffffff;
   border-radius: 7px;
   padding: 10px 15px;
-  margin-top: 15px;
+  margin-top: 23px;
 `;
 
 const FormLink = styled(Link)`
   color: ${({ theme }) => theme.color.primary};
-  font-weight: 900;
-  font-size: 1.2rem;
+  font-weight: ${({ theme }) => theme.font.weight.semiBold};
+  margin-left: 5px;
   text-decoration: none;
-  width: 100%;
-  display: block;
-  text-align: center;
-  margin: 10px 0;
 `;
 
-const MessageBox = styled.span`
-  font-weight: 800;
-  width: 100%;
-  display: block;
+const LinkText = styled.p`
+  font-weight: ${({ theme }) => theme.font.weight.medium};
+  margin: 20px 0;
+  font-size: 1.2rem;
+  color: ${({ theme }) => theme.color.secondary};
   text-align: center;
-  margin: 10px 0;
+`;
+
+const Error = styled.p`
+  font-size: 1.1rem;
+  font-weight: ${({ theme }) => theme.font.weight.medium};
+  color: #ff0033;
+  margin: 5px 0 0;
+`;
+
+const FormErrorMessage = styled.p`
+  font-size: 1.4rem;
+  font-weight: ${({ theme }) => theme.font.weight.medium};
+  color: #e04f5f;
+`;
+
+const FormMessage = styled.span`
+  font-size: 1.4rem;
+  font-weight: ${({ theme }) => theme.font.weight.medium};
+  color: #32bea6;
 `;
 
 const ResetPassword = () => {
   const { resetPassword } = useAuth();
-  const emailRef = useRef();
   const [isLoading, setIsLoading] = useState(false);
-  const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
+  const [formMessage, setFormMessage] = useState('');
+  const [formError, setFormError] = useState('');
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm();
 
-  const submitFormHandler = async (e) => {
-    e.preventDefault();
-
+  const submitFormHandler = async ({ email }) => {
     try {
-      setError("");
-      setMessage("");
+      setFormError('');
+      setFormMessage('');
       setIsLoading(true);
-      await resetPassword(emailRef.current.value);
-      setMessage("Check your email");
-    } catch {
-      setError("Failed to reset password");
+      await resetPassword(email);
+      setFormMessage('Check your email');
+    } catch (error) {
+      setFormError(error.message);
     }
     setIsLoading(false);
   };
 
   return (
-    <>
-      <Container>
-        <Heading>Reset Password</Heading>
-        <FormContainer>
-          <ResetForm onSubmit={submitFormHandler}>
-            {error && <AuthError message={error} />}
-            {message && <MessageBox>{message}</MessageBox>}
-            <InputLabel htmlFor="email">E-MAIL</InputLabel>
-            <InputField ref={emailRef} type="email" id="email" required />
-            <SubmitButton disabled={isLoading}>RESET</SubmitButton>
-            <FormLink to="/login">Log In</FormLink>
-          </ResetForm>
-        </FormContainer>
-      </Container>
-    </>
+    <Container>
+      <Logo />
+      <Heading>Reset Password</Heading>
+      <ResetForm onSubmit={handleSubmit(submitFormHandler)}>
+        {formError && <FormErrorMessage>{formError}</FormErrorMessage>}
+        {formMessage && <FormMessage>{formMessage}</FormMessage>}
+        <InputLabel htmlFor="email">E-MAIL</InputLabel>
+        <InputField
+          {...register('email', {
+            required: 'Email is Required',
+            pattern: {
+              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+              message: 'Invalid email address',
+            },
+          })}
+          type="text"
+          name="email"
+        />
+        {errors.email && <Error>{errors.email.message}</Error>}
+        <SubmitButton disabled={isLoading} type="submit">
+          RESET
+        </SubmitButton>
+        <LinkText>
+          <FormLink to="/login">Log In </FormLink>with your account
+        </LinkText>
+      </ResetForm>
+    </Container>
   );
 };
 

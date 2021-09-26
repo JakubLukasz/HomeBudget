@@ -1,6 +1,7 @@
-import styled from "styled-components";
-import Icon from "./Icon";
-import MoreIcon from "../assets/images/more.svg";
+import styled from 'styled-components';
+import Icon from './Icon';
+import MoreIcon from '../assets/images/more.svg';
+import React from 'react';
 
 const OpenMoreButton = styled.button`
   border: none;

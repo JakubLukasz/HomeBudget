@@ -1,8 +1,9 @@
-import styled from "styled-components";
-import Icon from "./Icon";
-import addBillIcon from "../assets/images/add.svg";
-import { useAddBill } from "../contexts/AddBillContext";
-import { devices } from "../assets/devices";
+import React from 'react';
+import styled from 'styled-components';
+import Icon from './Icon';
+import addBillIcon from '../assets/images/add.svg';
+import { useAddBill } from '../hooks/useAddBill';
+import { devices } from '../assets/styles/devices';
 
 const AddButton = styled.button`
   padding: 10px;
@@ -24,7 +25,7 @@ const ButtonIcon = styled(Icon)`
 `;
 
 const ButtonText = styled.span`
-  font-weight: 600;
+  font-weight: ${({ theme }) => theme.font.weight.medium};
   font-size: 1rem;
   color: ${({ theme }) => theme.color.secondary};
   margin: 10px 0 0 0;
@@ -35,9 +36,9 @@ const ButtonText = styled.span`
 `;
 
 const AddBill = () => {
-  const { setIsPopupOpen } = useAddBill();
+  const { setIsModalOpen } = useAddBill();
 
-  const addBillHandler = () => setIsPopupOpen((snapshot) => !snapshot);
+  const addBillHandler = () => setIsModalOpen((snapshot) => !snapshot);
 
   return (
     <AddButton onClick={addBillHandler}>

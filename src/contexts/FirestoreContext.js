@@ -1,19 +1,16 @@
-import { createContext, useContext, useState } from "react";
-import { db } from "../services/firebase";
-import { useAuth } from "../contexts/AuthContext";
+import React, { createContext, useState } from 'react';
+import { db } from '../services/firebase';
+import { useAuth } from '../hooks/useAuth';
+import PropTypes from 'prop-types';
 
-const FirestoreContext = createContext({});
-
-export const useFirestore = () => {
-  return useContext(FirestoreContext);
-};
+export const FirestoreContext = createContext({});
 
 export const FirestoreContextProvider = ({ children }) => {
   const [isConfigured, setIsConfigured] = useState(true);
   const { currentUser } = useAuth();
 
   const createUserData = ({ email, uid }) => {
-    const userDoc = db.collection("users").doc(uid);
+    const userDoc = db.collection('users').doc(uid);
     const userData = {
       uid,
       email,
@@ -23,16 +20,16 @@ export const FirestoreContextProvider = ({ children }) => {
   };
 
   const setupUserData = (setupData) => {
-    const userRef = db.collection("users").doc(currentUser.uid);
+    const userRef = db.collection('users').doc(currentUser.uid);
     userRef.update(setupData);
   };
 
   const getExpenses = async () => {
     const tmp = [];
     const expensesRef = db
-      .collection("users")
+      .collection('users')
       .doc(currentUser.uid)
-      .collection("expenses");
+      .collection('expenses');
     const docs = await expensesRef.get();
     docs.forEach((doc) => tmp.push(doc.data()));
     return tmp;
@@ -41,16 +38,16 @@ export const FirestoreContextProvider = ({ children }) => {
   const getTransactions = async () => {
     const tmp = [];
     const transactionsRef = db
-      .collection("users")
+      .collection('users')
       .doc(currentUser.uid)
-      .collection("transactions");
+      .collection('transactions');
     const docs = await transactionsRef.get();
     docs.forEach((doc) => tmp.push(doc.data()));
     return tmp;
   };
 
   const getUserData = async () => {
-    const userRef = db.collection("users").doc(currentUser.uid);
+    const userRef = db.collection('users').doc(currentUser.uid);
     const doc = await userRef.get();
     return doc.data();
   };
@@ -67,11 +64,19 @@ export const FirestoreContextProvider = ({ children }) => {
   };
 
   const executePayday = (value, todaysPayment) => {
-    const userRef = db.collection("users").doc(currentUser.uid);
+    const userRef = db.collection('users').doc(currentUser.uid);
     userRef.update({
       moneyLeft: value,
       lastPayday: todaysPayment,
     });
+  };
+
+  const removeExpense = (id) => {
+    const expensesRef = db
+      .collection('users')
+      .doc(currentUser.uid)
+      .collection('expenses');
+    expensesRef.doc(id).delete();
   };
 
   const ctx = {
@@ -85,6 +90,7 @@ export const FirestoreContextProvider = ({ children }) => {
     getTransactions,
     getExpenses,
     executePayday,
+    removeExpense,
   };
 
   return (
@@ -92,4 +98,8 @@ export const FirestoreContextProvider = ({ children }) => {
       {children}
     </FirestoreContext.Provider>
   );
+};
+
+FirestoreContextProvider.propTypes = {
+  children: PropTypes.node,
 };

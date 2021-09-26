@@ -1,17 +1,17 @@
-import styled from "styled-components";
-import { useAddBill } from "../contexts/AddBillContext";
-import { useRef, useEffect, useState } from "react";
-import closeIcon from "../assets/images/close.svg";
-import SelectCategoryPopup from "./SelectCategoryPopup";
-import Icon from "./Icon";
-import { devices } from "../assets/devices";
-import { useFirestore } from "../contexts/FirestoreContext";
-import ErrorBox from "./ErrorBox";
-import { uniqueKey } from "../helpers/uniqueKey";
+import styled from 'styled-components';
+import { useAddBill } from '../../hooks/useAddBill';
+import React, { useRef, useEffect, useState } from 'react';
+import CloseIcon from '../../assets/images/closeIcon.svg';
+import SelectCategoryModal from './SelectCategoryModal';
+import Icon from '../Icon';
+import { devices } from '../../assets/styles/devices';
+import { useFirestore } from '../../hooks/useFirestore';
+import { uniqueKey } from '../../helpers/uniqueKey';
+import { useForm } from 'react-hook-form';
 
-const Popup = styled.div`
+const Modal = styled.div`
   width: 94vw;
-  background-color: ${({ theme }) => theme.color.white};
+  background-color: #ffffff;
   position: fixed;
   top: 3vw;
   bottom: 3vw;
@@ -21,7 +21,7 @@ const Popup = styled.div`
   z-index: 9999;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   border-radius: 15px;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
@@ -36,7 +36,7 @@ const Popup = styled.div`
   }
 `;
 
-const PopupMain = styled.main`
+const ModalMain = styled.main`
   position: relative;
   width: 100%;
   height: 100%;
@@ -45,102 +45,67 @@ const PopupMain = styled.main`
   @media ${devices.mobileM} {
     padding: 30px 25px;
   }
-
-  @media ${devices.mobileL} {
-    padding: 30px 40px;
-  }
-
-  @media ${devices.tablet} {
-    padding: 15px 20px;
-  }
 `;
 
 const CloseButton = styled.button`
-  position: absolute;
-  top: 25px;
-  right: 25px;
-  width: 30px;
-  height: 30px;
+  width: 20px;
+  height: 20px;
+`;
+
+const Header = styled.header`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0;
 `;
 
 const Heading = styled.h1`
-  font-family: ${({ theme }) => theme.font.family.montserrat};
-  font-weight: 800;
-  text-align: center;
-  font-size: 4rem;
-  margin: 10px 0;
-
-  @media ${devices.mobileM} {
-    margin: 20px 0;
-  }
-
-  @media ${devices.laptop} {
-    margin: 0;
-  }
+  font-weight: ${({ theme }) => theme.font.weight.semiBold};
+  font-size: 2rem;
+  text-transform: capitalize;
 `;
 
-const PopupForm = styled.form`
+const ModalForm = styled.form`
   width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   color: black;
-  height: 100%;
 `;
 
 const InputLabel = styled.label`
   color: black;
   display: block;
   font-size: 1rem;
-  font-weight: 700;
-  margin: 3px 0;
+  font-weight: ${({ theme }) => theme.font.weight.semiBold};
+  margin: 23px 0 3px 0;
 `;
 
 const InputField = styled.input`
   width: 100%;
-  font-family: ${({ theme }) => theme.font.family.montserrat};
   font-size: 1.4rem;
-  font-weight: 800;
+  font-weight: ${({ theme }) => theme.font.weight.medium};
   background: ${({ theme }) => theme.color.lightSecondary};
   border: none;
   border-radius: 7px;
   padding: 10px 15px;
-  margin-bottom: 15px;
-
-  @media ${devices.mobileM} {
-    margin-bottom: 20px;
-  }
-
-  @media ${devices.laptop} {
-    margin-bottom: 5px;
-  }
 `;
 
 const SwitchContainer = styled.div`
   width: 100%;
-  font-weight: 900;
   border: 2px solid ${({ theme }) => theme.color.primary};
   border-radius: 7px;
   overflow: hidden;
-  margin: 10px 0 15px;
-
-  @media ${devices.mobileM} {
-    margin-bottom: 20px;
-  }
-
-  @media ${devices.laptop} {
-    margin-bottom: 10px;
-  }
+  margin-top: 23px;
 `;
 
 const SwitchButton = styled.button`
   width: 50%;
   padding: 10px 0;
   font-size: 1.2rem;
-  font-weight: 900;
+  font-weight: ${({ theme }) => theme.font.weight.semiBold};
   background-color: ${({ theme, isSpent }) =>
-    isSpent ? theme.color.primary : "white"};
-  color: ${({ theme, isSpent }) => (isSpent ? "white" : theme.color.primary)};
+    isSpent ? theme.color.primary : 'white'};
+  color: ${({ theme, isSpent }) => (isSpent ? 'white' : theme.color.primary)};
   transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out;
 `;
 
@@ -153,7 +118,7 @@ const MoneyInputContainer = styled.div`
 const Currency = styled.div`
   color: #ffffff;
   background-color: black;
-  font-weight: 700;
+  font-weight: ${({ theme }) => theme.font.weight.medium};
   margin-left: 10px;
   font-size: 1.4rem;
   padding: 10px 15px;
@@ -163,48 +128,29 @@ const Currency = styled.div`
   justify-content: center;
   background-color: ${({ theme }) => theme.color.lightSecondary};
   color: black;
-  font-weight: 900;
 `;
 
 const SubmitButton = styled.button`
   width: 100%;
   font-size: 1.7rem;
-  font-weight: 800;
+  font-weight: ${({ theme }) => theme.font.weight.semiBold};
   background-color: ${({ theme }) => theme.color.primary};
-  color: ${({ theme }) => theme.color.white};
+  color: #ffffff;
   border-radius: 7px;
   padding: 10px 15px;
-  margin-top: 10px;
-
-  @media ${devices.mobileM} {
-    margin-top: 30px;
-  }
-
-  @media ${devices.laptop} {
-    margin-top: 5px;
-  }
+  margin-top: 23px;
 `;
 
 const CategoryContainer = styled.div`
   width: 100%;
-  margin-bottom: 15px;
   display: flex;
   align-items: center;
-
-  @media ${devices.mobileM} {
-    margin-bottom: 20px;
-  }
-
-  @media ${devices.laptop} {
-    margin-bottom: 5px;
-  }
 `;
 
 const SelectCategory = styled.button`
   flex: 4;
-  font-family: ${({ theme }) => theme.font.family.montserrat};
   font-size: 1.2rem;
-  font-weight: 800;
+  font-weight: ${({ theme }) => theme.font.weight.semiBold};
   background-color: ${({ theme }) => theme.color.primary};
   color: #ffffff;
   border-radius: 7px;
@@ -221,9 +167,8 @@ const CategoryView = styled.p`
   flex: 3;
   display: inline-block;
   margin: 0;
-  font-family: ${({ theme }) => theme.font.family.montserrat};
   font-size: 1.4rem;
-  font-weight: 800;
+  font-weight: ${({ theme }) => theme.font.weight.medium};
   background: ${({ theme }) => theme.color.lightSecondary};
   border: none;
   border-radius: 7px;
@@ -238,19 +183,29 @@ const CategoryView = styled.p`
   }
 `;
 
-const AddBillPopup = () => {
+const Error = styled.p`
+  font-size: 1.1rem;
+  font-weight: ${({ theme }) => theme.font.weight.medium};
+  color: #ff0033;
+  margin: 5px 0 0;
+`;
+
+const AddBillModal = () => {
   const [isSpent, setIsSpent] = useState(true);
   const [isSelectCategoryOpen, setIsSelectCategoryOpen] = useState(false);
-  const [isErrorBoxOpen, setIsErrorBoxOpen] = useState(false);
-  const [currency, setCurrency] = useState("");
+  const [currency, setCurrency] = useState('');
   const [randomId, setRandomId] = useState(null);
+  const [categoryError, setCategoryError] = useState('');
   const { getCurrency, getTransactions } = useFirestore();
-  const { setIsPopupOpen, addNewBill, selectedCategory, setSelectedCategory } =
+  const { setIsModalOpen, addNewBill, selectedCategory, setSelectedCategory } =
     useAddBill();
-  const titleRef = useRef();
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm();
+
   const categoryRef = useRef();
-  const dateRef = useRef();
-  const amountRef = useRef();
 
   const checkId = (transactions) => {
     const randomId = uniqueKey();
@@ -281,29 +236,21 @@ const AddBillPopup = () => {
     setCurrency(currencyValue);
   };
 
-  const addBillHandler = (e) => {
-    e.preventDefault();
-    if (
-      titleRef.current.value !== "" &&
-      categoryRef.current.innerText !== "Not Selected..." &&
-      dateRef.current.value !== "" &&
-      amountRef.current.value !== ""
-    ) {
+  const onSubmit = ({ title, date, amount }) => {
+    if (categoryRef.current.innerText != 'Not Selected...') {
       addNewBill({
         id: randomId,
-        title: titleRef.current.value,
+        title,
         categoryTitle: categoryRef.current.innerText,
         categorySrc: selectedCategory.src,
-        date: dateRef.current.value,
-        amount: parseFloat(amountRef.current.value),
-        isSpent: isSpent,
-        currency: currency,
+        date: date,
+        amount: parseFloat(amount),
+        isSpent,
+        currency,
       });
-      setSelectedCategory("");
-      setIsPopupOpen((snapshot) => !snapshot);
-    } else {
-      setIsErrorBoxOpen(true);
-    }
+      setSelectedCategory('');
+      setIsModalOpen((snapshot) => !snapshot);
+    } else setCategoryError('Category is required');
   };
 
   const selectCategoryHandler = () =>
@@ -311,55 +258,70 @@ const AddBillPopup = () => {
 
   const changeSwitchColor = () => setIsSpent((snapshot) => !snapshot);
 
-  const closePopupHandler = () => {
-    setSelectedCategory("");
-    setIsPopupOpen((snapshot) => !snapshot);
+  const closeModalHandler = () => {
+    setSelectedCategory('');
+    setIsModalOpen((snapshot) => !snapshot);
   };
 
   return (
-    <Popup>
-      <PopupMain>
+    <Modal>
+      <ModalMain>
         {isSelectCategoryOpen && (
-          <SelectCategoryPopup
+          <SelectCategoryModal
             setIsSelectCategoryOpen={setIsSelectCategoryOpen}
           />
         )}
-        <CloseButton onClick={closePopupHandler}>
-          <Icon src={closeIcon} />
-        </CloseButton>
-        <Heading>BILL</Heading>
-        <PopupForm onSubmit={addBillHandler}>
-          {isErrorBoxOpen && <ErrorBox setIsErrorBoxOpen={setIsErrorBoxOpen} />}
+        <Header>
+          <Heading>Add Bill</Heading>
+          <CloseButton onClick={closeModalHandler}>
+            <Icon src={CloseIcon} />
+          </CloseButton>
+        </Header>
+        <ModalForm onSubmit={handleSubmit(onSubmit)}>
           <InputLabel htmlFor="title">TITLE</InputLabel>
           <InputField
-            ref={titleRef}
+            {...register('title', { required: 'Title is required' })}
             type="text"
             id="title"
             name="title"
           ></InputField>
+          {errors.title && <Error>{errors.title.message}</Error>}
           <InputLabel htmlFor="category">CATEGORY</InputLabel>
           <CategoryContainer>
             <CategoryView ref={categoryRef}>
               {selectedCategory.title
                 ? selectedCategory.title
-                : "Not Selected..."}
+                : 'Not Selected...'}
             </CategoryView>
             <SelectCategory type="button" onClick={selectCategoryHandler}>
               SELECT CATEGORY
             </SelectCategory>
           </CategoryContainer>
+          {categoryError && <Error>{categoryError}</Error>}
           <InputLabel htmlFor="date">DATE OF PURCHASE</InputLabel>
-          <InputField ref={dateRef} type="date" name="date"></InputField>
+          <InputField
+            {...register('date', { required: 'Date is required' })}
+            type="date"
+            name="date"
+          ></InputField>
+          {errors.date && <Error>{errors.date.message}</Error>}
           <InputLabel htmlFor="amount">AMOUNT</InputLabel>
           <MoneyInputContainer>
             <InputField
-              ref={amountRef}
+              {...register('amount', {
+                required: 'Amount is required',
+                min: {
+                  value: 1,
+                  message: 'You must enter a number greater than 0',
+                },
+              })}
               type="number"
               name="amount"
               step="0.01"
             ></InputField>
             <Currency>{currency}</Currency>
           </MoneyInputContainer>
+          {errors.amount && <Error>{errors.amount.message}</Error>}
           <SwitchContainer>
             <SwitchButton
               isSpent={isSpent}
@@ -377,10 +339,10 @@ const AddBillPopup = () => {
             </SwitchButton>
           </SwitchContainer>
           <SubmitButton type="submit">ADD BILL</SubmitButton>
-        </PopupForm>
-      </PopupMain>
-    </Popup>
+        </ModalForm>
+      </ModalMain>
+    </Modal>
   );
 };
 
-export default AddBillPopup;
+export default AddBillModal;

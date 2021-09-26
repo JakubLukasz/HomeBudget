@@ -1,19 +1,20 @@
-import styled from "styled-components";
-import Card from "../../components/Card";
-import TotalWrapper from "./TotalWrapper";
-import TransactionsWrapper from "./TransactionsWrapper";
-import { useEffect, useState } from "react";
-import { devices } from "../../assets/devices";
-import { useFirestore } from "../../contexts/FirestoreContext";
-import { useLoading } from "../../contexts/LoadingContext";
-import { db } from "../../services/firebase";
-import { useAuth } from "../../contexts/AuthContext";
+import styled from 'styled-components';
+import Card from '../components/Card';
+import TotalWrapper from '../components/TotalWrapper';
+import TransactionsWrapper from '../components/TransactionsWrapper';
+import React, { useEffect, useState } from 'react';
+import { devices } from '../assets/styles/devices';
+import { useFirestore } from '../hooks/useFirestore';
+import { useLoading } from '../hooks/useLoading';
+import { db } from '../services/firebase';
+import { useAuth } from '../hooks/useAuth';
 
 const Container = styled.main`
   background-color: ${({ theme }) => theme.color.lightPrimary};
-  min-height: 100vh;
+  flex: 1;
   font-size: 1rem;
-  padding: 5px 10px 10vh;
+  padding: 5px 10px 0;
+  overflow: auto;
   display: flex;
   flex-direction: column;
 
@@ -25,13 +26,7 @@ const Container = styled.main`
     padding: 15px 20px 10vh;
   }
 
-  @media ${devices.tabletVerL} {
-    flex-direction: row;
-    align-items: flex-start;
-  }
-
   @media ${devices.laptop} {
-    margin-left: 80px;
     flex-direction: row;
     align-items: flex-start;
   }
@@ -49,16 +44,16 @@ const StyledCard = styled(Card)`
   }
 
   @media ${devices.tablet} {
-    flex: ${({ stretch }) => (stretch ? "1" : "0 1 auto")};
-    width: ${({ width }) => (width ? width : "auto")};
+    flex: ${({ stretch }) => (stretch ? '1' : '0 1 auto')};
+    width: ${({ width }) => (width ? width : 'auto')};
     &:first-child {
       margin-right: 15px;
     }
   }
 
-  @media ${devices.tabletVerL} {
-    flex: ${({ stretch }) => (stretch ? "1" : "0 1 auto")};
-    width: ${({ width }) => (width ? width : "auto")};
+  @media ${devices.laptop} {
+    flex: ${({ stretch }) => (stretch ? '1' : '0 1 auto')};
+    width: ${({ width }) => (width ? width : 'auto')};
     &:first-child {
       margin-right: 15px;
     }
@@ -68,13 +63,12 @@ const StyledCard = styled(Card)`
 const Main = () => {
   const [total, setTotal] = useState(null);
   const [transactions, setTransactions] = useState([]);
-  const [expenses, setExpenses] = useState([]);
+  // const [expenses, setExpenses] = useState([]);
   const { setIsLoading } = useLoading();
   const {
     checkIsUserConfigured,
     getUserData,
-    userListener,
-    getExpenses,
+    /*getExpenses,*/
     isConfigured,
     executePayday,
   } = useFirestore();
@@ -88,28 +82,22 @@ const Main = () => {
 
   const getCurrentDate = () => {
     const today = new Date();
-    const currentDay = String(today.getDate()).padStart(2, "0");
-    const currentMonth = String(today.getMonth() + 1).padStart(2, "0");
+    const currentDay = String(today.getDate()).padStart(2, '0');
+    const currentMonth = String(today.getMonth() + 1).padStart(2, '0');
     const currentYear = String(today.getFullYear());
     return { currentDay, currentMonth, currentYear };
   };
 
-  const handleExpense = ({ amount, months, isSpent, dayOfCollection }) => {
-    const tmp = months.map((month, index) => {
-      if (month) {
-        if (index < 10) return `0${index + 1}`;
-        else return index + 1;
-      }
-    });
-    const expenseDay = String(dayOfCollection);
-    const cleanMonths = tmp.filter((element) => element !== undefined);
-    // not finished
-  };
+  // const handleExpense = ({ amount, months, isSpent, dayOfCollection }) => {
+  //   const expenseDay = String(dayOfCollection);
+  //   const cleanMonths = tmp.filter((element) => element !== undefined);
+  //   // not finished
+  // };
 
-  const checkExpenses = async () => {
-    const respExpenses = await getExpenses();
-    respExpenses.forEach((expense) => handleExpense(expense));
-  };
+  // const checkExpenses = async () => {
+  //   const respExpenses = await getExpenses();
+  //   respExpenses.forEach((expense) => handleExpense(expense));
+  // };
 
   const initPayday = async () => {
     const { lastPayday, earnings, moneyLeft, payday } = await getUserData();
@@ -122,9 +110,9 @@ const Main = () => {
 
   useEffect(() => {
     const transactionsRef = db
-      .collection("users")
+      .collection('users')
       .doc(currentUser.uid)
-      .collection("transactions");
+      .collection('transactions');
     const unsubscribe = transactionsRef.onSnapshot((snapshot) => {
       const tmp = [];
       if (snapshot.size) {
@@ -137,7 +125,7 @@ const Main = () => {
   }, []);
 
   useEffect(() => {
-    const userRef = db.collection("users").doc(currentUser.uid);
+    const userRef = db.collection('users').doc(currentUser.uid);
     const unsubscribe = userRef.onSnapshot((doc) => setTotal(doc.data()));
     return () => unsubscribe();
   }, []);
@@ -155,16 +143,16 @@ const Main = () => {
     initPayday();
   }, []);
 
-  useEffect(() => {
-    checkExpenses();
-  }, []);
+  // useEffect(() => {
+  //   checkExpenses();
+  // }, []);
 
   return (
     <Container>
       <StyledCard title="MONEY LEFT">
         <TotalWrapper transactions={transactions} {...total} />
       </StyledCard>
-      <StyledCard width={"600px"} title="TRANSACTIONS">
+      <StyledCard width={'600px'} title="TRANSACTIONS">
         <TransactionsWrapper total={total} transactions={transactions} />
       </StyledCard>
     </Container>

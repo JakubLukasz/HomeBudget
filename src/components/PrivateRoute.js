@@ -1,5 +1,7 @@
-import { Route, Redirect } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
+import { Route, Redirect } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
   const { currentUser } = useAuth();
@@ -16,6 +18,10 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
       }}
     ></Route>
   );
+};
+
+PrivateRoute.propTypes = {
+  component: PropTypes.elementType,
 };
 
 export default PrivateRoute;

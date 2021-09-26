@@ -1,9 +1,11 @@
-import styled from "styled-components";
-import { devices } from "../../assets/devices";
+import styled from 'styled-components';
+import { devices } from '../assets/styles/devices';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 const Heading = styled.h1`
   font-size: 3rem;
-  font-weight: 900;
+  font-weight: ${({ theme }) => theme.font.weight.medium};
   margin: 5px 0;
 
   @media ${devices.tablet} {
@@ -31,6 +33,11 @@ const TotalWrapper = ({ moneyLeft, currency }) => {
       </Heading>
     </Container>
   );
+};
+
+TotalWrapper.propTypes = {
+  moneyLeft: PropTypes.number,
+  currency: PropTypes.string,
 };
 
 export default TotalWrapper;

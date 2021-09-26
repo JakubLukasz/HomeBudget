@@ -1,10 +1,7 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useState } from 'react';
+import PropTypes from 'prop-types';
 
-const LoadingContext = createContext({});
-
-export const useLoading = () => {
-  return useContext(LoadingContext);
-};
+export const LoadingContext = createContext({});
 
 export const LoadingContextProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -19,4 +16,8 @@ export const LoadingContextProvider = ({ children }) => {
       {children}
     </LoadingContext.Provider>
   );
+};
+
+LoadingContextProvider.propTypes = {
+  children: PropTypes.node,
 };

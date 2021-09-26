@@ -1,9 +1,10 @@
-import styled from "styled-components";
-import { useAuth } from "../contexts/AuthContext";
-import { useHistory } from "react-router-dom";
-import { devices } from "../assets/devices";
-import logOutIcon from "../assets/images/log-out.svg";
-import Icon from "./Icon";
+import styled from 'styled-components';
+import { useAuth } from '../hooks/useAuth';
+import React from 'react';
+import { useHistory } from 'react-router-dom';
+import { devices } from '../assets/styles/devices';
+import logOutIcon from '../assets/images/log-out.svg';
+import Icon from './Icon';
 
 const LinkIcon = styled(Icon)`
   width: auto;
@@ -15,7 +16,7 @@ const LinkIcon = styled(Icon)`
 `;
 
 const LinkTitle = styled.span`
-  font-weight: 600;
+  font-weight: ${({ theme }) => theme.font.weight.medim};
   color: ${({ theme }) => theme.color.secondary};
   font-size: 1rem;
   margin: 10px 0 0 0;
@@ -45,9 +46,9 @@ const LogOutButton = () => {
   const logOutHandler = async () => {
     try {
       await logout();
-      history.push("/login");
+      history.push('/login');
     } catch {
-      console.error("error");
+      console.error('error');
     }
   };
   return (

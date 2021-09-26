@@ -1,160 +1,183 @@
-import styled from "styled-components";
-import { useRef, useState } from "react";
-import { useAuth } from "../contexts/AuthContext";
-import { useFirestore } from "../contexts/FirestoreContext";
-import { Link, useHistory } from "react-router-dom";
-import AuthError from "../components/AuthError";
-import { devices } from "../assets/devices";
+import styled from 'styled-components';
+import React, { useState } from 'react';
+import { useAuth } from '../hooks/useAuth';
+import { useFirestore } from '../hooks/useFirestore';
+import { Link, useHistory } from 'react-router-dom';
+import { devices } from '../assets/styles/devices';
+import Logo from '../components/Logo';
+import { useForm } from 'react-hook-form';
 
 const Container = styled.section`
-  width: 100vw;
-  height: 100vh;
+  height: var(--app-height);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 `;
 
-const FormContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 50px;
-`;
-
 const SignupForm = styled.form`
-  font-family: ${({ theme }) => theme.font.family.montserrat};
   width: 100%;
-  max-width: 700px;
-  margin-bottom: 70px;
+  padding: 0 20px;
+  max-width: 500px;
 
-  @media ${devices.tablet} {
-    min-width: 300px;
+  @media ${devices.mobileM} {
+    padding: 0 40px;
   }
 
-  @media ${devices.tabletVer} {
+  @media ${devices.tablet} {
     min-width: 300px;
   }
 `;
 
 const InputLabel = styled.label`
   display: block;
-  font-family: ${({ theme }) => theme.font.family.montserrat};
   color: ${({ theme }) => theme.color.secondary};
+  font-weight: ${({ theme }) => theme.font.weight.semiBold};
   font-size: 1rem;
-  margin: 3px 0;
+  margin: 23px 0 3px 0;
 `;
 
 const InputField = styled.input`
   width: 100%;
-  font-family: ${({ theme }) => theme.font.family.montserrat};
   font-size: 1.4rem;
-  font-weight: 800;
+  font-weight: ${({ theme }) => theme.font.weight.medium};
   background: ${({ theme }) => theme.color.lightSecondary};
   border: none;
   border-radius: 7px;
   outline: none;
   padding: 10px 15px;
-  margin-bottom: 15px;
 `;
 
 const Heading = styled.h1`
-  font-family: ${({ theme }) => theme.font.family.montserrat};
-  font-weight: 800;
+  font-weight: ${({ theme }) => theme.font.weight.regular};
   text-align: center;
-  font-size: 4rem;
-  margin-bottom: 70px;
+  font-size: 2rem;
+  margin: 10px 0 30px;
+
+  @media ${devices.mobileM} {
+    margin: 10px 0 70px;
+  }
 `;
 
 const SubmitButton = styled.button`
-  border: none;
   width: 100%;
   font-size: 1.7rem;
-  font-weight: 800;
+  font-weight: ${({ theme }) => theme.font.weight.semiBold};
   background-color: ${({ theme }) => theme.color.primary};
-  color: ${({ theme }) => theme.color.white};
-  font-family: ${({ theme }) => theme.font.family.montserrat};
+  color: #ffffff;
   border-radius: 7px;
   padding: 10px 15px;
-  margin-top: 15px;
+  margin-top: 23px;
 `;
 
-const LinkText = styled.span`
-  display: block;
+const LinkText = styled.p`
   color: ${({ theme }) => theme.color.secondary};
   font-size: 1.2rem;
-  width: 100%;
   text-align: center;
   margin: 20px 0;
-  font-weight: 600;
+  font-weight: ${({ theme }) => theme.font.weight.regular};
 `;
 
 const FormLink = styled(Link)`
   color: ${({ theme }) => theme.color.primary};
-  font-weight: 900;
+  font-weight: ${({ theme }) => theme.font.weight.semiBold};
   font-size: 1.2rem;
+  margin-left: 5px;
   text-decoration: none;
+`;
+
+const Error = styled.p`
+  font-size: 1.1rem;
+  font-weight: ${({ theme }) => theme.font.weight.medium};
+  color: #ff0033;
+  margin: 5px 0 0;
+`;
+
+const FormErrorMessage = styled.p`
+  font-size: 1.4rem;
+  font-weight: ${({ theme }) => theme.font.weight.medium};
+  color: #e04f5f;
 `;
 
 const Signup = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [formError, setFormError] = useState('');
   const { signup } = useAuth();
   const { createUserData } = useFirestore();
-  const emailRef = useRef();
-  const passwordRef = useRef();
-  const confirmPasswordRef = useRef();
   const history = useHistory();
 
-  const submitFormHandler = async (e) => {
-    e.preventDefault();
-    if (passwordRef.current.value !== confirmPasswordRef.current.value) {
-      return setError("Passwords are not the same");
-    }
+  const {
+    handleSubmit,
+    register,
+    getValues,
+    formState: { errors },
+  } = useForm();
 
+  const submitFormHandler = async ({ email, password }) => {
     try {
-      setError("");
+      setFormError('');
       setIsLoading(true);
-      const { user } = await signup(
-        emailRef.current.value,
-        passwordRef.current.value
-      );
+      const { user } = await signup(email, password);
       await createUserData(user);
-      history.push("/");
-    } catch {
-      setError("Failed to create an account");
+      history.push('/');
+    } catch (error) {
+      setFormError(error.message);
     }
     setIsLoading(false);
   };
 
   return (
     <Container>
+      <Logo />
       <Heading>Sign up</Heading>
-      <FormContainer>
-        <SignupForm onSubmit={submitFormHandler}>
-          {error && <AuthError message={error} />}
-          <InputLabel htmlFor="email">E-MAIL</InputLabel>
-          <InputField ref={emailRef} type="email" id="email" required />
-          <InputLabel htmlFor="password">PASSWORD</InputLabel>
-          <InputField
-            ref={passwordRef}
-            type="password"
-            id="password"
-            required
-          />
-          <InputLabel htmlFor="confirm-password">CONFIRM PASSWORD</InputLabel>
-          <InputField
-            ref={confirmPasswordRef}
-            type="password"
-            id="confirm-password"
-            required
-          />
-          <SubmitButton disabled={isLoading}>SIGN UP</SubmitButton>
-          <LinkText>
-            already have an account? <FormLink to="/login">Log In</FormLink>
-          </LinkText>
-        </SignupForm>
-      </FormContainer>
+      <SignupForm onSubmit={handleSubmit(submitFormHandler)}>
+        {formError && <FormErrorMessage>{formError}</FormErrorMessage>}
+        <InputLabel htmlFor="email">E-MAIL</InputLabel>
+        <InputField
+          {...register('email', {
+            required: 'Email is Required',
+            pattern: {
+              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+              message: 'Invalid email address',
+            },
+          })}
+          type="text"
+          name="email"
+        />
+        {errors.email && <Error>{errors.email.message}</Error>}
+        <InputLabel htmlFor="password">PASSWORD</InputLabel>
+        <InputField
+          {...register('password', {
+            required: 'Password is Required',
+            minLength: {
+              value: 8,
+              message: 'Password must have at least 8 characters',
+            },
+          })}
+          type="password"
+          name="password"
+        />
+        {errors.password && <Error>{errors.password.message}</Error>}
+        <InputLabel htmlFor="confirm-password">CONFIRM PASSWORD</InputLabel>
+        <InputField
+          {...register('confirm__password', {
+            validate: (value) =>
+              value === getValues('password') || 'The passwords do not match',
+          })}
+          type="password"
+          name="confirm__password"
+          required
+        />
+        {errors.confirm__password && (
+          <Error>{errors.confirm__password.message}</Error>
+        )}
+        <SubmitButton disabled={isLoading} type="submit">
+          SIGN UP
+        </SubmitButton>
+        <LinkText>
+          Already have an account? <FormLink to="/login">Log In</FormLink>
+        </LinkText>
+      </SignupForm>
     </Container>
   );
 };

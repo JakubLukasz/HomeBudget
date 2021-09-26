@@ -1,8 +1,10 @@
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 const Title = styled.span`
   color: ${({ theme }) => theme.color.secondary};
-  font-weight: 800;
+  font-weight: ${({ theme }) => theme.font.weight.semiBold};
 `;
 
 const Card = ({ className, children, title }) => {
@@ -12,6 +14,12 @@ const Card = ({ className, children, title }) => {
       {children}
     </div>
   );
+};
+
+Card.propTypes = {
+  className: PropTypes.string,
+  children: PropTypes.node,
+  title: PropTypes.string,
 };
 
 export default Card;

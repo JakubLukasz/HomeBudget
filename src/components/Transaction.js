@@ -1,6 +1,8 @@
-import styled from "styled-components";
-import Icon from "../../components/Icon";
-import { devices } from "../../assets/devices";
+import styled from 'styled-components';
+import Icon from '../components/Icon';
+import { devices } from '../assets/styles/devices';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 const Container = styled.div`
   display: flex;
@@ -46,7 +48,8 @@ const Title = styled.h2`
   overflow: hidden;
   white-space: nowrap;
   max-width: 100px;
-
+  font-weight: ${({ theme }) => theme.font.weight.semiBold};
+  text-transform: capitalize;
   @media ${devices.mobileM} {
     max-width: 200px;
   }
@@ -58,13 +61,13 @@ const Title = styled.h2`
 
 const Date = styled.span`
   font-size: 1.2rem;
-  font-weight: 500;
+  font-weight: ${({ theme }) => theme.font.weight.regular};
 `;
 
 const Price = styled.span`
-  color: ${({ isSpent }) => (isSpent ? "red" : "green")};
+  color: ${({ isSpent }) => (isSpent ? 'red' : 'green')};
   font-size: 1.3rem;
-  font-weight: 700;
+  font-weight: ${({ theme }) => theme.font.weight.medium};
 `;
 
 const Transaction = ({
@@ -89,14 +92,23 @@ const Transaction = ({
       <div>
         <Price isSpent={isSpent}>
           <span>
-            {isSpent ? "-" : "+"}
+            {isSpent ? '-' : '+'}
             {amount}
-          </span>{" "}
+          </span>{' '}
           {currency}
         </Price>
       </div>
     </Container>
   );
+};
+
+Transaction.propTypes = {
+  title: PropTypes.string,
+  amount: PropTypes.number,
+  date: PropTypes.string,
+  currency: PropTypes.string,
+  categorySrc: PropTypes.string,
+  isSpent: PropTypes.bool,
 };
 
 export default Transaction;

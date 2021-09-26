@@ -1,20 +1,17 @@
-import styled from "styled-components";
-import { Link } from "react-router-dom";
-import Icon from "./Icon";
-import AddBill from "./AddBill";
-import statsIcon from "../assets/images/stats.svg";
-import planIcon from "../assets/images/plan.svg";
-import Logo from "../assets/images/logo.svg";
-import { devices } from "../assets/devices";
-import LogOutButton from "./LogOutButton";
+import styled from 'styled-components';
+import { Link } from 'react-router-dom';
+import Icon from './Icon';
+import AddBill from './AddBill';
+import statsIcon from '../assets/images/stats.svg';
+import planIcon from '../assets/images/plan.svg';
+import Logo from '../assets/images/logo.svg';
+import { devices } from '../assets/styles/devices';
+import LogOutButton from './LogOutButton';
+import React from 'react';
 
 const Navigation = styled.nav`
   display: flex;
   align-items: center;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
   box-shadow: rgba(0, 0, 0, 0.1) 0px -10px 50px;
   background-color: ${({ theme }) => theme.color.white};
 
@@ -23,22 +20,19 @@ const Navigation = styled.nav`
     flex-direction: column;
     align-items: flex-start;
     right: auto;
-    width: 80px;
-    height: 100vh;
   }
 `;
 
 const LinkIcon = styled(Icon)`
-  width: auto;
+  width: 2.5rem;
   height: 2.5rem;
-  svg,
-  path {
+  svg {
     fill: ${({ theme }) => theme.color.secondary};
   }
 `;
 
 const LinkTitle = styled.span`
-  font-weight: 600;
+  font-weight: ${({ theme }) => theme.font.weight.regular};
   color: ${({ theme }) => theme.color.secondary};
   font-size: 1rem;
   margin: 10px 0 0 0;

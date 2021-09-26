@@ -1,5 +1,7 @@
-import styled from "styled-components";
-import Transaction from "./Transaction";
+import styled from 'styled-components';
+import Transaction from './Transaction';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 const Container = styled.div`
   min-height: 50px;
@@ -13,6 +15,11 @@ const TransactionsWrapper = ({ transactions, total }) => {
       ))}
     </Container>
   );
+};
+
+TransactionsWrapper.propTypes = {
+  transactions: PropTypes.array,
+  total: PropTypes.object,
 };
 
 export default TransactionsWrapper;

@@ -1,10 +1,12 @@
-import styled from "styled-components";
-import { devices } from "../assets/devices";
-import Icon from "./Icon";
-import previousIcon from "../assets/images/previous.svg";
-import { useAddBill } from "../contexts/AddBillContext";
+import styled from 'styled-components';
+import { devices } from '../../assets/styles/devices';
+import Icon from '../Icon';
+import BackIcon from '../../assets/images/backIcon.svg';
+import { useAddBill } from '../../hooks/useAddBill';
+import React from 'react';
+import PropTypes from 'prop-types';
 
-const Popup = styled.div`
+const Modal = styled.div`
   background-color: ${({ theme }) => theme.color.white};
   position: absolute;
   top: 0;
@@ -31,31 +33,23 @@ const Popup = styled.div`
   }
 `;
 
-const CloseButton = styled.button`
-  position: absolute;
-  top: 25px;
-  left: 25px;
-  border: none;
-  background: none;
-  width: 30px;
-  height: 30px;
-  cursor: pointer;
+const Header = styled.header`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 10px;
 `;
 
 const Heading = styled.h1`
-  font-family: ${({ theme }) => theme.font.family.montserrat};
-  font-weight: 800;
-  text-align: center;
-  font-size: 2.5rem;
-  margin: 10px 0;
+  font-weight: ${({ theme }) => theme.font.weight.semiBold};
+  font-size: 2rem;
+  text-transform: capitalize;
+`;
 
-  @media ${devices.mobileM} {
-    margin: 40px 0 20px;
-  }
-
-  @media ${devices.laptop} {
-    margin: 10px 0;
-  }
+const BackButton = styled.button`
+  width: 30px;
+  height: 30px;
 `;
 
 const CategoryButton = styled.button`
@@ -93,18 +87,18 @@ const IconContainer = styled.div`
 
 const CategorySpan = styled.span`
   font-size: 1.6rem;
-  font-weight: 900;
+  font-weight: ${({ theme }) => theme.font.weight.medium};
   margin-left: 20px;
 `;
 
-const SubCategoryPopup = ({
+const SubCategoryModal = ({
   subCategories,
   src,
-  setIsSubCategoryPopupOpen,
+  setIsSubCategoryModalOpen,
   setIsSelectCategoryOpen,
 }) => {
   const { setSelectedCategory } = useAddBill();
-  const closeHandler = () => setIsSubCategoryPopupOpen((snapshot) => !snapshot);
+  const closeHandler = () => setIsSubCategoryModalOpen((snapshot) => !snapshot);
   const selectCategory = (e) => {
     closeHandler();
     setIsSelectCategoryOpen((snapshot) => !snapshot);
@@ -112,11 +106,13 @@ const SubCategoryPopup = ({
   };
 
   return (
-    <Popup>
-      <CloseButton onClick={closeHandler}>
-        <Icon src={previousIcon} />
-      </CloseButton>
-      <Heading>Select</Heading>
+    <Modal>
+      <Header>
+        <BackButton onClick={closeHandler}>
+          <Icon src={BackIcon} />
+        </BackButton>
+        <Heading>select</Heading>
+      </Header>
       {subCategories.map((category) => (
         <CategoryButton key={category} onClick={selectCategory}>
           <IconContainer>
@@ -125,8 +121,15 @@ const SubCategoryPopup = ({
           <CategorySpan>{category}</CategorySpan>
         </CategoryButton>
       ))}
-    </Popup>
+    </Modal>
   );
 };
 
-export default SubCategoryPopup;
+SubCategoryModal.propTypes = {
+  subCategories: PropTypes.array,
+  src: PropTypes.string,
+  setIsSelectCategoryOpen: PropTypes.func,
+  setIsSubCategoryModalOpen: PropTypes.func,
+};
+
+export default SubCategoryModal;
