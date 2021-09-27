@@ -63,7 +63,6 @@ const StyledCard = styled(Card)`
 const Main = () => {
   const [total, setTotal] = useState(null);
   const [transactions, setTransactions] = useState([]);
-  // const [expenses, setExpenses] = useState([]);
   const { setIsLoading } = useLoading();
   const {
     checkIsUserConfigured,

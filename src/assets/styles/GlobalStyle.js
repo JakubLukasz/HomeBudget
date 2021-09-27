@@ -78,20 +78,8 @@ const GlobalStyle = createGlobalStyle`
         font-size:62.5%;
         overflow: hidden;
 
-        @media ${devices.mobileM}{
-
-        }
-
-        @media ${devices.mobileL}{
-            
-        }
-
         @media ${devices.tablet}{
             font-size:75%;
-        }
-
-        @media ${devices.tabletVer}{
-            font-size:95%;
         }
 
         @media ${devices.laptop}{
