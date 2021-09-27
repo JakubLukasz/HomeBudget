@@ -131,21 +131,6 @@ const Statistics = () => {
             <DoughnutGraph data={earnedCategoryData} />
           </StyledCard>
         )}
-        {earnedCategoryData && (
-          <StyledCard title="EARNED GRAPH">
-            <DoughnutGraph data={earnedCategoryData} />
-          </StyledCard>
-        )}
-        {earnedCategoryData && (
-          <StyledCard title="EARNED GRAPH">
-            <DoughnutGraph data={earnedCategoryData} />
-          </StyledCard>
-        )}
-        {earnedCategoryData && (
-          <StyledCard title="EARNED GRAPH">
-            <DoughnutGraph data={earnedCategoryData} />
-          </StyledCard>
-        )}
       </CardContainer>
     </Container>
   );

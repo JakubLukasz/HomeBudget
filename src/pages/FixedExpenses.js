@@ -45,12 +45,20 @@ const AddNewFixedExpense = styled.button`
 
 const Expenses = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, 1fr);
   grid-gap: 15px;
   margin-top: 15px;
 
   @media ${devices.tablet} {
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media ${devices.laptop} {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  @media ${devices.laptopL} {
+    grid-template-columns: repeat(5, 1fr);
   }
 `;
 
@@ -79,7 +87,6 @@ const FixedExpenses = () => {
       .collection('expenses');
     const unsubscribe = expensesRef.onSnapshot((snapshot) => {
       const tmp = [];
-      console.log(snapshot.size);
       snapshot.forEach((doc) => tmp.push(doc.data()));
       setExpenses(tmp);
     });

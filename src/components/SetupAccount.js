@@ -134,7 +134,7 @@ const SetupAccount = () => {
         payday,
         currency,
         isConfigured: true,
-        lastPayday: null,
+        paydayData: [],
       });
       setIsConfigured(true);
     } catch (error) {

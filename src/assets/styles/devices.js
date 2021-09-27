@@ -3,10 +3,7 @@ export const devices = {
   mobileM: `(min-width: 375px)`,
   mobileL: `(min-width: 425px)`,
   tablet: `(min-width: 768px)`,
-  tabletVer: `(min-width: 768px) and (orientation: portrait)`,
-  tabletL: `(min-width: 1024px) and (orientation: landscape)`,
-  tabletVerL: `(min-width: 1024px) and (orientation: portrait)`,
-  laptop: `(min-width: 1024px) and (orientation: landscape)`,
+  laptop: `(min-width: 1024px)`,
   laptopL: `(min-width: 1440px)`,
   desktop: `(min-width: 2560px)`,
 };

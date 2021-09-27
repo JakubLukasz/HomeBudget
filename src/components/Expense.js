@@ -62,9 +62,14 @@ const Header = styled.header`
 
 const Main = styled.main`
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
   margin-top: 10px;
+
+  @media ${devices.laptop} {
+    flex-direction: row;
+    justify-content: space-between;
+  }
 `;
 
 const Expense = ({ id, amount, title, isSpent, currency, dayOfCollection }) => {
@@ -80,7 +85,7 @@ const Expense = ({ id, amount, title, isSpent, currency, dayOfCollection }) => {
         </DeleteButton>
       </Header>
       <Main>
-        <Day>Day of collection: {dayOfCollection}</Day>
+        <Day>Collection: {dayOfCollection}</Day>
         <Price isSpent={isSpent}>
           <span>
             {isSpent ? '-' : '+'}

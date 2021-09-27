@@ -238,7 +238,7 @@ const AddExpensesModal = ({ setIsExpensesModalOpen }) => {
     const tmp = [];
     months.forEach((month, index) => {
       if (month) {
-        let value = index < 9 ? `0${index + 1}` : index + 1;
+        let value = index < 9 ? `0${index + 1}` : `${index + 1}`;
         tmp.push(value);
       }
     });
@@ -247,15 +247,6 @@ const AddExpensesModal = ({ setIsExpensesModalOpen }) => {
 
   const onSubmit = ({ title, amount, day }) => {
     if (months.filter((month) => month === true).length >= 1) {
-      console.log(
-        randomId,
-        title,
-        getCheckedMonths(months),
-        parseFloat(day),
-        parseFloat(amount),
-        isSpent,
-        currency
-      );
       addNewExpense({
         id: randomId,
         title,
@@ -264,6 +255,7 @@ const AddExpensesModal = ({ setIsExpensesModalOpen }) => {
         amount: parseFloat(amount),
         isSpent,
         currency,
+        expenseCollection: [],
       });
       closeModalHandler();
     } else {

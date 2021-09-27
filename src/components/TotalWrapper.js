@@ -11,10 +11,6 @@ const Heading = styled.h1`
   @media ${devices.tablet} {
     padding: 0 10px;
   }
-
-  @media ${devices.tabletVerL} {
-    padding: 0 10px;
-  }
 `;
 
 const Container = styled.div`

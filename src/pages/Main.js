@@ -68,9 +68,10 @@ const Main = () => {
   const {
     checkIsUserConfigured,
     getUserData,
-    /*getExpenses,*/
+    getExpenses,
     isConfigured,
-    executePayday,
+    checkPayday,
+    checkExpense,
   } = useFirestore();
   const { currentUser } = useAuth();
 
@@ -78,34 +79,6 @@ const Main = () => {
     const data = await getUserData();
     setTotal(data);
     setIsLoading(false);
-  };
-
-  const getCurrentDate = () => {
-    const today = new Date();
-    const currentDay = String(today.getDate()).padStart(2, '0');
-    const currentMonth = String(today.getMonth() + 1).padStart(2, '0');
-    const currentYear = String(today.getFullYear());
-    return { currentDay, currentMonth, currentYear };
-  };
-
-  // const handleExpense = ({ amount, months, isSpent, dayOfCollection }) => {
-  //   const expenseDay = String(dayOfCollection);
-  //   const cleanMonths = tmp.filter((element) => element !== undefined);
-  //   // not finished
-  // };
-
-  // const checkExpenses = async () => {
-  //   const respExpenses = await getExpenses();
-  //   respExpenses.forEach((expense) => handleExpense(expense));
-  // };
-
-  const initPayday = async () => {
-    const { lastPayday, earnings, moneyLeft, payday } = await getUserData();
-    const { currentDay, currentMonth, currentYear } = getCurrentDate();
-    const todaysPayment = `${currentMonth}-${currentYear}`;
-    if (currentDay >= payday && lastPayday !== todaysPayment) {
-      executePayday(moneyLeft + earnings, todaysPayment);
-    }
   };
 
   useEffect(() => {
@@ -140,12 +113,14 @@ const Main = () => {
   }, [isConfigured]);
 
   useEffect(() => {
-    initPayday();
+    checkPayday();
   }, []);
 
-  // useEffect(() => {
-  //   checkExpenses();
-  // }, []);
+  useEffect(() => {
+    getExpenses().then((resp) =>
+      resp.forEach((expense) => checkExpense(expense))
+    );
+  }, []);
 
   return (
     <Container>
