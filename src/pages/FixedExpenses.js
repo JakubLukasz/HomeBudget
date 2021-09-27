@@ -45,7 +45,8 @@ const AddNewFixedExpense = styled.button`
 
 const Expenses = styled.div`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr 1fr;
+  grid-auto-columns: minmax(auto, 1fr);
   grid-gap: 15px;
   margin-top: 15px;
 

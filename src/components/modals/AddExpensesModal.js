@@ -274,7 +274,13 @@ const AddExpensesModal = ({ setIsExpensesModalOpen }) => {
       <ModalForm onSubmit={handleSubmit(onSubmit)}>
         <InputLabel htmlFor="title">TITLE</InputLabel>
         <InputField
-          {...register('title', { required: 'Title is required' })}
+          {...register('title', {
+            required: 'Title is required',
+            maxLength: {
+              value: 10,
+              message: 'Title cannot be longer than 10 characters',
+            },
+          })}
           type="text"
           id="title"
           name="title"

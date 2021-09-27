@@ -67,8 +67,10 @@ const Heading = styled.h1`
 
 const ModalForm = styled.form`
   width: 100%;
+  height: 90%;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   color: black;
 `;
 

@@ -19,11 +19,11 @@ const Container = styled.main`
   flex-direction: column;
 
   @media ${devices.mobileM} {
-    padding: 10px 15px 10vh;
+    padding: 10px 15px 0;
   }
 
   @media ${devices.mobileL} {
-    padding: 15px 20px 10vh;
+    padding: 15px 20px 0;
   }
 
   @media ${devices.laptop} {

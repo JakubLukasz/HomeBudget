@@ -22,10 +22,7 @@ const Title = styled.h2`
   font-size: 1.7rem;
   font-weight: ${({ theme }) => theme.font.weight.semiBold};
   text-transform: uppercase;
-  text-align: center;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
+  max-width: 50%;
 `;
 
 const Price = styled.p`
