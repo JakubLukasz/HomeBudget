@@ -16,6 +16,7 @@ const StyledCard = styled(Card)`
   box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
   border-radius: 15px;
   padding: 10px;
+  margin-bottom: 15px;
 
   @media ${devices.tablet} {
     width: 49%;
