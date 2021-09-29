@@ -2,27 +2,67 @@ import styled from 'styled-components';
 import { devices } from '../assets/styles/devices';
 import React from 'react';
 import PropTypes from 'prop-types';
-import Icon from './Icon';
 import { useFirestore } from '../hooks/useFirestore';
-import CloseIcon from '../assets/images/closeIcon.svg';
+import CloseButton from './CloseButton';
 
 const Container = styled.div`
+  width: 49%;
   padding: 15px;
   display: flex;
   flex-direction: column;
   background-color: ${({ theme }) => theme.color.lightSecondary};
   border-radius: 15px;
+  margin: 0 2% 2% 0;
+
+  &:nth-child(2n) {
+    margin: 0 0 2% 0;
+  }
 
   @media ${devices.tablet} {
+    width: 32%;
+    margin: 0 2% 2% 0;
     padding: 25px;
+
+    &:nth-child(2n) {
+      margin: 0 2% 2% 0;
+    }
+
+    &:nth-child(3n) {
+      margin: 0 0 2% 0;
+    }
   }
+
+  @media ${devices.laptop} {
+    width: 19%;
+    margin: 0 1.25% 1.25% 0;
+
+    &:nth-child(2n) {
+      margin: 0 1.25% 1.25% 0;
+    }
+
+    &:nth-child(3n) {
+      margin: 0 1.25% 1.25% 0;
+    }
+
+    &:nth-child(5n) {
+      margin: 0 0 1.25% 0;
+    }
+  }
+`;
+
+const Close = styled(CloseButton)`
+  width: 15px;
+  height: 15px;
 `;
 
 const Title = styled.h2`
   font-size: 1.7rem;
   font-weight: ${({ theme }) => theme.font.weight.semiBold};
   text-transform: uppercase;
-  max-width: 50%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 80%;
+  white-space: nowrap;
 `;
 
 const Price = styled.p`
@@ -38,21 +78,9 @@ const Day = styled.p`
   margin-bottom: 5px;
 `;
 
-const StyledIcon = styled(Icon)`
-  fill: ${({ theme }) => theme.color.primary};
-  height: 1.3rem;
-  width: auto;
-`;
-
-const DeleteButton = styled.button`
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
 const Header = styled.header`
   display: flex;
+  align-items: center;
   justify-content: space-between;
   margin-bottom: 10px;
 `;
@@ -77,9 +105,7 @@ const Expense = ({ id, amount, title, isSpent, currency, dayOfCollection }) => {
     <Container>
       <Header>
         <Title>{title}</Title>
-        <DeleteButton onClick={handleDeleteExpense}>
-          <StyledIcon src={CloseIcon} />
-        </DeleteButton>
+        <Close click={handleDeleteExpense} />
       </Header>
       <Main>
         <Day>Collection: {dayOfCollection}</Day>

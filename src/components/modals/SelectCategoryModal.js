@@ -1,17 +1,17 @@
 import styled from 'styled-components';
 import { devices } from '../../assets/styles/devices';
-import BackIcon from '../../assets/images/backIcon.svg';
 import Icon from '../Icon';
 import SubCategoryModal from './SubCategoryModal';
 import React, { useState } from 'react';
-import foodIcon from '../../assets/images/food.svg';
-import carIcon from '../../assets/images/car.svg';
-import homeIcon from '../../assets/images/home.svg';
-import shoppingIcon from '../../assets/images/shoppingBag.svg';
-import feesIcon from '../../assets/images/fees.svg';
-import entertainmentIcon from '../../assets/images/person.svg';
-import otherIcon from '../../assets/images/square.svg';
+import FoodIcon from '../../assets/images/foodIcon.svg';
+import CarIcon from '../../assets/images/carIcon.svg';
+import HomeIcon from '../../assets/images/homeIcon.svg';
+import ShoppingIcon from '../../assets/images/shoppingIcon.svg';
+import FeesIcon from '../../assets/images/feesIcon.svg';
+import EntertainmentIcon from '../../assets/images/entertainmentIcon.svg';
+import OtherIcon from '../../assets/images/otherIcon.svg';
 import PropTypes from 'prop-types';
+import BackButton from '../BackButton';
 
 const Modal = styled.div`
   background-color: ${({ theme }) => theme.color.white};
@@ -52,11 +52,6 @@ const Heading = styled.h1`
   font-weight: ${({ theme }) => theme.font.weight.semiBold};
   font-size: 2rem;
   text-transform: capitalize;
-`;
-
-const BackButton = styled.button`
-  width: 30px;
-  height: 30px;
 `;
 
 const CategoryButton = styled.button`
@@ -104,12 +99,12 @@ const CategorySpan = styled.span`
 const SelectCategoryModal = ({ setIsSelectCategoryOpen }) => {
   const mainCategories = [
     {
-      src: foodIcon,
+      src: FoodIcon,
       title: 'Food',
       subCategories: ['Groceries', 'Bar, Cafe', 'Restaurant'],
     },
     {
-      src: carIcon,
+      src: CarIcon,
       title: 'Car',
       subCategories: [
         'Car',
@@ -120,12 +115,12 @@ const SelectCategoryModal = ({ setIsSelectCategoryOpen }) => {
       ],
     },
     {
-      src: homeIcon,
+      src: HomeIcon,
       title: 'Home',
       subCategories: ['Tools', 'Furniture', 'House and Garden', 'Repairs'],
     },
     {
-      src: shoppingIcon,
+      src: ShoppingIcon,
       title: 'Shopping',
       subCategories: [
         'Electronics',
@@ -140,7 +135,7 @@ const SelectCategoryModal = ({ setIsSelectCategoryOpen }) => {
       ],
     },
     {
-      src: feesIcon,
+      src: FeesIcon,
       title: 'Fees',
       subCategories: [
         'Internet Bill',
@@ -157,7 +152,7 @@ const SelectCategoryModal = ({ setIsSelectCategoryOpen }) => {
       ],
     },
     {
-      src: entertainmentIcon,
+      src: EntertainmentIcon,
       title: 'Entertainment',
       subCategories: [
         'Alcohol',
@@ -172,7 +167,7 @@ const SelectCategoryModal = ({ setIsSelectCategoryOpen }) => {
       ],
     },
     {
-      src: otherIcon,
+      src: OtherIcon,
       title: 'Other',
       subCategories: [
         'Sale',
@@ -202,9 +197,7 @@ const SelectCategoryModal = ({ setIsSelectCategoryOpen }) => {
         />
       )}
       <Header>
-        <BackButton onClick={closeModalHandler}>
-          <Icon src={BackIcon} />
-        </BackButton>
+        <BackButton click={closeModalHandler} />
         <Heading>Select</Heading>
       </Header>
       {mainCategories.map(({ src, title, subCategories }) => (

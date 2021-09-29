@@ -5,6 +5,12 @@ import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { devices } from '../assets/styles/devices';
 import Logo from '../components/Logo';
+import {
+  Input,
+  Label,
+  SubmitButton,
+  Error,
+} from '../assets/styles/reusableStyles';
 
 const Container = styled.section`
   height: var(--app-height);
@@ -28,25 +34,6 @@ const ResetForm = styled.form`
   }
 `;
 
-const InputLabel = styled.label`
-  display: block;
-  color: ${({ theme }) => theme.color.secondary};
-  font-size: 1rem;
-  font-weight: ${({ theme }) => theme.font.weight.semiBold};
-  margin: 23px 0 3px 0;
-`;
-
-const InputField = styled.input`
-  width: 100%;
-  font-size: 1.4rem;
-  font-weight: ${({ theme }) => theme.font.weight.medium};
-  background: ${({ theme }) => theme.color.lightSecondary};
-  border: none;
-  border-radius: 7px;
-  outline: none;
-  padding: 10px 15px;
-`;
-
 const Heading = styled.h1`
   font-weight: ${({ theme }) => theme.font.weight.regular};
   text-align: center;
@@ -56,17 +43,6 @@ const Heading = styled.h1`
   @media ${devices.mobileM} {
     margin: 10px 0 70px;
   }
-`;
-
-const SubmitButton = styled.button`
-  width: 100%;
-  font-size: 1.7rem;
-  font-weight: ${({ theme }) => theme.font.weight.semiBold};
-  background-color: ${({ theme }) => theme.color.primary};
-  color: #ffffff;
-  border-radius: 7px;
-  padding: 10px 15px;
-  margin-top: 23px;
 `;
 
 const FormLink = styled(Link)`
@@ -82,13 +58,6 @@ const LinkText = styled.p`
   font-size: 1.2rem;
   color: ${({ theme }) => theme.color.secondary};
   text-align: center;
-`;
-
-const Error = styled.p`
-  font-size: 1.1rem;
-  font-weight: ${({ theme }) => theme.font.weight.medium};
-  color: #ff0033;
-  margin: 5px 0 0;
 `;
 
 const FormErrorMessage = styled.p`
@@ -134,8 +103,8 @@ const ResetPassword = () => {
       <ResetForm onSubmit={handleSubmit(submitFormHandler)}>
         {formError && <FormErrorMessage>{formError}</FormErrorMessage>}
         {formMessage && <FormMessage>{formMessage}</FormMessage>}
-        <InputLabel htmlFor="email">E-MAIL</InputLabel>
-        <InputField
+        <Label htmlFor="email">E-MAIL</Label>
+        <Input
           {...register('email', {
             required: 'Email is Required',
             pattern: {

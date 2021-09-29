@@ -4,12 +4,11 @@ import React, { useEffect, useState } from 'react';
 import { devices } from '../assets/styles/devices';
 import { Doughnut } from 'react-chartjs-2';
 import { useFirestore } from '../hooks/useFirestore';
+import { Page } from '../assets/styles/reusableStyles';
+import { currentDate } from '../helpers/currentDate';
 
-const Container = styled.main`
+const Container = styled(Page)`
   background-color: ${({ theme }) => theme.color.lightPrimary};
-  font-size: 1rem;
-  flex: 1;
-  overflow: auto;
 `;
 
 const StyledCard = styled(Card)`
@@ -17,6 +16,57 @@ const StyledCard = styled(Card)`
   box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
   border-radius: 15px;
   padding: 10px;
+
+  @media ${devices.tablet} {
+    width: 49%;
+    margin: 0 2% 2% 0;
+
+    &:first-child {
+      margin: 0 2% 2% 0;
+    }
+
+    &:nth-child(2n) {
+      margin: 0 0 2% 0;
+    }
+  }
+
+  @media ${devices.laptop} {
+    width: 32%;
+    margin: 0 2% 2% 0;
+
+    &:first-child {
+      margin: 0 2% 2% 0;
+    }
+
+    &:nth-child(2n) {
+      margin: 0 2% 2% 0;
+    }
+
+    &:nth-child(3n) {
+      margin: 0 0 2% 0;
+    }
+  }
+
+  @media ${devices.desktop} {
+    width: 19%;
+    margin: 0 1.25% 1.25% 0;
+
+    &:first-child {
+      margin: 0 1.25% 1.25% 0;
+    }
+
+    &:nth-child(2n) {
+      margin: 0 1.25% 1.25% 0;
+    }
+
+    &:nth-child(3n) {
+      margin: 0 1.25% 1.25% 0;
+    }
+
+    &:nth-child(5n) {
+      margin: 0 0 1.25% 0;
+    }
+  }
 `;
 
 const DoughnutGraph = styled(Doughnut)`
@@ -24,28 +74,43 @@ const DoughnutGraph = styled(Doughnut)`
 `;
 
 const CardContainer = styled.div`
-  margin: 20px;
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-auto-rows: auto;
-  row-gap: 20px;
+  display: flex;
+  flex-direction: column;
 
   @media ${devices.tablet} {
-    grid-template-columns: repeat(3, 1fr);
-    grid-auto-columns: minmax(auto, 1fr);
-    gap: 20px;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
   }
 `;
 
 const Statistics = () => {
   const { getTransactions } = useFirestore();
-  const [transactions, setTransactions] = useState([]);
+  const [spentTransactions, setSpentTransactions] = useState([]);
+  const [earnedTransactions, setEarnedTransactions] = useState([]);
+  const [spentMonthTransactions, setSpentMonthTransactions] = useState([]);
+  const [earnedMonthTransactions, setEarnedMonthTransactions] = useState([]);
   const [earnedCategoryData, setEarnedCategoryData] = useState(null);
   const [spentCategoryData, setSpentCategoryData] = useState(null);
+  const [spentMonthCategoryData, setSpentMonthCategoryData] = useState(null);
+  const [earnedMonthCategoryData, setEarnedMonthCategoryData] = useState(null);
 
   const generateRandomColor = () => {
     let randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
     return randomColor;
+  };
+
+  const createDoughnut = (labels, data) => {
+    return {
+      labels,
+      datasets: [
+        {
+          data,
+          backgroundColor: colors,
+          hoverOffset: 4,
+        },
+      ],
+    };
   };
 
   const colors = [
@@ -60,11 +125,6 @@ const Statistics = () => {
     '#e32f29',
     '#21de6a',
   ].concat(generateRandomColor);
-
-  const loadTransactions = async () => {
-    const docs = await getTransactions();
-    setTransactions(docs);
-  };
 
   const groupArrayByCategory = (rawArray) => {
     const array = [];
@@ -87,48 +147,71 @@ const Statistics = () => {
     return result;
   };
 
-  useEffect(() => {
-    loadTransactions();
-  }, []);
+  const setupDoughnut = (dataArray, func) => {
+    const labels = dataArray.map(({ categoryTitle }) => categoryTitle);
+    const data = dataArray.map(({ amount }) => amount);
+    func(createDoughnut(labels, data));
+  };
+
+  const setupMonthStatistics = (spentData, earnedData) => {
+    const { currentMonth } = currentDate();
+    const spentMonthData = spentData.filter(
+      ({ date }) => date.split('.')[1] === currentMonth
+    );
+    setSpentMonthTransactions(spentMonthData);
+    const earnedMonthData = earnedData.filter(
+      ({ date }) => date.split('.')[1] === currentMonth
+    );
+    setEarnedMonthTransactions(earnedMonthData);
+    const spentMonthArray = groupArrayByCategory(spentMonthData);
+    const earnedMonthArray = groupArrayByCategory(earnedMonthData);
+    return { spentMonthArray, earnedMonthArray };
+  };
+
+  const handleTransactions = (transactions) => {
+    const spentTransactionsData = transactions.filter(({ isSpent }) => isSpent);
+    setSpentTransactions(spentTransactionsData);
+    const earnedTransactionsData = transactions.filter(
+      ({ isSpent }) => !isSpent
+    );
+    setEarnedTransactions(earnedTransactionsData);
+    const spentCategoryArray = groupArrayByCategory(spentTransactionsData);
+    const earnedCategoryArray = groupArrayByCategory(earnedTransactionsData);
+    const { spentMonthArray, earnedMonthArray } = setupMonthStatistics(
+      spentTransactionsData,
+      earnedTransactionsData
+    );
+    setupDoughnut(spentCategoryArray, setSpentCategoryData);
+    setupDoughnut(earnedCategoryArray, setEarnedCategoryData);
+    setupDoughnut(spentMonthArray, setSpentMonthCategoryData);
+    setupDoughnut(earnedMonthArray, setEarnedMonthCategoryData);
+  };
 
   useEffect(() => {
-    const spentTransactions = transactions.filter(({ isSpent }) => isSpent);
-    const earnedTransactions = transactions.filter(({ isSpent }) => !isSpent);
-    const spentCategoryObject = groupArrayByCategory(spentTransactions);
-    const earnedCategoryObject = groupArrayByCategory(earnedTransactions);
-    setSpentCategoryData({
-      labels: spentCategoryObject.map(({ categoryTitle }) => categoryTitle),
-      datasets: [
-        {
-          data: spentCategoryObject.map(({ amount }) => amount),
-          backgroundColor: colors,
-          hoverOffset: 4,
-        },
-      ],
-    });
-    setEarnedCategoryData({
-      labels: earnedCategoryObject.map(({ categoryTitle }) => categoryTitle),
-      datasets: [
-        {
-          data: earnedCategoryObject.map(({ amount }) => amount),
-          backgroundColor: colors,
-          hoverOffset: 4,
-        },
-      ],
-    });
-  }, [transactions]);
+    getTransactions().then((transactions) => handleTransactions(transactions));
+  }, []);
 
   return (
     <Container>
       <CardContainer>
-        {spentCategoryData && (
-          <StyledCard title="SPENT GRAPH">
+        {spentTransactions.length !== 0 && (
+          <StyledCard title="SPENT GRAPH (ALL TIME)">
             <DoughnutGraph data={spentCategoryData} />
           </StyledCard>
         )}
-        {earnedCategoryData && (
-          <StyledCard title="EARNED GRAPH">
+        {earnedTransactions.length !== 0 && (
+          <StyledCard title="EARNED GRAPH (ALL TIME)">
             <DoughnutGraph data={earnedCategoryData} />
+          </StyledCard>
+        )}
+        {spentMonthTransactions.length !== 0 && (
+          <StyledCard title="SPENT GRAPH (THIS MONTH)">
+            <DoughnutGraph data={spentMonthCategoryData} />
+          </StyledCard>
+        )}
+        {earnedMonthTransactions.length !== 0 && (
+          <StyledCard title="SPENT GRAPH (THIS MONTH)">
+            <DoughnutGraph data={earnedMonthCategoryData} />
           </StyledCard>
         )}
       </CardContainer>

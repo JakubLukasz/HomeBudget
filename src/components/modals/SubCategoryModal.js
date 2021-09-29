@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 import { devices } from '../../assets/styles/devices';
 import Icon from '../Icon';
-import BackIcon from '../../assets/images/backIcon.svg';
-import { useAddBill } from '../../hooks/useAddBill';
+import { useInputData } from '../../hooks/useInputData';
 import React from 'react';
 import PropTypes from 'prop-types';
+import BackButton from '../BackButton';
 
 const Modal = styled.div`
   background-color: ${({ theme }) => theme.color.white};
@@ -47,11 +47,6 @@ const Heading = styled.h1`
   text-transform: capitalize;
 `;
 
-const BackButton = styled.button`
-  width: 30px;
-  height: 30px;
-`;
-
 const CategoryButton = styled.button`
   width: 100%;
   border: none;
@@ -71,7 +66,7 @@ const CategoryButton = styled.button`
 
 const CategoryIcon = styled(Icon)`
   height: 2rem;
-  width: auto;
+  width: 2rem;
   fill: white;
 `;
 
@@ -97,7 +92,7 @@ const SubCategoryModal = ({
   setIsSubCategoryModalOpen,
   setIsSelectCategoryOpen,
 }) => {
-  const { setSelectedCategory } = useAddBill();
+  const { setSelectedCategory } = useInputData();
   const closeHandler = () => setIsSubCategoryModalOpen((snapshot) => !snapshot);
   const selectCategory = (e) => {
     closeHandler();
@@ -108,9 +103,7 @@ const SubCategoryModal = ({
   return (
     <Modal>
       <Header>
-        <BackButton onClick={closeHandler}>
-          <Icon src={BackIcon} />
-        </BackButton>
+        <BackButton click={closeHandler} />
         <Heading>select</Heading>
       </Header>
       {subCategories.map((category) => (

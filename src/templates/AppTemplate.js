@@ -3,7 +3,7 @@ import Statistics from '../pages/Statistics';
 import Main from '../pages/Main';
 import React from 'react';
 import AppNav from '../components/Nav';
-import { useAddBill } from '../hooks/useAddBill';
+import { useInputData } from '../hooks/useInputData';
 import AddBillModal from '../components/modals/AddBillModal';
 import { useFirestore } from '../hooks/useFirestore';
 import { useLoading } from '../hooks/useLoading';
@@ -26,7 +26,7 @@ const Container = styled.div`
 `;
 
 const AppTemplate = () => {
-  const { isModalOpen } = useAddBill();
+  const { isModalOpen } = useInputData();
   const { isConfigured } = useFirestore();
   const { isLoading } = useLoading();
   return (

@@ -7,6 +7,7 @@ const Heading = styled.h1`
   font-size: 3rem;
   font-weight: ${({ theme }) => theme.font.weight.medium};
   margin: 5px 0;
+  color: ${({ moneyLeft }) => (moneyLeft < 0 ? 'red' : 'black')};
 
   @media ${devices.tablet} {
     padding: 0 10px;
@@ -19,13 +20,11 @@ const Container = styled.div`
   padding: 0 10px;
 `;
 
-const MoneyLeft = styled.span``;
-
 const TotalWrapper = ({ moneyLeft, currency }) => {
   return (
     <Container>
-      <Heading>
-        <MoneyLeft>{moneyLeft}</MoneyLeft> {currency}
+      <Heading moneyLeft={moneyLeft}>
+        {moneyLeft} {currency}
       </Heading>
     </Container>
   );

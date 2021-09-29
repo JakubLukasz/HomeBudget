@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import Icon from './Icon';
-import addBillIcon from '../assets/images/add.svg';
-import { useAddBill } from '../hooks/useAddBill';
+import AddBillIcon from '../assets/images/addBillIcon.svg';
+import { useInputData } from '../hooks/useInputData';
 import { devices } from '../assets/styles/devices';
 
 const AddButton = styled.button`
@@ -36,13 +36,13 @@ const ButtonText = styled.span`
 `;
 
 const AddBill = () => {
-  const { setIsModalOpen } = useAddBill();
+  const { setIsModalOpen } = useInputData();
 
   const addBillHandler = () => setIsModalOpen((snapshot) => !snapshot);
 
   return (
     <AddButton onClick={addBillHandler}>
-      <ButtonIcon src={addBillIcon} />
+      <ButtonIcon src={AddBillIcon} />
       <ButtonText>Add Bill</ButtonText>
     </AddButton>
   );

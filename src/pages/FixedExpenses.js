@@ -7,17 +7,10 @@ import { useFirestore } from '../hooks/useFirestore';
 import { useLoading } from '../hooks/useLoading';
 import { db } from '../services/firebase';
 import { useAuth } from '../hooks/useAuth';
+import { Page } from '../assets/styles/reusableStyles';
 
-const Container = styled.main`
+const Container = styled(Page)`
   background-color: ${({ theme }) => theme.color.white};
-  flex: 1;
-  overflow: auto;
-  font-size: 1rem;
-  padding: 10px 20px 0;
-
-  /* @media ${devices.laptop} {
-    height: var(--app-height);
-  } */
 `;
 
 const Title = styled.span`
@@ -36,31 +29,17 @@ const AddNewFixedExpense = styled.button`
   font-weight: bold;
   align-items: center;
   justify-content: center;
-  margin: 10px 0;
+  margin: 10px 0 20px;
+  width: 100%;
 
   @media ${devices.laptop} {
-    max-width: 400px;
+    width: auto;
   }
 `;
 
 const Expenses = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-auto-columns: minmax(auto, 1fr);
-  grid-gap: 15px;
-  margin-top: 15px;
-
-  @media ${devices.tablet} {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  @media ${devices.laptop} {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  @media ${devices.laptopL} {
-    grid-template-columns: repeat(5, 1fr);
-  }
+  display: flex;
+  flex-wrap: wrap;
 `;
 
 const FixedExpenses = () => {
@@ -102,14 +81,14 @@ const FixedExpenses = () => {
         <AddExpensesModal setIsExpensesModalOpen={setIsExpensesModalOpen} />
       )}
       <Title>FIXED EXPENSES</Title>
+      <AddNewFixedExpense onClick={addNewFixedExpenseHandler}>
+        ADD EXPENSE
+      </AddNewFixedExpense>
       <Expenses>
         {expenses.map((expenseVal) => (
           <Expense key={expenseVal.id} {...expenseVal} />
         ))}
       </Expenses>
-      <AddNewFixedExpense onClick={addNewFixedExpenseHandler}>
-        ADD EXPENSE
-      </AddNewFixedExpense>
     </Container>
   );
 };

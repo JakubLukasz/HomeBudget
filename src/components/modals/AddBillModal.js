@@ -1,42 +1,22 @@
 import styled from 'styled-components';
-import { useAddBill } from '../../hooks/useAddBill';
+import { useInputData } from '../../hooks/useInputData';
 import React, { useRef, useEffect, useState } from 'react';
-import CloseIcon from '../../assets/images/closeIcon.svg';
 import SelectCategoryModal from './SelectCategoryModal';
-import Icon from '../Icon';
 import { devices } from '../../assets/styles/devices';
 import { useFirestore } from '../../hooks/useFirestore';
-import { uniqueKey } from '../../helpers/uniqueKey';
 import { useForm } from 'react-hook-form';
+import {
+  Input,
+  Label,
+  SubmitButton,
+  Modal,
+  Form,
+  Error,
+} from '../../assets/styles/reusableStyles';
+import Switch from '../FormSwitch';
+import CloseButton from '../CloseButton';
 
-const Modal = styled.div`
-  width: 94vw;
-  background-color: #ffffff;
-  position: fixed;
-  top: 3vw;
-  bottom: 3vw;
-  left: 3vw;
-  right: 3vw;
-  color: black;
-  z-index: 9999;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border-radius: 15px;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
-
-  @media ${devices.tablet} {
-    width: 500px;
-    top: 50%;
-    left: 50%;
-    right: auto;
-    bottom: auto;
-    transform: translate(-50%, -50%);
-  }
-`;
-
-const ModalMain = styled.main`
+const Content = styled.main`
   position: relative;
   width: 100%;
   height: 100%;
@@ -45,11 +25,6 @@ const ModalMain = styled.main`
   @media ${devices.mobileM} {
     padding: 30px 25px;
   }
-`;
-
-const CloseButton = styled.button`
-  width: 20px;
-  height: 20px;
 `;
 
 const Header = styled.header`
@@ -63,52 +38,6 @@ const Heading = styled.h1`
   font-weight: ${({ theme }) => theme.font.weight.semiBold};
   font-size: 2rem;
   text-transform: capitalize;
-`;
-
-const ModalForm = styled.form`
-  width: 100%;
-  height: 90%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  color: black;
-`;
-
-const InputLabel = styled.label`
-  color: black;
-  display: block;
-  font-size: 1rem;
-  font-weight: ${({ theme }) => theme.font.weight.semiBold};
-  margin: 23px 0 3px 0;
-`;
-
-const InputField = styled.input`
-  width: 100%;
-  font-size: 1.4rem;
-  font-weight: ${({ theme }) => theme.font.weight.medium};
-  background: ${({ theme }) => theme.color.lightSecondary};
-  border: none;
-  border-radius: 7px;
-  padding: 10px 15px;
-`;
-
-const SwitchContainer = styled.div`
-  width: 100%;
-  border: 2px solid ${({ theme }) => theme.color.primary};
-  border-radius: 7px;
-  overflow: hidden;
-  margin-top: 23px;
-`;
-
-const SwitchButton = styled.button`
-  width: 50%;
-  padding: 10px 0;
-  font-size: 1.2rem;
-  font-weight: ${({ theme }) => theme.font.weight.semiBold};
-  background-color: ${({ theme, isSpent }) =>
-    isSpent ? theme.color.primary : 'white'};
-  color: ${({ theme, isSpent }) => (isSpent ? 'white' : theme.color.primary)};
-  transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out;
 `;
 
 const MoneyInputContainer = styled.div`
@@ -130,17 +59,6 @@ const Currency = styled.div`
   justify-content: center;
   background-color: ${({ theme }) => theme.color.lightSecondary};
   color: black;
-`;
-
-const SubmitButton = styled.button`
-  width: 100%;
-  font-size: 1.7rem;
-  font-weight: ${({ theme }) => theme.font.weight.semiBold};
-  background-color: ${({ theme }) => theme.color.primary};
-  color: #ffffff;
-  border-radius: 7px;
-  padding: 10px 15px;
-  margin-top: 23px;
 `;
 
 const CategoryContainer = styled.div`
@@ -185,22 +103,15 @@ const CategoryView = styled.p`
   }
 `;
 
-const Error = styled.p`
-  font-size: 1.1rem;
-  font-weight: ${({ theme }) => theme.font.weight.medium};
-  color: #ff0033;
-  margin: 5px 0 0;
-`;
-
 const AddBillModal = () => {
   const [isSpent, setIsSpent] = useState(true);
   const [isSelectCategoryOpen, setIsSelectCategoryOpen] = useState(false);
   const [currency, setCurrency] = useState('');
   const [randomId, setRandomId] = useState(null);
   const [categoryError, setCategoryError] = useState('');
-  const { getCurrency, getTransactions } = useFirestore();
-  const { setIsModalOpen, addNewBill, selectedCategory, setSelectedCategory } =
-    useAddBill();
+  const { getCurrency, addNewBill, generateTransactionsID } = useFirestore();
+  const { setIsModalOpen, selectedCategory, setSelectedCategory } =
+    useInputData();
   const {
     handleSubmit,
     register,
@@ -209,34 +120,21 @@ const AddBillModal = () => {
 
   const categoryRef = useRef();
 
-  const checkId = (transactions) => {
-    const randomId = uniqueKey();
-    transactions.forEach(({ id }) => {
-      if (id === randomId) {
-        return checkId(transactions);
-      }
-    });
-    return randomId;
-  };
-
-  const generateKey = async () => {
-    const transactions = await getTransactions();
-    const generatedId = checkId(transactions);
-    setRandomId(generatedId);
+  const changeDateFormat = (date) => {
+    const arr = date.split('-');
+    const year = arr[0];
+    const month = arr[1];
+    const day = arr[2];
+    return `${day}.${month}.${year}`;
   };
 
   useEffect(() => {
-    generateKey();
+    generateTransactionsID().then((id) => setRandomId(id));
   }, []);
 
   useEffect(() => {
-    currencyHandler();
+    getCurrency().then((resp) => setCurrency(resp));
   }, []);
-
-  const currencyHandler = async () => {
-    const currencyValue = await getCurrency();
-    setCurrency(currencyValue);
-  };
 
   const onSubmit = ({ title, date, amount }) => {
     if (categoryRef.current.innerText != 'Not Selected...') {
@@ -245,7 +143,7 @@ const AddBillModal = () => {
         title,
         categoryTitle: categoryRef.current.innerText,
         categorySrc: selectedCategory.src,
-        date: date,
+        date: changeDateFormat(date),
         amount: parseFloat(amount),
         isSpent,
         currency,
@@ -258,8 +156,6 @@ const AddBillModal = () => {
   const selectCategoryHandler = () =>
     setIsSelectCategoryOpen((snapshot) => !snapshot);
 
-  const changeSwitchColor = () => setIsSpent((snapshot) => !snapshot);
-
   const closeModalHandler = () => {
     setSelectedCategory('');
     setIsModalOpen((snapshot) => !snapshot);
@@ -267,7 +163,7 @@ const AddBillModal = () => {
 
   return (
     <Modal>
-      <ModalMain>
+      <Content>
         {isSelectCategoryOpen && (
           <SelectCategoryModal
             setIsSelectCategoryOpen={setIsSelectCategoryOpen}
@@ -275,20 +171,18 @@ const AddBillModal = () => {
         )}
         <Header>
           <Heading>Add Bill</Heading>
-          <CloseButton onClick={closeModalHandler}>
-            <Icon src={CloseIcon} />
-          </CloseButton>
+          <CloseButton click={closeModalHandler} />
         </Header>
-        <ModalForm onSubmit={handleSubmit(onSubmit)}>
-          <InputLabel htmlFor="title">TITLE</InputLabel>
-          <InputField
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          <Label htmlFor="title">TITLE</Label>
+          <Input
             {...register('title', { required: 'Title is required' })}
             type="text"
             id="title"
             name="title"
-          ></InputField>
+          />
           {errors.title && <Error>{errors.title.message}</Error>}
-          <InputLabel htmlFor="category">CATEGORY</InputLabel>
+          <Label htmlFor="category">CATEGORY</Label>
           <CategoryContainer>
             <CategoryView ref={categoryRef}>
               {selectedCategory.title
@@ -300,16 +194,16 @@ const AddBillModal = () => {
             </SelectCategory>
           </CategoryContainer>
           {categoryError && <Error>{categoryError}</Error>}
-          <InputLabel htmlFor="date">DATE OF PURCHASE</InputLabel>
-          <InputField
+          <Label htmlFor="date">DATE OF PURCHASE</Label>
+          <Input
             {...register('date', { required: 'Date is required' })}
             type="date"
             name="date"
-          ></InputField>
+          />
           {errors.date && <Error>{errors.date.message}</Error>}
-          <InputLabel htmlFor="amount">AMOUNT</InputLabel>
+          <Label htmlFor="amount">AMOUNT</Label>
           <MoneyInputContainer>
-            <InputField
+            <Input
               {...register('amount', {
                 required: 'Amount is required',
                 min: {
@@ -320,29 +214,14 @@ const AddBillModal = () => {
               type="number"
               name="amount"
               step="0.01"
-            ></InputField>
+            />
             <Currency>{currency}</Currency>
           </MoneyInputContainer>
           {errors.amount && <Error>{errors.amount.message}</Error>}
-          <SwitchContainer>
-            <SwitchButton
-              isSpent={isSpent}
-              type="button"
-              onClick={changeSwitchColor}
-            >
-              SPENT
-            </SwitchButton>
-            <SwitchButton
-              isSpent={!isSpent}
-              type="button"
-              onClick={changeSwitchColor}
-            >
-              EARNED
-            </SwitchButton>
-          </SwitchContainer>
+          <Switch isSpent={isSpent} setIsSpent={setIsSpent} />
           <SubmitButton type="submit">ADD BILL</SubmitButton>
-        </ModalForm>
-      </ModalMain>
+        </Form>
+      </Content>
     </Modal>
   );
 };

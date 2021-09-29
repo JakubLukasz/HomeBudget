@@ -8,23 +8,12 @@ import { useFirestore } from '../hooks/useFirestore';
 import { useLoading } from '../hooks/useLoading';
 import { db } from '../services/firebase';
 import { useAuth } from '../hooks/useAuth';
+import { Page } from '../assets/styles/reusableStyles';
 
-const Container = styled.main`
+const Container = styled(Page)`
   background-color: ${({ theme }) => theme.color.lightPrimary};
-  flex: 1;
-  font-size: 1rem;
-  padding: 5px 10px 0;
-  overflow: auto;
   display: flex;
   flex-direction: column;
-
-  @media ${devices.mobileM} {
-    padding: 10px 15px 0;
-  }
-
-  @media ${devices.mobileL} {
-    padding: 15px 20px 0;
-  }
 
   @media ${devices.laptop} {
     flex-direction: row;
@@ -41,14 +30,6 @@ const StyledCard = styled(Card)`
 
   @media ${devices.mobileM} {
     padding: 10px 15px;
-  }
-
-  @media ${devices.tablet} {
-    flex: ${({ stretch }) => (stretch ? '1' : '0 1 auto')};
-    width: ${({ width }) => (width ? width : 'auto')};
-    &:first-child {
-      margin-right: 15px;
-    }
   }
 
   @media ${devices.laptop} {

@@ -2,8 +2,8 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import Icon from './Icon';
 import AddBill from './AddBill';
-import statsIcon from '../assets/images/stats.svg';
-import planIcon from '../assets/images/plan.svg';
+import StatsIcon from '../assets/images/statsIcon.svg';
+import ExpensesIcon from '../assets/images/expensesIcon.svg';
 import Logo from '../assets/images/logo.svg';
 import { devices } from '../assets/styles/devices';
 import LogOutButton from './LogOutButton';
@@ -32,7 +32,7 @@ const LinkIcon = styled(Icon)`
 `;
 
 const LinkTitle = styled.span`
-  font-weight: ${({ theme }) => theme.font.weight.regular};
+  font-weight: ${({ theme }) => theme.font.weight.medium};
   color: ${({ theme }) => theme.color.secondary};
   font-size: 1rem;
   margin: 10px 0 0 0;
@@ -62,11 +62,11 @@ const AppNav = () => {
   return (
     <Navigation>
       <NavLink to="/statistics">
-        <LinkIcon src={statsIcon} />
+        <LinkIcon src={StatsIcon} />
         <LinkTitle>Statistics</LinkTitle>
       </NavLink>
       <NavLink to="/fixed-expenses">
-        <LinkIcon src={planIcon} />
+        <LinkIcon src={ExpensesIcon} />
         <LinkTitle>Expenses</LinkTitle>
       </NavLink>
       <AddBill />

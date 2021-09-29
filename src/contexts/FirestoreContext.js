@@ -3,6 +3,9 @@ import { db } from '../services/firebase';
 import { useAuth } from '../hooks/useAuth';
 import PropTypes from 'prop-types';
 import { currentDate } from '../helpers/currentDate';
+import { uniqueKey } from '../helpers/uniqueKey';
+import PaydayIcon from '../assets/images/paydayIcon.svg';
+import ExpensesIcon from '../assets/images/expensesIcon.svg';
 
 export const FirestoreContext = createContext({});
 
@@ -68,58 +71,87 @@ export const FirestoreContextProvider = ({ children }) => {
     return data.includes(date);
   };
 
-  const executePayday = (paydayData, paydayDate, value) => {
+  const executePayday = async (paydayData, paydayDate, todayDate, earnings) => {
     const userRef = db.collection('users').doc(currentUser.uid);
+    const ID = await generateTransactionsID();
+    const currency = await getCurrency();
     paydayData.push(paydayDate);
     userRef.update({
-      moneyLeft: value,
       paydayData,
+    });
+    addNewBill({
+      id: ID,
+      title: 'Payday',
+      categoryTitle: 'Payday',
+      categorySrc: PaydayIcon,
+      date: todayDate,
+      amount: parseFloat(earnings),
+      isSpent: false,
+      currency,
     });
   };
 
-  const setupPayday = (data, paydayDate) => {
-    const { paydayData, moneyLeft, earnings } = data;
+  const setupPayday = (data, payday) => {
+    const { currentDay, currentMonth, currentYear } = currentDate();
+    const { paydayData, earnings } = data;
+    const paydayDate = `${payday}.${currentMonth}.${currentYear}`;
+    const todayDate = `${currentDay}.${currentMonth}.${currentYear}`;
     const paydayResp = isDateIncluded(paydayData, paydayDate);
-    const value = moneyLeft + earnings;
-    if (!paydayResp) executePayday(paydayData, paydayDate, value);
+    if (!paydayResp) executePayday(paydayData, paydayDate, todayDate, earnings);
   };
 
   const checkPayday = async () => {
-    const { currentDay, currentMonth, currentYear } = currentDate();
+    const { currentDay } = currentDate();
     const userRef = db.collection('users').doc(currentUser.uid);
     const resp = await userRef.get();
     const data = resp.data();
     const { payday } = data;
-    const paydayDate = `${payday}.${currentMonth}.${currentYear}`;
-    if (currentDay >= payday) setupPayday(data, paydayDate);
+    if (currentDay >= payday) setupPayday(data, payday);
   };
 
-  const executeExpense = (id, expenseCollection, expenseDate, value) => {
+  const executeExpense = async (
+    expenseCollection,
+    dayOfCollection,
+    expense
+  ) => {
+    const { title, amount, isSpent, id } = expense;
+    const { currentDay, currentMonth, currentYear } = currentDate();
     const userRef = db.collection('users').doc(currentUser.uid);
     const expenseRef = userRef.collection('expenses').doc(id);
+    const expenseDate = `${dayOfCollection}.${currentMonth}.${currentYear}`;
+    const todayDate = `${currentDay}.${currentMonth}.${currentYear}`;
     expenseCollection.push(expenseDate);
     expenseRef.update({
       expenseCollection,
     });
-    userRef.update({
-      moneyLeft: value,
+    const ID = await generateTransactionsID();
+    const currency = await getCurrency();
+    addNewBill({
+      id: ID,
+      title,
+      categoryTitle: title,
+      categorySrc: ExpensesIcon,
+      date: todayDate,
+      amount: parseFloat(amount),
+      isSpent,
+      currency,
     });
   };
 
-  const setupExpense = async (expense, expenseDate) => {
-    const { moneyLeft } = await getUserData();
-    const { expenseCollection, amount, isSpent, id } = expense;
+  const setupExpense = async (expense) => {
+    const { currentMonth, currentYear } = currentDate();
+    const { expenseCollection, dayOfCollection } = expense;
+    const expenseDate = `${dayOfCollection}.${currentMonth}.${currentYear}`;
     const expenseResp = isDateIncluded(expenseCollection, expenseDate);
-    const value = isSpent ? moneyLeft - amount : moneyLeft + amount;
-    if (!expenseResp) executeExpense(id, expenseCollection, expenseDate, value);
+    if (!expenseResp)
+      executeExpense(expenseCollection, dayOfCollection, expense);
   };
 
   const checkExpense = (expense) => {
-    const { currentDay, currentMonth, currentYear } = currentDate();
-    const { dayOfCollection } = expense;
-    const expenseDate = `${dayOfCollection}.${currentMonth}.${currentYear}`;
-    if (currentDay >= dayOfCollection) setupExpense(expense, expenseDate);
-    console.log(expense);
+    const { currentDay, currentMonth } = currentDate();
+    const { dayOfCollection, months } = expense;
+    const monthResp = isDateIncluded(months, currentMonth);
+    if (currentDay >= dayOfCollection && monthResp) setupExpense(expense);
   };
 
   const removeExpense = (id) => {
@@ -128,6 +160,56 @@ export const FirestoreContextProvider = ({ children }) => {
       .doc(currentUser.uid)
       .collection('expenses');
     expensesRef.doc(id).delete();
+  };
+
+  const checkId = (array) => {
+    const randomId = uniqueKey();
+    array.forEach(({ id }) => {
+      if (id === randomId) {
+        return checkId(array);
+      }
+    });
+    return randomId;
+  };
+
+  const generateExpensesID = async () => {
+    const expenses = await getExpenses();
+    const generatedID = checkId(expenses);
+    return generatedID;
+  };
+
+  const generateTransactionsID = async () => {
+    const transactions = await getTransactions();
+    const generatedID = checkId(transactions);
+    return generatedID;
+  };
+
+  const addNewBill = (bill) => {
+    const transactionsRef = db
+      .collection('users')
+      .doc(currentUser.uid)
+      .collection('transactions');
+    transactionsRef.add(bill);
+    updateTotal(bill);
+  };
+
+  const addNewExpense = (expense) => {
+    const { id } = expense;
+    const expensesRef = db
+      .collection('users')
+      .doc(currentUser.uid)
+      .collection('expenses')
+      .doc(id);
+    expensesRef.set(expense);
+  };
+
+  const updateTotal = async ({ amount, isSpent }) => {
+    const { moneyLeft } = await getUserData();
+    const userRef = db.collection('users').doc(currentUser.uid);
+    const value = isSpent ? moneyLeft - amount : moneyLeft + amount;
+    userRef.update({
+      moneyLeft: value,
+    });
   };
 
   const ctx = {
@@ -143,6 +225,10 @@ export const FirestoreContextProvider = ({ children }) => {
     checkPayday,
     removeExpense,
     checkExpense,
+    addNewExpense,
+    addNewBill,
+    generateTransactionsID,
+    generateExpensesID,
   };
 
   return (

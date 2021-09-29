@@ -3,9 +3,7 @@ import Transaction from './Transaction';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Container = styled.div`
-  min-height: 50px;
-`;
+const Container = styled.div``;
 
 const TransactionsWrapper = ({ transactions, total }) => {
   return (

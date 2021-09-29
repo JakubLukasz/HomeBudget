@@ -5,6 +5,8 @@ import { devices } from '../assets/styles/devices';
 import { useForm } from 'react-hook-form';
 import Logo from './Logo';
 
+import { Input, Label, SubmitButton } from '../assets/styles/reusableStyles';
+
 const Container = styled.div`
   width: 100vw;
   height: 100vh;
@@ -40,31 +42,12 @@ const SetupForm = styled.form`
   }
 `;
 
-const Title = styled.label`
-  display: block;
-  color: ${({ theme }) => theme.color.secondary};
-  font-size: 1rem;
-  font-weight: ${({ theme }) => theme.font.weight.semiBold};
-  margin: 23px 0 3px 0;
-`;
-
-const UserInput = styled.input`
-  width: 100%;
-  font-size: 1.4rem;
-  font-weight: ${({ theme }) => theme.font.weight.medium};
-  background: ${({ theme }) => theme.color.lightSecondary};
-  border: none;
-  border-radius: 7px;
-  outline: none;
-  padding: 10px 15px;
-`;
-
 const EarningsContainer = styled.div`
   display: flex;
   align-items: center;
 `;
 
-const EarningsInput = styled(UserInput)`
+const EarningsInput = styled(Input)`
   flex: 7;
   margin: 0;
 `;
@@ -82,18 +65,6 @@ const Currency = styled.select`
   &:hover {
     outline: none;
   }
-`;
-
-const SubmitButton = styled.button`
-  border: none;
-  width: 100%;
-  font-size: 1.7rem;
-  font-weight: ${({ theme }) => theme.font.weight.semiBold};
-  background-color: ${({ theme }) => theme.color.primary};
-  color: #ffffff;
-  border-radius: 7px;
-  padding: 10px 15px;
-  margin-top: 23px;
 `;
 
 const CurrencyOption = styled.option`
@@ -149,21 +120,20 @@ const SetupAccount = () => {
       <Heading>Setup Account</Heading>
       <SetupForm onSubmit={handleSubmit(onSubmit)}>
         {formError && <FormErrorMessage>{formError}</FormErrorMessage>}
-        <Title>FIRST NAME</Title>
-        <UserInput
+        <Label>FIRST NAME</Label>
+        <Input
           {...register('firstname', { required: 'Firstname is required' })}
           type="text"
           name="firstname"
-        ></UserInput>
+        />
         {errors.firstname && <Error>{errors.firstname.message}</Error>}
-        <Title>MONTHLY EARNINGS (NO TAXES)</Title>
+        <Label>MONTHLY EARNINGS (NO TAXES)</Label>
         <EarningsContainer>
           <EarningsInput
             {...register('earnings', {
               required: 'Earnings are required',
-              valueAsNumber: true,
             })}
-            type="text"
+            type="number"
             name="earnings"
           ></EarningsInput>
           <Currency {...register('currency')} name="currency">
@@ -173,8 +143,8 @@ const SetupAccount = () => {
           </Currency>
         </EarningsContainer>
         {errors.earnings && <Error>{errors.earnings.message}</Error>}
-        <Title htmlFor="payday">PAYDAY (1-28)</Title>
-        <UserInput
+        <Label htmlFor="payday">PAYDAY (1-28)</Label>
+        <Input
           {...register('payday', {
             required: 'Payday is required',
             min: {
@@ -186,9 +156,9 @@ const SetupAccount = () => {
               message: 'You must choose a number between 1 and 28',
             },
           })}
-          type="text"
+          type="number"
           name="payday"
-        ></UserInput>
+        ></Input>
         {errors.payday && <Error>{errors.payday.message}</Error>}
         <SubmitButton disabled={isLoading} type="submit">
           DONE

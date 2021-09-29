@@ -11,6 +11,10 @@ const Container = styled.div`
   margin: 20px 0 30px;
   padding: 0px 5px;
 
+  &:last-child {
+    margin: 20px 0 10px;
+  }
+
   @media ${devices.mobileM} {
     padding: 0px 10px;
   }
