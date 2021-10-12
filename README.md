@@ -9,10 +9,10 @@ LIVE: www.dailyprofit.jakublukaszewski.pl
 
 ## Screenshots
 
-<img src="./src/screenshots/screenshot1.jpg" alt="screenshot1" width="30%"/>
-<img src="./src/screenshots/screenshot2.jpg" alt="screenshot2" width="30%"/>
-<img src="./src/screenshots/screenshot3.jpg" alt="screenshot3" width="30%"/>
-<img src="./src/screenshots/screenshot4.jpg" alt="screenshot4" width="30%"/>
+<img src="./src/screenshots/screen1.jpg" alt="screenshot1" width="30%"/>
+<img src="./src/screenshots/screen2.jpg" alt="screenshot2" width="30%"/>
+<img src="./src/screenshots/screen3.jpg" alt="screenshot3" width="30%"/>
+<img src="./src/screenshots/screen4.jpg" alt="screenshot4" width="30%"/>
 
 ## Instalation
 
