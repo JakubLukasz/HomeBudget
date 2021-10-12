@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="89.594788mm"
+   height="89.594788mm"
+   viewBox="0 0 89.594788 89.594788"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   sodipodi:docname="AddExpenseIcon.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:zoom="1.0482005"
+     inkscape:cx="-35.775598"
+     inkscape:cy="163.61374"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2">
+    <rect
+       x="242.85281"
+       y="348.08905"
+       width="196.98062"
+       height="160.5527"
+       id="rect2604" />
+    <style
+       id="style8968">.cls-1{fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}</style>
+    <style
+       id="style9471">.cls-1{fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}</style>
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-57.836784,-65.685172)">
+    <circle
+       style="fill:#011627;fill-opacity:1;stroke:#c00000;stroke-width:0.351999"
+       id="path848"
+       cx="102.63418"
+       cy="110.48257"
+       r="44.621395" />
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,103.70012,-5.1760817)"
+       id="text2602"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect2604);fill:#000000;fill-opacity:1;stroke:none" />
+    <g
+       id="g897"
+       transform="matrix(0.06526924,0,0,0.06526924,85.925253,93.773641)"
+       style="fill:#ffffff">
+      <g
+         id="g833"
+         style="fill:#ffffff">
+	<g
+   id="g831"
+   style="fill:#ffffff">
+		<path
+   d="M 336,32 H 301.248 C 294.656,13.376 276.864,0 256,0 235.136,0 217.344,13.376 210.72,32 H 176 c -8.832,0 -16,7.168 -16,16 v 64 c 0,8.832 7.168,16 16,16 h 160 c 8.832,0 16,-7.168 16,-16 V 48 c 0,-8.832 -7.168,-16 -16,-16 z"
+   id="path829"
+   style="fill:#ffffff" />
+
+	</g>
+
+</g>
+      <g
+         id="g839"
+         style="fill:#ffffff">
+	<g
+   id="g837"
+   style="fill:#ffffff">
+		<path
+   d="m 416,64 h -32 v 48 c 0,26.464 -21.536,48 -48,48 H 176 c -26.464,0 -48,-21.536 -48,-48 V 64 H 96 C 78.368,64 64,78.368 64,96 v 384 c 0,17.952 14.048,32 32,32 h 320 c 17.952,0 32,-14.048 32,-32 V 96 C 448,78.048 433.952,64 416,64 Z m -164.672,283.328 -64,64 C 184.192,414.432 180.096,416 176,416 c -4.096,0 -8.192,-1.568 -11.328,-4.672 l -32,-32 c -6.24,-6.24 -6.24,-16.384 0,-22.624 6.24,-6.24 16.384,-6.24 22.624,0 L 176,377.376 228.672,324.704 c 6.24,-6.24 16.384,-6.24 22.624,0 6.24,6.24 6.272,16.352 0.032,22.624 z m 0,-128 -64,64 C 184.192,286.432 180.096,288 176,288 c -4.096,0 -8.192,-1.568 -11.328,-4.672 l -32,-32 c -6.24,-6.24 -6.24,-16.384 0,-22.624 6.24,-6.24 16.384,-6.24 22.624,0 L 176,249.376 228.672,196.704 c 6.24,-6.24 16.384,-6.24 22.624,0 6.24,6.24 6.272,16.352 0.032,22.624 z M 368,384 h -64 c -8.832,0 -16,-7.168 -16,-16 0,-8.832 7.168,-16 16,-16 h 64 c 8.832,0 16,7.168 16,16 0,8.832 -7.168,16 -16,16 z m 0,-128 h -64 c -8.832,0 -16,-7.168 -16,-16 0,-8.832 7.168,-16 16,-16 h 64 c 8.832,0 16,7.168 16,16 0,8.832 -7.168,16 -16,16 z"
+   id="path835"
+   style="fill:#ffffff" />
+
+	</g>
+
+</g>
+      <g
+         id="g841"
+         style="fill:#ffffff">
+</g>
+      <g
+         id="g843"
+         style="fill:#ffffff">
+</g>
+      <g
+         id="g845"
+         style="fill:#ffffff">
+</g>
+      <g
+         id="g847"
+         style="fill:#ffffff">
+</g>
+      <g
+         id="g849"
+         style="fill:#ffffff">
+</g>
+      <g
+         id="g851"
+         style="fill:#ffffff">
+</g>
+      <g
+         id="g853"
+         style="fill:#ffffff">
+</g>
+      <g
+         id="g855"
+         style="fill:#ffffff">
+</g>
+      <g
+         id="g857"
+         style="fill:#ffffff">
+</g>
+      <g
+         id="g859"
+         style="fill:#ffffff">
+</g>
+      <g
+         id="g861"
+         style="fill:#ffffff">
+</g>
+      <g
+         id="g863"
+         style="fill:#ffffff">
+</g>
+      <g
+         id="g865"
+         style="fill:#ffffff">
+</g>
+      <g
+         id="g867"
+         style="fill:#ffffff">
+</g>
+      <g
+         id="g869"
+         style="fill:#ffffff">
+</g>
+    </g>
+  </g>
+</svg>

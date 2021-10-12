@@ -7,8 +7,8 @@ import LogOutIcon from '../assets/images/logOutIcon.svg';
 import Icon from './Icon';
 
 const LinkIcon = styled(Icon)`
-  width: auto;
-  height: 2.5rem;
+  width: 3rem;
+  height: 3rem;
   svg,
   path {
     fill: ${({ theme }) => theme.color.secondary};
@@ -16,13 +16,13 @@ const LinkIcon = styled(Icon)`
 `;
 
 const LinkTitle = styled.span`
-  font-weight: ${({ theme }) => theme.font.weight.medium};
+  font-weight: ${({ theme }) => theme.font.weight.semiBold};
   color: ${({ theme }) => theme.color.secondary};
-  font-size: 1rem;
+  font-size: 1.1rem;
   margin: 10px 0 0 0;
 
   @media ${devices.mobileM} {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
   }
 `;
 

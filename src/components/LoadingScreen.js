@@ -2,12 +2,12 @@ import styled from 'styled-components';
 import React from 'react';
 
 const Loading = styled.div`
-  width: 100vw;
-  height: 100vh;
-  position: fixed;
+  width: 100%;
+  height: 100%;
+  position: absolute;
   top: 0;
   left: 0;
-  background-color: ${({ theme }) => theme.color.white};
+  background: transparent;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -15,11 +15,11 @@ const Loading = styled.div`
 `;
 
 const LoadingIcon = styled.div`
-  border: 2px solid #f3f3f3; /* Light grey */
-  border-top: 2px solid #3498db; /* Blue */
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #3498db;
   border-radius: 50%;
-  width: 80px;
-  height: 80px;
+  width: 10rem;
+  height: 10rem;
   animation: spin 1s linear infinite;
 
   @keyframes spin {

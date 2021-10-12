@@ -87,7 +87,7 @@ const GlobalStyle = createGlobalStyle`
         }
 
         @media ${devices.laptopL}{
-            font-size:62.5%;
+            font-size:55%;
         }
     }
 

@@ -14,6 +14,7 @@ import {
 } from '../../assets/styles/reusableStyles';
 import Switch from '../FormSwitch';
 import CloseButton from '../CloseButton';
+import { useInputData } from '../../hooks/useInputData';
 
 const Content = styled.main`
   position: relative;
@@ -59,7 +60,7 @@ const CheckboxInput = styled.input`
   cursor: pointer;
 `;
 
-const AddExpensesModal = ({ setIsExpensesModalOpen }) => {
+const AddExpensesModal = () => {
   const monthsNames = [
     'January',
     'February',
@@ -81,6 +82,7 @@ const AddExpensesModal = ({ setIsExpensesModalOpen }) => {
   const [monthsError, setMonthsError] = useState(false);
   const [currency, setCurrency] = useState('');
   const [randomId, setRandomId] = useState(null);
+  const { setIsExpensesModalOpen } = useInputData();
   const {
     handleSubmit,
     register,
@@ -110,10 +112,7 @@ const AddExpensesModal = ({ setIsExpensesModalOpen }) => {
   const getCheckedMonths = (months) => {
     const tmp = [];
     months.forEach((month, index) => {
-      if (month) {
-        let value = index < 9 ? `0${index + 1}` : `${index + 1}`;
-        tmp.push(value);
-      }
+      if (month) tmp.push(`${index + 1}`);
     });
     return tmp;
   };

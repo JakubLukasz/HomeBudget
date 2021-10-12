@@ -110,7 +110,7 @@ const AddBillModal = () => {
   const [randomId, setRandomId] = useState(null);
   const [categoryError, setCategoryError] = useState('');
   const { getCurrency, addNewBill, generateTransactionsID } = useFirestore();
-  const { setIsModalOpen, selectedCategory, setSelectedCategory } =
+  const { setIsBillModalOpen, selectedCategory, setSelectedCategory } =
     useInputData();
   const {
     handleSubmit,
@@ -119,14 +119,6 @@ const AddBillModal = () => {
   } = useForm();
 
   const categoryRef = useRef();
-
-  const changeDateFormat = (date) => {
-    const arr = date.split('-');
-    const year = arr[0];
-    const month = arr[1];
-    const day = arr[2];
-    return `${day}.${month}.${year}`;
-  };
 
   useEffect(() => {
     generateTransactionsID().then((id) => setRandomId(id));
@@ -143,13 +135,13 @@ const AddBillModal = () => {
         title,
         categoryTitle: categoryRef.current.innerText,
         categorySrc: selectedCategory.src,
-        date: changeDateFormat(date),
+        date: date,
         amount: parseFloat(amount),
         isSpent,
         currency,
       });
       setSelectedCategory('');
-      setIsModalOpen((snapshot) => !snapshot);
+      setIsBillModalOpen((snapshot) => !snapshot);
     } else setCategoryError('Category is required');
   };
 
@@ -158,7 +150,7 @@ const AddBillModal = () => {
 
   const closeModalHandler = () => {
     setSelectedCategory('');
-    setIsModalOpen((snapshot) => !snapshot);
+    setIsBillModalOpen(false);
   };
 
   return (
@@ -194,7 +186,7 @@ const AddBillModal = () => {
             </SelectCategory>
           </CategoryContainer>
           {categoryError && <Error>{categoryError}</Error>}
-          <Label htmlFor="date">DATE OF PURCHASE</Label>
+          <Label htmlFor="date">DATE OF BILL</Label>
           <Input
             {...register('date', { required: 'Date is required' })}
             type="date"

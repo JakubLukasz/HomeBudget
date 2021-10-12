@@ -28,20 +28,6 @@ export const Modal = styled.div`
   }
 `;
 
-export const Page = styled.main`
-  flex: 1;
-  padding: 5px 10px 0;
-  overflow: auto;
-
-  @media ${devices.mobileM} {
-    padding: 10px 15px 0;
-  }
-
-  @media ${devices.mobileL} {
-    padding: 15px 20px 0;
-  }
-`;
-
 export const Form = styled.form`
   width: 100%;
   height: 90%;

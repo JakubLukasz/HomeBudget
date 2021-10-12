@@ -40,10 +40,6 @@ const Heading = styled.h1`
   text-align: center;
   font-size: 2rem;
   margin: 10px 0 30px;
-
-  @media ${devices.mobileM} {
-    margin: 10px 0 70px;
-  }
 `;
 
 const LinkText = styled.p`

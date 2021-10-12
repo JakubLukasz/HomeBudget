@@ -13,7 +13,6 @@ export const theme = {
     },
   },
   color: {
-    // primary: "#58A9CC",
     primary: '#011627',
     secondary: '#A0A0A0',
     regularPrimary: '#c5dfeb',

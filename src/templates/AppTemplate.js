@@ -6,12 +6,11 @@ import AppNav from '../components/Nav';
 import { useInputData } from '../hooks/useInputData';
 import AddBillModal from '../components/modals/AddBillModal';
 import { useFirestore } from '../hooks/useFirestore';
-import { useLoading } from '../hooks/useLoading';
-import LoadingScreen from '../components/LoadingScreen';
 import SetupAccount from '../components/SetupAccount';
 import FixedExpenses from '../pages/FixedExpenses';
 import styled from 'styled-components';
 import { devices } from '../assets/styles/devices';
+import AddExpensesModal from '../components/modals/AddExpensesModal';
 
 const Container = styled.div`
   max-width: 100vw;
@@ -26,15 +25,14 @@ const Container = styled.div`
 `;
 
 const AppTemplate = () => {
-  const { isModalOpen } = useInputData();
+  const { isBillModalOpen, isExpensesModalOpen } = useInputData();
   const { isConfigured } = useFirestore();
-  const { isLoading } = useLoading();
   return (
     <Container>
       <BrowserRouter>
-        {isModalOpen && <AddBillModal />}
+        {isBillModalOpen && <AddBillModal />}
+        {isExpensesModalOpen && <AddExpensesModal />}
         {!isConfigured && <SetupAccount />}
-        {isLoading && <LoadingScreen />}
         <Switch>
           <Route exact path="/" component={Main} />
         </Switch>

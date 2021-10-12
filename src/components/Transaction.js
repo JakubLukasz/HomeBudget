@@ -27,7 +27,7 @@ const Container = styled.div`
 
 const Category = styled(Icon)`
   height: 20px;
-  width: auto;
+  width: 20px;
 
   @media ${devices.latpop} {
     height: 15px;

@@ -1,10 +1,9 @@
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import Icon from './Icon';
-import AddBill from './AddBill';
 import StatsIcon from '../assets/images/statsIcon.svg';
 import ExpensesIcon from '../assets/images/expensesIcon.svg';
-import Logo from '../assets/images/logo.svg';
+import Logo from '../assets/images/homeIcon.svg';
 import { devices } from '../assets/styles/devices';
 import LogOutButton from './LogOutButton';
 import React from 'react';
@@ -13,7 +12,7 @@ const Navigation = styled.nav`
   display: flex;
   align-items: center;
   box-shadow: rgba(0, 0, 0, 0.1) 0px -10px 50px;
-  background-color: ${({ theme }) => theme.color.white};
+  background-color: #ffffff;
 
   @media ${devices.laptop} {
     padding-top: 20px;
@@ -24,25 +23,26 @@ const Navigation = styled.nav`
 `;
 
 const LinkIcon = styled(Icon)`
-  width: 2.5rem;
-  height: 2.5rem;
-  svg {
+  width: 3rem;
+  height: 3rem;
+  svg,
+  ellipse {
     fill: ${({ theme }) => theme.color.secondary};
   }
 `;
 
 const LinkTitle = styled.span`
-  font-weight: ${({ theme }) => theme.font.weight.medium};
+  font-weight: ${({ theme }) => theme.font.weight.semiBold};
   color: ${({ theme }) => theme.color.secondary};
-  font-size: 1rem;
+  font-size: 1.1rem;
   margin: 10px 0 0 0;
 
   @media ${devices.mobileM} {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
   }
 `;
 
-const NavLink = styled(Link)`
+const StyledNavLink = styled(NavLink)`
   text-decoration: none;
   padding: 10px;
   width: 100%;
@@ -50,9 +50,13 @@ const NavLink = styled(Link)`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  &.open svg {
+    fill: ${({ theme }) => theme.color.primary};
+  }
 `;
 
-const HomeLink = styled(NavLink)`
+const HomeLink = styled(StyledNavLink)`
   @media ${devices.laptop} {
     order: -2;
   }
@@ -61,16 +65,15 @@ const HomeLink = styled(NavLink)`
 const AppNav = () => {
   return (
     <Navigation>
-      <NavLink to="/statistics">
+      <StyledNavLink to="/statistics" activeClassName="open">
         <LinkIcon src={StatsIcon} />
         <LinkTitle>Statistics</LinkTitle>
-      </NavLink>
-      <NavLink to="/fixed-expenses">
+      </StyledNavLink>
+      <StyledNavLink to="/fixed-expenses" activeClassName="open">
         <LinkIcon src={ExpensesIcon} />
         <LinkTitle>Expenses</LinkTitle>
-      </NavLink>
-      <AddBill />
-      <HomeLink to="/">
+      </StyledNavLink>
+      <HomeLink exact to="/" activeClassName="open">
         <LinkIcon src={Logo} />
         <LinkTitle>Home</LinkTitle>
       </HomeLink>

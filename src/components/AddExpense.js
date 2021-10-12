@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import Icon from './Icon';
-import AddBillIcon from '../assets/images/addBillIcon.svg';
-import { useInputData } from '../hooks/useInputData';
+import AddExpenseIcon from '../assets/images/AddExpenseIcon.svg';
 import { devices } from '../assets/styles/devices';
+import { useInputData } from '../hooks/useInputData';
 
-const AddButton = styled.button`
+const AddExpenseButton = styled.button`
   width: 50%;
   display: flex;
   flex-direction: column;
@@ -34,17 +34,18 @@ const ButtonText = styled.span`
   }
 `;
 
-const AddBill = () => {
-  const { setIsBillModalOpen } = useInputData();
+const AddExpense = () => {
+  const { setIsExpensesModalOpen } = useInputData();
 
-  const addBillHandler = () => setIsBillModalOpen((snapshot) => !snapshot);
+  const addExpenseHandler = () =>
+    setIsExpensesModalOpen((snapshot) => !snapshot);
 
   return (
-    <AddButton onClick={addBillHandler}>
-      <ButtonIcon src={AddBillIcon} />
-      <ButtonText>Add Bill</ButtonText>
-    </AddButton>
+    <AddExpenseButton onClick={addExpenseHandler}>
+      <ButtonIcon src={AddExpenseIcon} />
+      <ButtonText>Add Expense</ButtonText>
+    </AddExpenseButton>
   );
 };
 
-export default AddBill;
+export default AddExpense;

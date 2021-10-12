@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { useState, createContext } from 'react';
 import { db } from '../services/firebase';
 import { useAuth } from '../hooks/useAuth';
 import PropTypes from 'prop-types';
@@ -10,8 +10,8 @@ import ExpensesIcon from '../assets/images/expensesIcon.svg';
 export const FirestoreContext = createContext({});
 
 export const FirestoreContextProvider = ({ children }) => {
-  const [isConfigured, setIsConfigured] = useState(true);
   const { currentUser } = useAuth();
+  const [isConfigured, setIsConfigured] = useState(true);
 
   const createUserData = ({ email, uid }) => {
     const userDoc = db.collection('users').doc(uid);
@@ -94,8 +94,8 @@ export const FirestoreContextProvider = ({ children }) => {
   const setupPayday = (data, payday) => {
     const { currentDay, currentMonth, currentYear } = currentDate();
     const { paydayData, earnings } = data;
-    const paydayDate = `${payday}.${currentMonth}.${currentYear}`;
-    const todayDate = `${currentDay}.${currentMonth}.${currentYear}`;
+    const paydayDate = `${currentYear}-${currentMonth}-${payday}`;
+    const todayDate = `${currentYear}-${currentMonth}-${currentDay}`;
     const paydayResp = isDateIncluded(paydayData, paydayDate);
     if (!paydayResp) executePayday(paydayData, paydayDate, todayDate, earnings);
   };
@@ -118,8 +118,8 @@ export const FirestoreContextProvider = ({ children }) => {
     const { currentDay, currentMonth, currentYear } = currentDate();
     const userRef = db.collection('users').doc(currentUser.uid);
     const expenseRef = userRef.collection('expenses').doc(id);
-    const expenseDate = `${dayOfCollection}.${currentMonth}.${currentYear}`;
-    const todayDate = `${currentDay}.${currentMonth}.${currentYear}`;
+    const expenseDate = `${currentYear}-${currentMonth}-${dayOfCollection}`;
+    const todayDate = `${currentYear}-${currentMonth}-${currentDay}`;
     expenseCollection.push(expenseDate);
     expenseRef.update({
       expenseCollection,
@@ -141,7 +141,7 @@ export const FirestoreContextProvider = ({ children }) => {
   const setupExpense = async (expense) => {
     const { currentMonth, currentYear } = currentDate();
     const { expenseCollection, dayOfCollection } = expense;
-    const expenseDate = `${dayOfCollection}.${currentMonth}.${currentYear}`;
+    const expenseDate = `${currentYear}-${currentMonth}-${dayOfCollection}`;
     const expenseResp = isDateIncluded(expenseCollection, expenseDate);
     if (!expenseResp)
       executeExpense(expenseCollection, dayOfCollection, expense);
@@ -184,6 +184,26 @@ export const FirestoreContextProvider = ({ children }) => {
     return generatedID;
   };
 
+  const getExpensesSize = async () => {
+    const expensesRef = db
+      .collection('users')
+      .doc(currentUser.uid)
+      .collection('expenses');
+    const snapshot = await expensesRef.get();
+    const count = snapshot.size;
+    return count;
+  };
+
+  const getTransactionsSize = async () => {
+    const transactionsRef = db
+      .collection('users')
+      .doc(currentUser.uid)
+      .collection('transactions');
+    const snapshot = await transactionsRef.get();
+    const count = snapshot.size;
+    return count;
+  };
+
   const addNewBill = (bill) => {
     const transactionsRef = db
       .collection('users')
@@ -214,9 +234,9 @@ export const FirestoreContextProvider = ({ children }) => {
 
   const ctx = {
     createUserData,
+    setupUserData,
     isConfigured,
     setIsConfigured,
-    setupUserData,
     checkIsUserConfigured,
     getUserData,
     getCurrency,
@@ -229,6 +249,8 @@ export const FirestoreContextProvider = ({ children }) => {
     addNewBill,
     generateTransactionsID,
     generateExpensesID,
+    getExpensesSize,
+    getTransactionsSize,
   };
 
   return (

@@ -11,6 +11,7 @@ import {
   SubmitButton,
   Error,
 } from '../assets/styles/reusableStyles';
+import ExampleData from '../components/ExampleData';
 
 const Container = styled.section`
   height: var(--app-height);
@@ -38,11 +39,7 @@ const Heading = styled.h1`
   font-weight: ${({ theme }) => theme.font.weight.regular};
   text-align: center;
   font-size: 2rem;
-  margin: 10px 0 30px;
-
-  @media ${devices.mobileM} {
-    margin: 10px 0 70px;
-  }
+  margin: 10px 0 0;
 `;
 
 const LinkText = styled.p`
@@ -102,6 +99,7 @@ const Login = () => {
     <Container>
       <Logo />
       <Heading>Log in</Heading>
+      <ExampleData setFormError={setFormError} />
       <LoginForm onSubmit={handleSubmit(submitFormHandler)}>
         {formError && <FormErrorMessage>{formError}</FormErrorMessage>}
         <Label htmlFor="email">E-MAIL</Label>

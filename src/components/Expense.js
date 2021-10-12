@@ -10,9 +10,10 @@ const Container = styled.div`
   padding: 15px;
   display: flex;
   flex-direction: column;
-  background-color: ${({ theme }) => theme.color.lightSecondary};
+  background-color: #ffffff;
   border-radius: 15px;
   margin: 0 2% 2% 0;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px -10px 50px;
 
   &:nth-child(2n) {
     margin: 0 0 2% 0;

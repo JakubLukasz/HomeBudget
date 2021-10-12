@@ -4,20 +4,45 @@ import React, { useEffect, useState } from 'react';
 import { devices } from '../assets/styles/devices';
 import { Doughnut } from 'react-chartjs-2';
 import { useFirestore } from '../hooks/useFirestore';
-import { Page } from '../assets/styles/reusableStyles';
 import { currentDate } from '../helpers/currentDate';
+import NoTransactions from '../components/NoTransactions';
 
-const Container = styled(Page)`
+const Container = styled.div`
   background-color: ${({ theme }) => theme.color.lightPrimary};
+  flex: 1;
+  overflow: auto;
 `;
 
-const StyledCard = styled(Card)`
+const Header = styled.header`
+  width: 100%;
   background-color: #ffffff;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
-  border-radius: 15px;
-  padding: 10px;
-  margin-bottom: 15px;
+  padding: 20px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px -10px 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  @media ${devices.laptop} {
+    display: none;
+  }
+`;
 
+const Heading = styled.h2`
+  font-size: 1.7rem;
+`;
+
+const Content = styled.main`
+  padding: 15px 10px 0;
+
+  @media ${devices.mobileM} {
+    padding: 15px 15px 0;
+  }
+
+  @media ${devices.mobileL} {
+    padding: 15px 20px 0;
+  }
+`;
+
+const GraphCard = styled(Card)`
   @media ${devices.tablet} {
     width: 49%;
     margin: 0 2% 2% 0;
@@ -87,6 +112,7 @@ const CardContainer = styled.div`
 
 const Statistics = () => {
   const { getTransactions } = useFirestore();
+  const [transactions, setTransactions] = useState([]);
   const [spentTransactions, setSpentTransactions] = useState([]);
   const [earnedTransactions, setEarnedTransactions] = useState([]);
   const [spentMonthTransactions, setSpentMonthTransactions] = useState([]);
@@ -170,6 +196,7 @@ const Statistics = () => {
   };
 
   const handleTransactions = (transactions) => {
+    setTransactions(transactions);
     const spentTransactionsData = transactions.filter(({ isSpent }) => isSpent);
     setSpentTransactions(spentTransactionsData);
     const earnedTransactionsData = transactions.filter(
@@ -194,28 +221,40 @@ const Statistics = () => {
 
   return (
     <Container>
-      <CardContainer>
-        {spentTransactions.length !== 0 && (
-          <StyledCard title="SPENT GRAPH (ALL TIME)">
-            <DoughnutGraph data={spentCategoryData} />
-          </StyledCard>
+      <Header>
+        <Heading>Statistics</Heading>
+      </Header>
+      <Content>
+        {transactions.length === 0 && (
+          <NoTransactions
+            text={
+              'To display the stats you need to add either an account orexpense'
+            }
+          />
         )}
-        {earnedTransactions.length !== 0 && (
-          <StyledCard title="EARNED GRAPH (ALL TIME)">
-            <DoughnutGraph data={earnedCategoryData} />
-          </StyledCard>
-        )}
-        {spentMonthTransactions.length !== 0 && (
-          <StyledCard title="SPENT GRAPH (THIS MONTH)">
-            <DoughnutGraph data={spentMonthCategoryData} />
-          </StyledCard>
-        )}
-        {earnedMonthTransactions.length !== 0 && (
-          <StyledCard title="SPENT GRAPH (THIS MONTH)">
-            <DoughnutGraph data={earnedMonthCategoryData} />
-          </StyledCard>
-        )}
-      </CardContainer>
+        <CardContainer>
+          {spentTransactions.length !== 0 && (
+            <GraphCard title="SPENT GRAPH (ALL TIME)">
+              <DoughnutGraph data={spentCategoryData} />
+            </GraphCard>
+          )}
+          {earnedTransactions.length !== 0 && (
+            <GraphCard title="EARNED GRAPH (ALL TIME)">
+              <DoughnutGraph data={earnedCategoryData} />
+            </GraphCard>
+          )}
+          {spentMonthTransactions.length !== 0 && (
+            <GraphCard title="SPENT GRAPH (THIS MONTH)">
+              <DoughnutGraph data={spentMonthCategoryData} />
+            </GraphCard>
+          )}
+          {earnedMonthTransactions.length !== 0 && (
+            <GraphCard title="EARNED GRAPH (THIS MONTH)">
+              <DoughnutGraph data={earnedMonthCategoryData} />
+            </GraphCard>
+          )}
+        </CardContainer>
+      </Content>
     </Container>
   );
 };

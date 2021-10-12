@@ -4,12 +4,15 @@ import PropTypes from 'prop-types';
 export const InputDataContext = createContext({});
 
 export const InputDataContextProvider = ({ children }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isBillModalOpen, setIsBillModalOpen] = useState(false);
+  const [isExpensesModalOpen, setIsExpensesModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('');
 
   const ctx = {
-    isModalOpen,
-    setIsModalOpen,
+    isBillModalOpen,
+    setIsBillModalOpen,
+    isExpensesModalOpen,
+    setIsExpensesModalOpen,
     selectedCategory,
     setSelectedCategory,
   };
