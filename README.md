@@ -32,6 +32,8 @@ Project is created with:
 - React: 17.0.2
 - Firebase: 8.8.1
 - Chart.js: 3.5.0
+- Dayjs: 1.10.7
+- Material UI: 5.0.4
 - React-router-dom: 5.2.0
 - React-hook-form: 7.15.4
 - Styled-components: 5.3.0
