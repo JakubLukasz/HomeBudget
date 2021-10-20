@@ -1,22 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Typography } from '@mui/material';
 
-const Color = styled.span`
+const Text = styled(Typography)`
+  font-weight: ${({ theme }) => theme.font.weight.extraBold};
   color: ${({ theme }) => theme.color.primary};
 `;
 
-const LogoElement = styled.p`
-  color: #292929;
-  font-weight: ${({ theme }) => theme.font.weight.extraBold};
-  font-size: 4rem;
-`;
-
 const Logo = () => {
-  return (
-    <LogoElement>
-      Daily<Color>Profit</Color>
-    </LogoElement>
-  );
+  return <Text variant="h3">Daily Profit</Text>;
 };
 
 export default Logo;

@@ -4,12 +4,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import AddBill from './AddBill';
 import AddExpense from './AddExpense';
+import { Typography } from '@mui/material';
 
 const Heading = styled.h1`
-  font-size: 3rem;
+  font-size: 1.7rem;
   font-weight: ${({ theme }) => theme.font.weight.semiBold};
-  margin: 5px 0;
-  margin: 0 auto;
+  text-align: center;
   color: ${({ moneyLeft }) => (moneyLeft < 0 ? 'red' : 'black')};
 
   @media ${devices.tablet} {
@@ -24,13 +24,6 @@ const Container = styled.div`
   padding: 0 10px;
 `;
 
-const Title = styled.p`
-  font-size: 1.3rem;
-  font-weight: ${({ theme }) => theme.font.weight.semiBold};
-  color: ${({ theme }) => theme.color.secondary};
-  margin: 15px 0 5px;
-`;
-
 const Controls = styled.div`
   width: 80%;
   display: flex;
@@ -43,7 +36,13 @@ const Controls = styled.div`
 const TotalWrapper = ({ moneyLeft, currency }) => {
   return (
     <Container>
-      <Title>Money left</Title>
+      <Typography
+        variant="subtitle2"
+        sx={{ fontWeight: 600 }}
+        color="secondary"
+      >
+        Money left
+      </Typography>
       <Heading moneyLeft={moneyLeft}>
         {moneyLeft} {currency}
       </Heading>

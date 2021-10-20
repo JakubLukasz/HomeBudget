@@ -11,6 +11,8 @@ import FixedExpenses from '../pages/FixedExpenses';
 import styled from 'styled-components';
 import { devices } from '../assets/styles/devices';
 import AddExpensesModal from '../components/modals/AddExpensesModal';
+import SubCategoryModal from '../components/modals/SubCategoryModal';
+import SelectCategoryModal from '../components/modals/SelectCategoryModal';
 
 const Container = styled.div`
   max-width: 100vw;
@@ -25,7 +27,12 @@ const Container = styled.div`
 `;
 
 const AppTemplate = () => {
-  const { isBillModalOpen, isExpensesModalOpen } = useInputData();
+  const {
+    isBillModalOpen,
+    isExpensesModalOpen,
+    isSubCategoryModalOpen,
+    isCategoryModalOpen,
+  } = useInputData();
   const { isConfigured } = useFirestore();
   return (
     <Container>
@@ -33,6 +40,8 @@ const AppTemplate = () => {
         {isBillModalOpen && <AddBillModal />}
         {isExpensesModalOpen && <AddExpensesModal />}
         {!isConfigured && <SetupAccount />}
+        {isCategoryModalOpen && <SelectCategoryModal />}
+        {isSubCategoryModalOpen && <SubCategoryModal />}
         <Switch>
           <Route exact path="/" component={Main} />
         </Switch>

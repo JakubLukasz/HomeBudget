@@ -5,7 +5,6 @@ import MontserratSemiBold from '../fonts/Montserrat-SemiBold.ttf';
 import MontserratMedium from '../fonts/Montserrat-Medium.ttf';
 import MontserratRegular from '../fonts/Montserrat-Regular.ttf';
 import MontserratLight from '../fonts/Montserrat-Light.ttf';
-import { devices } from './devices';
 
 const GlobalStyle = createGlobalStyle`
     *,*::before,*::after{
@@ -75,20 +74,7 @@ const GlobalStyle = createGlobalStyle`
     }
 
     html{
-        font-size:62.5%;
         overflow: hidden;
-
-        @media ${devices.tablet}{
-            font-size:75%;
-        }
-
-        @media ${devices.laptop}{
-            font-size:45%;
-        }
-
-        @media ${devices.laptopL}{
-            font-size:55%;
-        }
     }
 
     

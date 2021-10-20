@@ -4,8 +4,10 @@ import { useFirestore } from '../hooks/useFirestore';
 import { devices } from '../assets/styles/devices';
 import { useForm } from 'react-hook-form';
 import Logo from './Logo';
-
-import { Input, Label, SubmitButton } from '../assets/styles/reusableStyles';
+import Input from './Input';
+import { Stack, Typography, Alert } from '@mui/material';
+import LoadingButton from '@mui/lab/LoadingButton';
+import MenuItem from '@mui/material/MenuItem';
 
 const Container = styled.div`
   width: 100vw;
@@ -13,7 +15,7 @@ const Container = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 9999;
+  z-index: 100;
   background-color: #ffffff;
   display: flex;
   flex-direction: column;
@@ -21,14 +23,7 @@ const Container = styled.div`
   align-items: center;
 `;
 
-const Heading = styled.h1`
-  font-weight: ${({ theme }) => theme.font.weight.regular};
-  text-align: center;
-  font-size: 2rem;
-  margin: 10px 0 70px;
-`;
-
-const SetupForm = styled.form`
+const Form = styled.form`
   width: 100%;
   padding: 0 40px;
   max-width: 500px;
@@ -36,63 +31,19 @@ const SetupForm = styled.form`
   @media ${devices.tablet} {
     min-width: 300px;
   }
-
-  @media ${devices.tabletVer} {
-    min-width: 300px;
-  }
-`;
-
-const EarningsContainer = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const EarningsInput = styled(Input)`
-  flex: 7;
-  margin: 0;
-`;
-
-const Currency = styled.select`
-  padding: 10px;
-  flex: 1;
-  margin-left: 20px;
-  border-radius: 7px;
-  background-color: ${({ theme }) => theme.color.lightSecondary};
-  border: none;
-  font-weight: ${({ theme }) => theme.font.weight.medium};
-
-  &:focus,
-  &:hover {
-    outline: none;
-  }
-`;
-
-const CurrencyOption = styled.option`
-  background: ${({ theme }) => theme.color.lightSecondary};
-`;
-
-const Error = styled.p`
-  font-size: 1.1rem;
-  font-weight: ${({ theme }) => theme.font.weight.medium};
-  color: #ff0033;
-  margin: 5px 0 0;
-`;
-
-const FormErrorMessage = styled.p`
-  font-size: 1.4rem;
-  font-weight: ${({ theme }) => theme.font.weight.medium};
-  color: #e04f5f;
 `;
 
 const SetupAccount = () => {
+  const currencies = ['zł', '€', '$'];
+  const [formError, setFormError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [currency, setCurrency] = useState('');
   const { setupUserData, setIsConfigured } = useFirestore();
   const {
     handleSubmit,
     register,
     formState: { errors },
   } = useForm();
-  const [formError, setFormError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = async ({ firstname, earnings, currency, payday }) => {
     try {
@@ -117,53 +68,84 @@ const SetupAccount = () => {
   return (
     <Container>
       <Logo />
-      <Heading>Setup Account</Heading>
-      <SetupForm onSubmit={handleSubmit(onSubmit)}>
-        {formError && <FormErrorMessage>{formError}</FormErrorMessage>}
-        <Label>FIRST NAME</Label>
-        <Input
-          {...register('firstname', { required: 'Firstname is required' })}
-          type="text"
-          name="firstname"
-        />
-        {errors.firstname && <Error>{errors.firstname.message}</Error>}
-        <Label>MONTHLY EARNINGS (NO TAXES)</Label>
-        <EarningsContainer>
-          <EarningsInput
-            {...register('earnings', {
-              required: 'Earnings are required',
+      <Typography variant="h6" component="p" sx={{ mb: 8 }}>
+        Setup Account
+      </Typography>
+      <Form onSubmit={handleSubmit(onSubmit)}>
+        <Stack spacing={3}>
+          {formError && <Alert severity="error">{formError}</Alert>}
+          <Input
+            {...register('firstname', { required: 'Firstname is required' })}
+            type="text"
+            name="firstname"
+            label="Firstname"
+            variant="filled"
+            size="small"
+            error={errors.firstname ? true : false}
+            helperText={errors.firstname ? errors.firstname.message : ''}
+          />
+          <Stack direction="row" justifyContent="center">
+            <Input
+              {...register('earnings', {
+                required: 'Earnings are required',
+              })}
+              type="number"
+              name="earnings"
+              label="Monthly earnings ( no taxes)"
+              variant="filled"
+              size="small"
+              error={errors.earnings ? true : false}
+              helperText={errors.earnings ? errors.earnings.message : ''}
+            ></Input>
+          </Stack>
+          <Input
+            {...register('currency', {
+              onChange: (e) => setCurrency(e.target.value),
+              required: 'Currency is required',
             })}
+            select
+            label="Currency"
+            value={currency}
+            variant="filled"
+            error={errors.currency ? true : false}
+            helperText={errors.currency ? errors.currency.message : ''}
+          >
+            {currencies.map((option) => (
+              <MenuItem key={option} value={option}>
+                {option}
+              </MenuItem>
+            ))}
+          </Input>
+          <Input
+            {...register('payday', {
+              required: 'Payday is required',
+              min: {
+                value: 1,
+                message: 'You must choose a number between 1 and 28',
+              },
+              max: {
+                value: 28,
+                message: 'You must choose a number between 1 and 28',
+              },
+            })}
+            label="Payday (1-28)"
+            variant="filled"
+            size="small"
             type="number"
-            name="earnings"
-          ></EarningsInput>
-          <Currency {...register('currency')} name="currency">
-            <CurrencyOption value="zł">zł</CurrencyOption>
-            <CurrencyOption value="€">€</CurrencyOption>
-            <CurrencyOption value="$">$</CurrencyOption>
-          </Currency>
-        </EarningsContainer>
-        {errors.earnings && <Error>{errors.earnings.message}</Error>}
-        <Label htmlFor="payday">PAYDAY (1-28)</Label>
-        <Input
-          {...register('payday', {
-            required: 'Payday is required',
-            min: {
-              value: 1,
-              message: 'You must choose a number between 1 and 28',
-            },
-            max: {
-              value: 28,
-              message: 'You must choose a number between 1 and 28',
-            },
-          })}
-          type="number"
-          name="payday"
-        ></Input>
-        {errors.payday && <Error>{errors.payday.message}</Error>}
-        <SubmitButton disabled={isLoading} type="submit">
-          DONE
-        </SubmitButton>
-      </SetupForm>
+            name="payday"
+            error={errors.payday ? true : false}
+            helperText={errors.payday ? errors.payday.message : ''}
+          ></Input>
+          <LoadingButton
+            fullWidth
+            variant="contained"
+            loading={isLoading}
+            type="submit"
+          >
+            DONE
+          </LoadingButton>
+        </Stack>
+      </Form>
     </Container>
   );
 };

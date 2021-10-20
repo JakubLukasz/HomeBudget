@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import Icon from './Icon';
-import AddExpenseIcon from '../assets/images/AddExpenseIcon.svg';
 import { devices } from '../assets/styles/devices';
 import { useInputData } from '../hooks/useInputData';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import { Typography } from '@mui/material';
 
-const AddExpenseButton = styled.button`
+const AddButton = styled.button`
   width: 50%;
   display: flex;
   flex-direction: column;
@@ -17,34 +17,27 @@ const AddExpenseButton = styled.button`
   }
 `;
 
-const ButtonIcon = styled(Icon)`
-  width: 5rem;
-  height: 5rem;
-  fill: ${({ theme }) => theme.color.primary};
-`;
-
-const ButtonText = styled.span`
-  font-weight: ${({ theme }) => theme.font.weight.semiBold};
-  font-size: 1.2rem;
-  color: ${({ theme }) => theme.color.primary};
-  margin: 10px 0 0 0;
-
-  @media ${devices.mobileM} {
-    font-size: 1.4rem;
-  }
+const IconBox = styled.div`
+  background-color: ${({ theme }) => theme.color.primary};
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  padding: 1rem;
+  margin-bottom: 0.5rem;
 `;
 
 const AddExpense = () => {
   const { setIsExpensesModalOpen } = useInputData();
 
-  const addExpenseHandler = () =>
-    setIsExpensesModalOpen((snapshot) => !snapshot);
-
   return (
-    <AddExpenseButton onClick={addExpenseHandler}>
-      <ButtonIcon src={AddExpenseIcon} />
-      <ButtonText>Add Expense</ButtonText>
-    </AddExpenseButton>
+    <AddButton onClick={() => setIsExpensesModalOpen(true)}>
+      <IconBox>
+        <AssignmentIcon />
+      </IconBox>
+      <Typography variant="h6">Add Expense</Typography>
+    </AddButton>
   );
 };
 

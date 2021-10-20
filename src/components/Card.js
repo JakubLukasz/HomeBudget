@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import { Typography } from '@mui/material';
 
 const Container = styled.div`
   background-color: #ffffff;
@@ -10,15 +11,12 @@ const Container = styled.div`
   margin-bottom: 15px;
 `;
 
-const Title = styled.span`
-  color: ${({ theme }) => theme.color.secondary};
-  font-weight: ${({ theme }) => theme.font.weight.semiBold};
-`;
-
 const Card = ({ className, children, title }) => {
   return (
     <Container className={className}>
-      <Title>{title}</Title>
+      <Typography color="secondary" variant="subtitle2" component="p">
+        {title}
+      </Typography>
       {children}
     </Container>
   );

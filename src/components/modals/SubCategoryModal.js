@@ -1,119 +1,63 @@
 import styled from 'styled-components';
-import { devices } from '../../assets/styles/devices';
-import Icon from '../Icon';
 import { useInputData } from '../../hooks/useInputData';
 import React from 'react';
 import PropTypes from 'prop-types';
-import BackButton from '../BackButton';
+import Modal from '../Modal';
+import { Typography, Button, Stack } from '@mui/material';
 
-const Modal = styled.div`
-  background-color: ${({ theme }) => theme.color.white};
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  color: black;
-  z-index: 9999;
-  display: flex;
-  flex-direction: column;
+const CategoryButton = styled(Button)`
   justify-content: flex-start;
-  align-items: center;
-  padding: 15px 15px;
-  border-radius: 15px;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
-  overflow: auto;
-
-  @media ${devices.mobileM} {
-    padding: 30px 25px;
-  }
-
-  @media ${devices.mobileL} {
-    padding: 30px 40px;
-  }
-`;
-
-const Header = styled.header`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  margin-bottom: 10px;
-`;
-
-const Heading = styled.h1`
-  font-weight: ${({ theme }) => theme.font.weight.semiBold};
-  font-size: 2rem;
-  text-transform: capitalize;
-`;
-
-const CategoryButton = styled.button`
-  width: 100%;
-  border: none;
-  background: none;
-  display: flex;
-  align-items: center;
-  padding: 10px 15px;
-  border-radius: 7px;
-  margin-top: 12px;
-  background-color: ${({ theme }) => theme.color.lightSecondary};
-
-  @media ${devices.laptop} {
-    padding: 8px;
-    margin-top: 7px;
-  }
-`;
-
-const CategoryIcon = styled(Icon)`
-  height: 2rem;
-  width: 2rem;
-  fill: white;
-`;
-
-const IconContainer = styled.div`
-  background-color: ${({ theme }) => theme.color.primary};
   padding: 10px;
-  border-radius: 50%;
-
-  @media ${devices.laptop} {
-    padding: 5px;
+  padding-left: 20px;
+  font-size: 1rem;
+  text-transform: capitalize;
+  & .MuiSvgIcon-root {
+    font-size: 2rem;
+    margin-right: 10px;
   }
 `;
 
-const CategorySpan = styled.span`
-  font-size: 1.6rem;
-  font-weight: ${({ theme }) => theme.font.weight.medium};
-  margin-left: 20px;
-`;
+const SubCategoryModal = () => {
+  const {
+    setSelectedCategory,
+    isSubCategoryModalOpen,
+    selectedGroup,
+    setIsSubCategoryModalOpen,
+    setIsCategoryModalOpen,
+    getCategoryIcon,
+    getSubCategories,
+  } = useInputData();
 
-const SubCategoryModal = ({
-  subCategories,
-  src,
-  setIsSubCategoryModalOpen,
-  setIsSelectCategoryOpen,
-}) => {
-  const { setSelectedCategory } = useInputData();
-  const closeHandler = () => setIsSubCategoryModalOpen((snapshot) => !snapshot);
+  const Icon = getCategoryIcon(selectedGroup);
+  const subCategories = getSubCategories(selectedGroup);
+
   const selectCategory = (e) => {
-    closeHandler();
-    setIsSelectCategoryOpen((snapshot) => !snapshot);
-    setSelectedCategory({ title: e.target.innerText, src });
+    setIsSubCategoryModalOpen(false);
+    setIsCategoryModalOpen(false);
+    setSelectedCategory(e.target.innerText);
   };
 
   return (
-    <Modal>
-      <Header>
-        <BackButton click={closeHandler} />
-        <Heading>select</Heading>
-      </Header>
-      {subCategories.map((category) => (
-        <CategoryButton key={category} onClick={selectCategory}>
-          <IconContainer>
-            <CategoryIcon src={src} />
-          </IconContainer>
-          <CategorySpan>{category}</CategorySpan>
-        </CategoryButton>
-      ))}
+    <Modal
+      title="Select Category"
+      isOpen={isSubCategoryModalOpen}
+      onClose={() => setIsSubCategoryModalOpen(false)}
+    >
+      <Stack direction="column" alignItems="flex-start" spacing={2}>
+        {subCategories.map((category) => (
+          <CategoryButton
+            fullWidth
+            variant="contained"
+            key={category}
+            onClick={selectCategory}
+          >
+            <Icon />
+            <Typography variant="h6" component="p">
+              {category}
+            </Typography>
+          </CategoryButton>
+        ))}
+      </Stack>
     </Modal>
   );
 };

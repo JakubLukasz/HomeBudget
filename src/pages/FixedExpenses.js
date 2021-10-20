@@ -6,36 +6,16 @@ import { db } from '../services/firebase';
 import { useAuth } from '../hooks/useAuth';
 import LoadingScreen from '../components/LoadingScreen';
 import { useFirestore } from '../hooks/useFirestore';
-import NoExpenses from '../components/NoExpenses';
+import NoData from '../components/NoData';
+import SectionHeader from '../components/SectionHeader';
+import { Grid, useMediaQuery } from '@mui/material';
+import { getGridMediaQuery } from '../hooks/useMuiMediaQuery';
 
 const Container = styled.div`
   position: relative;
   background-color: ${({ theme }) => theme.color.lightPrimary};
   flex: 1;
   overflow: auto;
-`;
-
-const Expenses = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-`;
-
-const Header = styled.header`
-  width: 100%;
-  background-color: #ffffff;
-  padding: 20px;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px -10px 50px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  @media ${devices.laptop} {
-    display: none;
-  }
-`;
-
-const Heading = styled.h2`
-  font-size: 1.7rem;
 `;
 
 const Content = styled.main`
@@ -51,6 +31,8 @@ const Content = styled.main`
 `;
 
 const FixedExpenses = () => {
+  const tablet = useMediaQuery((theme) => theme.breakpoints.up('sm'));
+  const gridMediaQuery = getGridMediaQuery();
   const [isLoading, setIsLoading] = useState(false);
   const { getExpensesSize } = useFirestore();
   const [expensesLength, setExpensesLength] = useState(null);
@@ -85,18 +67,18 @@ const FixedExpenses = () => {
   else
     return (
       <Container>
-        <Header>
-          <Heading>Fixed expenses</Heading>
-        </Header>
+        <SectionHeader title="Fixed expenses" />
         <Content>
           {expenses.length === 0 && (
-            <NoExpenses text={'Currently You have no expenses'} />
+            <NoData text="Currently You have no expenses" expense />
           )}
-          <Expenses>
+          <Grid container columnSpacing={tablet ? 2 : 0} rowSpacing={2}>
             {expenses.map((expenseVal) => (
-              <Expense key={expenseVal.id} {...expenseVal} />
+              <Grid item key={expenseVal.id} xs={gridMediaQuery}>
+                <Expense {...expenseVal} />
+              </Grid>
             ))}
-          </Expenses>
+          </Grid>
         </Content>
       </Container>
     );

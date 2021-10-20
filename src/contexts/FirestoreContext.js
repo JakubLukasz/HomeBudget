@@ -4,8 +4,7 @@ import { useAuth } from '../hooks/useAuth';
 import PropTypes from 'prop-types';
 import { currentDate } from '../helpers/currentDate';
 import { uniqueKey } from '../helpers/uniqueKey';
-import PaydayIcon from '../assets/images/paydayIcon.svg';
-import ExpensesIcon from '../assets/images/expensesIcon.svg';
+import dayjs from 'dayjs';
 
 export const FirestoreContext = createContext({});
 
@@ -71,7 +70,7 @@ export const FirestoreContextProvider = ({ children }) => {
     return data.includes(date);
   };
 
-  const executePayday = async (paydayData, paydayDate, todayDate, earnings) => {
+  const executePayday = async (paydayData, paydayDate, earnings) => {
     const userRef = db.collection('users').doc(currentUser.uid);
     const ID = await generateTransactionsID();
     const currency = await getCurrency();
@@ -82,9 +81,9 @@ export const FirestoreContextProvider = ({ children }) => {
     addNewBill({
       id: ID,
       title: 'Payday',
-      categoryTitle: 'Payday',
-      categorySrc: PaydayIcon,
-      date: todayDate,
+      category: 'Payday',
+      categoryGroup: 'Payday',
+      date: dayjs().format('YYYY-MM-DD'),
       amount: parseFloat(earnings),
       isSpent: false,
       currency,
@@ -92,12 +91,11 @@ export const FirestoreContextProvider = ({ children }) => {
   };
 
   const setupPayday = (data, payday) => {
-    const { currentDay, currentMonth, currentYear } = currentDate();
+    const { currentMonth, currentYear } = currentDate();
     const { paydayData, earnings } = data;
     const paydayDate = `${currentYear}-${currentMonth}-${payday}`;
-    const todayDate = `${currentYear}-${currentMonth}-${currentDay}`;
     const paydayResp = isDateIncluded(paydayData, paydayDate);
-    if (!paydayResp) executePayday(paydayData, paydayDate, todayDate, earnings);
+    if (!paydayResp) executePayday(paydayData, paydayDate, earnings);
   };
 
   const checkPayday = async () => {
@@ -114,12 +112,11 @@ export const FirestoreContextProvider = ({ children }) => {
     dayOfCollection,
     expense
   ) => {
+    const { currentMonth, currentYear } = currentDate();
     const { title, amount, isSpent, id } = expense;
-    const { currentDay, currentMonth, currentYear } = currentDate();
     const userRef = db.collection('users').doc(currentUser.uid);
     const expenseRef = userRef.collection('expenses').doc(id);
     const expenseDate = `${currentYear}-${currentMonth}-${dayOfCollection}`;
-    const todayDate = `${currentYear}-${currentMonth}-${currentDay}`;
     expenseCollection.push(expenseDate);
     expenseRef.update({
       expenseCollection,
@@ -129,9 +126,9 @@ export const FirestoreContextProvider = ({ children }) => {
     addNewBill({
       id: ID,
       title,
-      categoryTitle: title,
-      categorySrc: ExpensesIcon,
-      date: todayDate,
+      category: title,
+      categoryGroup: 'Expense',
+      date: dayjs().format('YYYY-MM-DD'),
       amount: parseFloat(amount),
       isSpent,
       currency,
@@ -148,7 +145,7 @@ export const FirestoreContextProvider = ({ children }) => {
   };
 
   const checkExpense = (expense) => {
-    const { currentDay, currentMonth } = currentDate();
+    const { currentMonth, currentDay } = currentDate();
     const { dayOfCollection, months } = expense;
     const monthResp = isDateIncluded(months, currentMonth);
     if (currentDay >= dayOfCollection && monthResp) setupExpense(expense);

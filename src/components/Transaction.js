@@ -1,8 +1,9 @@
 import styled from 'styled-components';
-import Icon from '../components/Icon';
 import { devices } from '../assets/styles/devices';
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Typography, Stack } from '@mui/material';
+import { useInputData } from '../hooks/useInputData';
 
 const Container = styled.div`
   display: flex;
@@ -25,52 +26,19 @@ const Container = styled.div`
   }
 `;
 
-const Category = styled(Icon)`
-  height: 20px;
-  width: 20px;
-
-  @media ${devices.latpop} {
-    height: 15px;
-  }
-`;
-
-const CategoryContainer = styled.div`
+const IconBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin-right: 20px;
   border-radius: 50%;
   background-color: ${({ theme }) => theme.color.lightSecondary};
   padding: 10px;
 `;
 
-const MainHeader = styled.header`
-  display: flex;
-  align-items: center;
-`;
-
-const Title = styled.h2`
-  margin: 0;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-  max-width: 100px;
-  font-weight: ${({ theme }) => theme.font.weight.semiBold};
-  text-transform: capitalize;
-  @media ${devices.mobileM} {
-    max-width: 200px;
-  }
-
-  @media ${devices.laptop} {
-    max-width: 500px;
-  }
-`;
-
-const Date = styled.span`
-  font-size: 1.2rem;
-  font-weight: ${({ theme }) => theme.font.weight.regular};
-`;
-
 const Price = styled.span`
   color: ${({ isSpent }) => (isSpent ? 'red' : 'green')};
-  font-size: 1.3rem;
+  font-size: 0.9rem;
   font-weight: ${({ theme }) => theme.font.weight.medium};
 `;
 
@@ -79,21 +47,26 @@ const Transaction = ({
   amount,
   date,
   currency,
-  categorySrc,
+  categoryGroup,
   isSpent,
 }) => {
+  const { getCategoryIcon } = useInputData();
+  const Icon = getCategoryIcon(categoryGroup);
+
   return (
     <Container>
-      <MainHeader>
-        <CategoryContainer>
-          <Category src={categorySrc} />
-        </CategoryContainer>
-        <header>
-          <Title>{title}</Title>
-          <Date>{date}</Date>
-        </header>
-      </MainHeader>
-      <div>
+      <Stack direction="row">
+        <IconBox>
+          <Icon color="primary" />
+        </IconBox>
+        <div>
+          <Typography variant="h6" component="p">
+            {title}
+          </Typography>
+          <Typography variant="body2">{date}</Typography>
+        </div>
+      </Stack>
+      <Stack>
         <Price isSpent={isSpent}>
           <span>
             {isSpent ? '-' : '+'}
@@ -101,7 +74,7 @@ const Transaction = ({
           </span>{' '}
           {currency}
         </Price>
-      </div>
+      </Stack>
     </Container>
   );
 };
@@ -111,7 +84,7 @@ Transaction.propTypes = {
   amount: PropTypes.number,
   date: PropTypes.string,
   currency: PropTypes.string,
-  categorySrc: PropTypes.string,
+  categoryGroup: PropTypes.string,
   isSpent: PropTypes.bool,
 };
 

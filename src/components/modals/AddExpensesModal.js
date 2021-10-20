@@ -1,63 +1,37 @@
 import styled from 'styled-components';
-import { devices } from '../../assets/styles/devices';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useFirestore } from '../../hooks/useFirestore';
 import PropTypes from 'prop-types';
-import {
-  Input,
-  Label,
-  SubmitButton,
-  Modal,
-  Form,
-  Error,
-} from '../../assets/styles/reusableStyles';
-import Switch from '../FormSwitch';
-import CloseButton from '../CloseButton';
+import Switch from '../SpentSwitch';
 import { useInputData } from '../../hooks/useInputData';
+import Modal from '../Modal';
+import Input from '../Input';
+import {
+  Stack,
+  Checkbox,
+  FormControlLabel,
+  Grid,
+  Typography,
+  Button,
+} from '@mui/material';
 
-const Content = styled.main`
-  position: relative;
-  width: 100%;
-  height: 100%;
-  padding: 15px 15px;
-
-  @media ${devices.mobileM} {
-    padding: 30px 25px;
-  }
+const SCheckBox = styled(Checkbox)`
+  padding: 3px 0;
+  margin-left: 12px;
 `;
 
-const Header = styled.header`
+const MonthsError = styled(Typography)`
+  color: #d32f2f;
+  font-size: 0.7rem;
+  margin-left: 12px;
+`;
+
+const Form = styled.form`
   width: 100%;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 10px 0;
-
-  @media ${devices.mobileM} {
-    margin: 20px 0;
-  }
-`;
-
-const Heading = styled.h1`
-  font-weight: ${({ theme }) => theme.font.weight.semiBold};
-  font-size: 2rem;
-  text-transform: capitalize;
-`;
-
-const CheckboxLabel = styled.label`
-  font-size: 1.5rem;
-  font-weight: ${({ theme }) => theme.font.weight.medium};
-  margin-left: 5px;
-`;
-
-const Checkbox = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-`;
-
-const CheckboxInput = styled.input`
-  cursor: pointer;
+  flex-direction: column;
+  justify-content: center;
 `;
 
 const AddExpensesModal = () => {
@@ -75,85 +49,64 @@ const AddExpensesModal = () => {
     'November',
     'December',
   ];
-  const [months, setMonths] = useState(
-    new Array(monthsNames.length).fill(true)
+  const [checkedMonths, setCheckedMonths] = useState(
+    new Array(monthsNames.length)
   );
   const [isSpent, setIsSpent] = useState(true);
-  const [monthsError, setMonthsError] = useState(false);
-  const [currency, setCurrency] = useState('');
-  const [randomId, setRandomId] = useState(null);
-  const { setIsExpensesModalOpen } = useInputData();
+
   const {
     handleSubmit,
     register,
     formState: { errors },
   } = useForm();
+
   const { getUserData, generateExpensesID, addNewExpense } = useFirestore();
+  const { isExpensesModalOpen, setIsExpensesModalOpen } = useInputData();
 
-  useEffect(() => {
-    generateExpensesID().then((resp) => setRandomId(resp));
-  }, []);
-
-  useEffect(() => {
-    getUserData().then(({ currency }) => setCurrency(currency));
-  }, []);
-
-  const handleOnChange = (position) => {
-    const updatedCheckedMonths = months.map((item, index) =>
-      index === position ? !item : item
-    );
-    setMonths(updatedCheckedMonths);
+  const handleCheckboxChange = (e) => {
+    setCheckedMonths({
+      [e.target.name]: e.target.value,
+    });
   };
 
-  const closeModalHandler = () => {
+  const onSubmit = async ({ title, amount, day, months }) => {
+    const id = await generateExpensesID();
+    const { currency } = await getUserData();
+    addNewExpense({
+      id,
+      title,
+      months,
+      dayOfCollection: parseFloat(day),
+      amount: parseFloat(amount),
+      isSpent,
+      currency,
+      expenseCollection: [],
+    });
     setIsExpensesModalOpen(false);
   };
 
-  const getCheckedMonths = (months) => {
-    const tmp = [];
-    months.forEach((month, index) => {
-      if (month) tmp.push(`${index + 1}`);
-    });
-    return tmp;
-  };
-
-  const onSubmit = ({ title, amount, day }) => {
-    if (months.filter((month) => month === true).length >= 1) {
-      addNewExpense({
-        id: randomId,
-        title,
-        months: getCheckedMonths(months),
-        dayOfCollection: parseFloat(day),
-        amount: parseFloat(amount),
-        isSpent,
-        currency,
-        expenseCollection: [],
-      });
-      closeModalHandler();
-    } else {
-      setMonthsError(true);
-    }
-  };
-
   return (
-    <Modal>
-      <Content>
-        <Header>
-          <Heading>add expense</Heading>
-          <CloseButton click={closeModalHandler} />
-        </Header>
-        <Form onSubmit={handleSubmit(onSubmit)}>
-          <Label htmlFor="title">TITLE</Label>
+    <Modal
+      margin
+      title="Add Expense"
+      isOpen={isExpensesModalOpen}
+      onClose={() => setIsExpensesModalOpen(false)}
+    >
+      <Form onSubmit={handleSubmit(onSubmit)}>
+        <Stack spacing={2}>
           <Input
             {...register('title', {
               required: 'Title is required',
             })}
+            label="Title"
+            variant="filled"
+            size="small"
             type="text"
             id="title"
             name="title"
+            error={errors.title ? true : false}
+            helperText={errors.title ? errors.title.message : ''}
           ></Input>
-          {errors.title && <Error>{errors.title.message}</Error>}
-          <Label htmlFor="amount">AMOUNT</Label>
           <Input
             {...register('amount', {
               required: 'Amount is required',
@@ -162,13 +115,16 @@ const AddExpensesModal = () => {
                 message: 'You must enter a number greater than 0',
               },
             })}
+            label="Amount"
+            variant="filled"
+            size="small"
             type="number"
             id="amount"
             name="amount"
             step="0.01"
+            error={errors.amount ? true : false}
+            helperText={errors.amount ? errors.amount.message : ''}
           ></Input>
-          {errors.amount && <Error>{errors.amount.message}</Error>}
-          <Label>DAY OF COLLECTION ( 1 - 28 )</Label>
           <Input
             {...register('day', {
               required: 'Day of collection is required',
@@ -181,32 +137,51 @@ const AddExpensesModal = () => {
                 message: 'You must choose a number between 1 and 28',
               },
             })}
+            label="Day of collection ( 1 - 28 )"
+            variant="filled"
+            size="small"
             type="number"
             id="day"
             name="day"
+            error={errors.day ? true : false}
+            helperText={errors.day ? errors.day.message : ''}
           />
-          {errors.day && <Error>{errors.day.message}</Error>}
+          <Stack>
+            <Grid container>
+              {monthsNames.map((month, index) => (
+                <Grid key={month} item xs={6}>
+                  <FormControlLabel
+                    control={
+                      <SCheckBox
+                        name={month}
+                        value={index < 9 ? `0${index + 1}` : `${index + 1}`}
+                        {...register('months', {
+                          validate: (value) =>
+                            value.length > 0 ||
+                            'You have to select at least one month',
+                        })}
+                        defaultChecked
+                        checked={checkedMonths[index]}
+                        onChange={handleCheckboxChange}
+                      />
+                    }
+                    label={month}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+            {errors.months && (
+              <MonthsError variant="subtitle2" component="p">
+                {errors.months.message}
+              </MonthsError>
+            )}
+          </Stack>
           <Switch isSpent={isSpent} setIsSpent={setIsSpent} />
-          <Label>MONTH OF COLLECTION ( 1 - 12 )</Label>
-          <Checkbox>
-            {monthsNames.map((month, index) => (
-              <div key={month}>
-                <CheckboxInput
-                  type="checkbox"
-                  id={month}
-                  name="month"
-                  value={month}
-                  checked={months[index]}
-                  onChange={() => handleOnChange(index)}
-                />
-                <CheckboxLabel>{month}</CheckboxLabel>
-              </div>
-            ))}
-          </Checkbox>
-          {monthsError && <Error>{monthsError}</Error>}
-          <SubmitButton type="submit">ADD EXPENSE</SubmitButton>
-        </Form>
-      </Content>
+          <Button fullWidth variant="contained" type="submit">
+            ADD EXPENSE
+          </Button>
+        </Stack>
+      </Form>
     </Modal>
   );
 };

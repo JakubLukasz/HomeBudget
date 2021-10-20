@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import Card from '../components/Card';
 import TotalWrapper from '../components/TotalWrapper';
 import TransactionsWrapper from '../components/TransactionsWrapper';
 import React, { useEffect, useState } from 'react';
@@ -8,23 +7,14 @@ import { useFirestore } from '../hooks/useFirestore';
 import { db } from '../services/firebase';
 import { useAuth } from '../hooks/useAuth';
 import LoadingScreen from '../components/LoadingScreen';
+import SectionHeader from '../components/SectionHeader';
+import Card from '../components/Card';
 
 const Container = styled.div`
   background-color: ${({ theme }) => theme.color.lightPrimary};
   position: relative;
   flex: 1;
   overflow: auto;
-`;
-
-const Header = styled.header`
-  width: 100%;
-  background-color: #ffffff;
-  padding: 20px;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px -10px 50px;
-
-  @media ${devices.laptop} {
-    display: none;
-  }
 `;
 
 const Content = styled.main`
@@ -43,10 +33,6 @@ const Content = styled.main`
     flex-direction: row;
     align-items: flex-start;
   }
-`;
-
-const Heading = styled.h2`
-  font-size: 1.7rem;
 `;
 
 const TransactionCard = styled(Card)`
@@ -127,9 +113,7 @@ const Main = () => {
   else
     return (
       <Container>
-        <Header>
-          <Heading>Dashboard</Heading>
-        </Header>
+        <SectionHeader title="Dashboard" />
         <Content>
           <TotalCard title="TOTAL">
             <TotalWrapper transactions={transactions} {...total} />

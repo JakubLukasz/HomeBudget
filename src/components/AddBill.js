@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import Icon from './Icon';
-import AddBillIcon from '../assets/images/addBillIcon.svg';
 import { useInputData } from '../hooks/useInputData';
 import { devices } from '../assets/styles/devices';
+import AddIcon from '@mui/icons-material/Add';
+import { Typography } from '@mui/material';
 
 const AddButton = styled.button`
   width: 50%;
@@ -17,21 +17,15 @@ const AddButton = styled.button`
   }
 `;
 
-const ButtonIcon = styled(Icon)`
-  width: 5rem;
-  height: 5rem;
-  fill: ${({ theme }) => theme.color.primary};
-`;
-
-const ButtonText = styled.span`
-  font-weight: ${({ theme }) => theme.font.weight.semiBold};
-  font-size: 1.2rem;
-  color: ${({ theme }) => theme.color.primary};
-  margin: 10px 0 0 0;
-
-  @media ${devices.mobileM} {
-    font-size: 1.4rem;
-  }
+const IconBox = styled.div`
+  background-color: ${({ theme }) => theme.color.primary};
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  padding: 1rem;
+  margin-bottom: 0.5rem;
 `;
 
 const AddBill = () => {
@@ -41,8 +35,10 @@ const AddBill = () => {
 
   return (
     <AddButton onClick={addBillHandler}>
-      <ButtonIcon src={AddBillIcon} />
-      <ButtonText>Add Bill</ButtonText>
+      <IconBox>
+        <AddIcon />
+      </IconBox>
+      <Typography variant="h6">Add Bill</Typography>
     </AddButton>
   );
 };

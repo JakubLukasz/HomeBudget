@@ -1,123 +1,84 @@
 import styled from 'styled-components';
-import { devices } from '../assets/styles/devices';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useFirestore } from '../hooks/useFirestore';
-import CloseButton from './CloseButton';
+import { useInputData } from '../hooks/useInputData';
+import { Stack, Typography, Grid, IconButton } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const Container = styled.div`
-  width: 49%;
+  width: 100%;
+  height: 100%;
   padding: 15px;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   background-color: #ffffff;
   border-radius: 15px;
-  margin: 0 2% 2% 0;
   box-shadow: rgba(0, 0, 0, 0.1) 0px -10px 50px;
-
-  &:nth-child(2n) {
-    margin: 0 0 2% 0;
-  }
-
-  @media ${devices.tablet} {
-    width: 32%;
-    margin: 0 2% 2% 0;
-    padding: 25px;
-
-    &:nth-child(2n) {
-      margin: 0 2% 2% 0;
-    }
-
-    &:nth-child(3n) {
-      margin: 0 0 2% 0;
-    }
-  }
-
-  @media ${devices.laptop} {
-    width: 19%;
-    margin: 0 1.25% 1.25% 0;
-
-    &:nth-child(2n) {
-      margin: 0 1.25% 1.25% 0;
-    }
-
-    &:nth-child(3n) {
-      margin: 0 1.25% 1.25% 0;
-    }
-
-    &:nth-child(5n) {
-      margin: 0 0 1.25% 0;
-    }
-  }
-`;
-
-const Close = styled(CloseButton)`
-  width: 15px;
-  height: 15px;
-`;
-
-const Title = styled.h2`
-  font-size: 1.7rem;
-  font-weight: ${({ theme }) => theme.font.weight.semiBold};
-  text-transform: uppercase;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  max-width: 80%;
-  white-space: nowrap;
 `;
 
 const Price = styled.p`
+  font-weight: ${({ theme }) => theme.font.weight.medium};
   color: ${({ isSpent }) => (isSpent ? 'red' : 'green')};
-  font-size: 1.6rem;
-  font-weight: ${({ theme }) => theme.font.weight.medium};
+  font-size: 1.5rem;
   text-align: center;
+  margin: 20px 0 10px;
 `;
 
-const Day = styled.p`
-  font-size: 1.4rem;
-  font-weight: ${({ theme }) => theme.font.weight.medium};
-  margin-bottom: 5px;
-`;
-
-const Header = styled.header`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
-`;
-
-const Main = styled.main`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 10px;
-
-  @media ${devices.laptop} {
-    flex-direction: row;
-    justify-content: space-between;
-  }
-`;
-
-const Expense = ({ id, amount, title, isSpent, currency, dayOfCollection }) => {
+const Expense = ({
+  id,
+  amount,
+  title,
+  isSpent,
+  currency,
+  dayOfCollection,
+  months,
+}) => {
+  const [monthNames, setMonthNames] = useState([]);
+  const { getMonthNames } = useInputData();
   const { removeExpense } = useFirestore();
-  const handleDeleteExpense = () => removeExpense(id);
+
+  useEffect(() => {
+    setMonthNames(getMonthNames(months));
+  }, []);
 
   return (
     <Container>
-      <Header>
-        <Title>{title}</Title>
-        <Close click={handleDeleteExpense} />
-      </Header>
-      <Main>
-        <Day>Collection: {dayOfCollection}</Day>
-        <Price isSpent={isSpent}>
-          <span>
-            {isSpent ? '-' : '+'}
-            {amount}
-          </span>{' '}
-          {currency}
-        </Price>
-      </Main>
+      <Stack spacing={1}>
+        <Stack>
+          <Stack direction="row" justifyContent="space-between">
+            <Typography variant="h5" sx={{ fontWeight: '600' }}>
+              Title: {title}
+            </Typography>
+            <IconButton variant="contained" onClick={() => removeExpense(id)}>
+              <DeleteIcon color="primary" />
+            </IconButton>
+          </Stack>
+          <Typography variant="h6">
+            Collection Day: {dayOfCollection}
+          </Typography>
+        </Stack>
+        <Stack>
+          <Typography variant="h6" sx={{ fontWeight: '600' }}>
+            Months
+          </Typography>
+          <Grid container>
+            {monthNames.map((monthName) => (
+              <Grid item xs={6} key={monthName}>
+                <Typography>{monthName}</Typography>
+              </Grid>
+            ))}
+          </Grid>
+        </Stack>
+      </Stack>
+      <Price variant="h6" isSpent={isSpent}>
+        <span>
+          {isSpent ? '-' : '+'}
+          {amount}
+        </span>{' '}
+        {currency}
+      </Price>
     </Container>
   );
 };
@@ -129,6 +90,7 @@ Expense.propTypes = {
   currency: PropTypes.string,
   dayOfCollection: PropTypes.number,
   id: PropTypes.string,
+  months: PropTypes.array,
 };
 
 export default Expense;

@@ -6,15 +6,25 @@ import { AuthContextProvider } from '../contexts/AuthContext';
 import { FirestoreContextProvider } from '../contexts/FirestoreContext';
 import { InputDataContextProvider } from '../contexts/InputDataContext';
 import PropTypes from 'prop-types';
+import { ThemeProvider as MuiThemeProvider } from '@mui/material';
+import { StyledEngineProvider } from '@mui/styled-engine';
+import { muiTheme } from '../assets/styles/muiTheme';
+import { GraphContextProvider } from '../contexts/GraphContext';
 
 const SetupTemplate = ({ children }) => {
   return (
     <AuthContextProvider>
       <FirestoreContextProvider>
-        <InputDataContextProvider>
-          <GlobalStyle theme={theme} />
-          <ThemeProvider theme={theme}>{children}</ThemeProvider>
-        </InputDataContextProvider>
+        <GraphContextProvider>
+          <InputDataContextProvider>
+            <StyledEngineProvider injectFirst>
+              <MuiThemeProvider theme={muiTheme}>
+                <GlobalStyle theme={theme} />
+                <ThemeProvider theme={theme}>{children}</ThemeProvider>
+              </MuiThemeProvider>
+            </StyledEngineProvider>
+          </InputDataContextProvider>
+        </GraphContextProvider>
       </FirestoreContextProvider>
     </AuthContextProvider>
   );

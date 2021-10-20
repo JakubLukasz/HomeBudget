@@ -1,12 +1,14 @@
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
-import Icon from './Icon';
-import StatsIcon from '../assets/images/statsIcon.svg';
-import ExpensesIcon from '../assets/images/expensesIcon.svg';
-import Logo from '../assets/images/homeIcon.svg';
 import { devices } from '../assets/styles/devices';
-import LogOutButton from './LogOutButton';
+import { useAuth } from '../hooks/useAuth';
+import { useHistory } from 'react-router-dom';
 import React from 'react';
+import HomeIcon from '@mui/icons-material/Home';
+import LogoutIcon from '@mui/icons-material/Logout';
+import EqualizerIcon from '@mui/icons-material/Equalizer';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import { Button } from '@mui/material';
 
 const Navigation = styled.nav`
   display: flex;
@@ -22,23 +24,14 @@ const Navigation = styled.nav`
   }
 `;
 
-const LinkIcon = styled(Icon)`
-  width: 3rem;
-  height: 3rem;
-  svg,
-  ellipse {
-    fill: ${({ theme }) => theme.color.secondary};
-  }
-`;
-
 const LinkTitle = styled.span`
   font-weight: ${({ theme }) => theme.font.weight.semiBold};
   color: ${({ theme }) => theme.color.secondary};
-  font-size: 1.1rem;
+  font-size: 0.7rem;
   margin: 10px 0 0 0;
 
   @media ${devices.mobileM} {
-    font-size: 1.3rem;
+    font-size: 0.8rem;
   }
 `;
 
@@ -62,22 +55,47 @@ const HomeLink = styled(StyledNavLink)`
   }
 `;
 
+const LogOutButton = styled(Button)`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.7rem;
+  text-transform: capitalize;
+`;
+
 const AppNav = () => {
+  const { logout } = useAuth();
+  const history = useHistory();
+
+  const logOutHandler = async () => {
+    try {
+      await logout();
+      history.push('/login');
+    } catch {
+      console.error('error');
+    }
+  };
+
   return (
     <Navigation>
       <StyledNavLink to="/statistics" activeClassName="open">
-        <LinkIcon src={StatsIcon} />
+        <EqualizerIcon color="secondary" fontSize="large" />
         <LinkTitle>Statistics</LinkTitle>
       </StyledNavLink>
       <StyledNavLink to="/fixed-expenses" activeClassName="open">
-        <LinkIcon src={ExpensesIcon} />
+        <AssignmentIcon color="secondary" fontSize="large" />
         <LinkTitle>Expenses</LinkTitle>
       </StyledNavLink>
       <HomeLink exact to="/" activeClassName="open">
-        <LinkIcon src={Logo} />
+        <HomeIcon color="secondary" fontSize="large" />
         <LinkTitle>Home</LinkTitle>
       </HomeLink>
-      <LogOutButton />
+      <LogOutButton onClick={logOutHandler}>
+        <LogoutIcon color="secondary" fontSize="large" />
+        <LinkTitle>Log out</LinkTitle>
+      </LogOutButton>
     </Navigation>
   );
 };
