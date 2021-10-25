@@ -13,11 +13,7 @@ import ExpenseIcon from '@mui/icons-material/Assignment';
 export const InputDataContext = createContext({});
 
 export const InputDataContextProvider = ({ children }) => {
-  const [isBillModalOpen, setIsBillModalOpen] = useState(false);
-  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
-  const [isSubCategoryModalOpen, setIsSubCategoryModalOpen] = useState(false);
-  const [isExpensesModalOpen, setIsExpensesModalOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState('Not Selected...');
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [subCategories, setSubCategories] = useState(null);
 
@@ -193,16 +189,8 @@ export const InputDataContextProvider = ({ children }) => {
   };
 
   const ctx = {
-    isBillModalOpen,
-    setIsBillModalOpen,
-    isExpensesModalOpen,
-    setIsExpensesModalOpen,
     selectedCategory,
     setSelectedCategory,
-    isCategoryModalOpen,
-    setIsCategoryModalOpen,
-    isSubCategoryModalOpen,
-    setIsSubCategoryModalOpen,
     selectedGroup,
     setSelectedGroup,
     mainCategories,

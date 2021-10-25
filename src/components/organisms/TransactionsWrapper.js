@@ -1,7 +1,7 @@
-import Transaction from './Transaction';
+import Transaction from '../molecules/Transaction';
 import React from 'react';
 import PropTypes from 'prop-types';
-import NoData from './NoData';
+import NoData from '../molecules/NoData';
 
 const TransactionsWrapper = ({ transactions, total }) => {
   if (transactions.length === 0)

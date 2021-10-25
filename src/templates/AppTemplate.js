@@ -2,17 +2,17 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import Statistics from '../pages/Statistics';
 import Main from '../pages/Main';
 import React from 'react';
-import AppNav from '../components/Nav';
-import { useInputData } from '../hooks/useInputData';
-import AddBillModal from '../components/modals/AddBillModal';
+import AppNav from '../components/organisms/Nav';
+import { useUi } from '../hooks/useUi';
+import AddBillModal from '../components/organisms/AddBillModal';
 import { useFirestore } from '../hooks/useFirestore';
-import SetupAccount from '../components/SetupAccount';
-import FixedExpenses from '../pages/FixedExpenses';
+import SetupAccount from '../components/organisms/SetupAccount';
+import Expenses from '../pages/Expenses';
 import styled from 'styled-components';
 import { devices } from '../assets/styles/devices';
-import AddExpensesModal from '../components/modals/AddExpensesModal';
-import SubCategoryModal from '../components/modals/SubCategoryModal';
-import SelectCategoryModal from '../components/modals/SelectCategoryModal';
+import AddExpensesModal from '../components/organisms/AddExpensesModal';
+import SubCategoryModal from '../components/organisms/SubCategoryModal';
+import SelectCategoryModal from '../components/organisms/SelectCategoryModal';
 
 const Container = styled.div`
   max-width: 100vw;
@@ -32,7 +32,7 @@ const AppTemplate = () => {
     isExpensesModalOpen,
     isSubCategoryModalOpen,
     isCategoryModalOpen,
-  } = useInputData();
+  } = useUi();
   const { isConfigured } = useFirestore();
   return (
     <Container>
@@ -46,7 +46,7 @@ const AppTemplate = () => {
           <Route exact path="/" component={Main} />
         </Switch>
         <Switch>
-          <Route path="/fixed-expenses" component={FixedExpenses} />
+          <Route path="/expenses" component={Expenses} />
         </Switch>
         <Switch>
           <Route path="/statistics" component={Statistics} />

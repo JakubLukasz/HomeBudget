@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
-import { devices } from '../assets/styles/devices';
-import { useAuth } from '../hooks/useAuth';
+import { devices } from '../../assets/styles/devices';
+import { useAuth } from '../../hooks/useAuth';
 import { useHistory } from 'react-router-dom';
 import React from 'react';
 import HomeIcon from '@mui/icons-material/Home';
@@ -9,6 +9,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import EqualizerIcon from '@mui/icons-material/Equalizer';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import { Button } from '@mui/material';
+import { styled as restyled } from '@mui/styles';
 
 const Navigation = styled.nav`
   display: flex;
@@ -24,16 +25,12 @@ const Navigation = styled.nav`
   }
 `;
 
-const LinkTitle = styled.span`
-  font-weight: ${({ theme }) => theme.font.weight.semiBold};
-  color: ${({ theme }) => theme.color.secondary};
-  font-size: 0.7rem;
-  margin: 10px 0 0 0;
-
-  @media ${devices.mobileM} {
-    font-size: 0.8rem;
-  }
-`;
+const LinkTitle = restyled('span')(({ theme }) => ({
+  fontWeight: '600',
+  color: theme.palette.secondary.main,
+  fontSize: '0.8rem',
+  margin: '10px 0 0 0',
+}));
 
 const StyledNavLink = styled(NavLink)`
   text-decoration: none;
@@ -84,7 +81,7 @@ const AppNav = () => {
         <EqualizerIcon color="secondary" fontSize="large" />
         <LinkTitle>Statistics</LinkTitle>
       </StyledNavLink>
-      <StyledNavLink to="/fixed-expenses" activeClassName="open">
+      <StyledNavLink to="/expenses" activeClassName="open">
         <AssignmentIcon color="secondary" fontSize="large" />
         <LinkTitle>Expenses</LinkTitle>
       </StyledNavLink>

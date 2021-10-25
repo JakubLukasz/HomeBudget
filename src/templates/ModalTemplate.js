@@ -51,7 +51,7 @@ const SButton = styled(Button)`
   min-width: auto;
 `;
 
-const Modal = ({ children, title, onClose, margin }) => {
+const ModalTemplate = ({ children, title, onClose, margin }) => {
   return (
     <Container margin={margin}>
       <Header>
@@ -67,11 +67,11 @@ const Modal = ({ children, title, onClose, margin }) => {
   );
 };
 
-Modal.propTypes = {
+ModalTemplate.propTypes = {
   children: PropTypes.node,
   title: PropTypes.string,
   onClose: PropTypes.func,
   margin: PropTypes.bool,
 };
 
-export default Modal;
+export default ModalTemplate;

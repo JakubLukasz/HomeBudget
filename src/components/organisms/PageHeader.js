@@ -1,7 +1,7 @@
 import { Typography } from '@mui/material';
 import React from 'react';
 import styled from 'styled-components';
-import { devices } from '../assets/styles/devices';
+import { devices } from '../../assets/styles/devices';
 import PropTypes from 'prop-types';
 
 const Header = styled.header`
@@ -15,7 +15,7 @@ const Header = styled.header`
   }
 `;
 
-const SectionHeader = ({ title }) => {
+const PageHeader = ({ title }) => {
   return (
     <Header>
       <Typography variant="subtitle1" component="h2">
@@ -25,8 +25,8 @@ const SectionHeader = ({ title }) => {
   );
 };
 
-SectionHeader.propTypes = {
+PageHeader.propTypes = {
   title: PropTypes.string,
 };
 
-export default SectionHeader;
+export default PageHeader;

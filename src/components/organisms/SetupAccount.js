@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 import React, { useState } from 'react';
-import { useFirestore } from '../hooks/useFirestore';
-import { devices } from '../assets/styles/devices';
+import { useFirestore } from '../../hooks/useFirestore';
+import { devices } from '../../assets/styles/devices';
 import { useForm } from 'react-hook-form';
-import Logo from './Logo';
-import Input from './Input';
+import Logo from '../atoms/Logo';
+import Input from '../atoms/Input';
 import { Stack, Typography, Alert } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import MenuItem from '@mui/material/MenuItem';
@@ -49,11 +49,12 @@ const SetupAccount = () => {
     try {
       setFormError('');
       setIsLoading(true);
+
       await setupUserData({
         firstname,
         earnings: parseFloat(earnings),
         moneyLeft: 0,
-        payday,
+        payday: payday < 9,
         currency,
         isConfigured: true,
         paydayData: [],
@@ -88,6 +89,10 @@ const SetupAccount = () => {
             <Input
               {...register('earnings', {
                 required: 'Earnings are required',
+                min: {
+                  value: 1,
+                  message: 'You must enter a number greater than 0',
+                },
               })}
               type="number"
               name="earnings"
@@ -100,12 +105,12 @@ const SetupAccount = () => {
           </Stack>
           <Input
             {...register('currency', {
-              onChange: (e) => setCurrency(e.target.value),
               required: 'Currency is required',
             })}
             select
             label="Currency"
             value={currency}
+            onChange={(e) => setCurrency(e.target.value)}
             variant="filled"
             error={errors.currency ? true : false}
             helperText={errors.currency ? errors.currency.message : ''}

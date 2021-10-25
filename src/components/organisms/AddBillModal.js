@@ -6,11 +6,13 @@ import { useForm } from 'react-hook-form';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DateAdapter from '@mui/lab/AdapterDayjs';
 import DatePicker from '@mui/lab/DatePicker';
+import { useUi } from '../../hooks/useUi';
 import { Button, Stack } from '@mui/material';
 import dayjs from 'dayjs';
-import Modal from '../Modal';
-import Input from '../Input';
-import SpentSwitch from '../SpentSwitch';
+import ModalTemplate from '../../templates/ModalTemplate';
+import Input from '../atoms/Input';
+import SpentSwitch from '../atoms/SpentSwitch';
+import { styled as restyled } from '@mui/styles';
 
 const Form = styled.form`
   width: 100%;
@@ -19,52 +21,73 @@ const Form = styled.form`
   justify-content: center;
 `;
 
+const Category = styled.div`
+  flex: 1;
+  background-color: #f0f0f0;
+  border-bottom: 2px solid ${({ error }) => (error ? '#d32f2f' : '#909090')};
+  display: flex;
+  align-items: center;
+  color: ${({ error }) => (error ? '#d32f2f' : '#606060')};
+  font-size: 0.95rem;
+  padding: 1rem 0.8rem;
+`;
+
+const CategoryErrorBox = restyled('p')(({ theme }) => ({
+  color: theme.palette.error.main,
+  fontWeight: '500',
+  fontSize: '.7rem',
+  margin: '5px 0 0 15px',
+}));
+
+const Color = restyled('p')(({ theme }) => ({
+  color: theme.palette.primary.main,
+  fontWeight: '700',
+  marginLeft: '5px',
+}));
+
 const AddBillModal = () => {
   const [isSpent, setIsSpent] = useState(true);
   const [todaysDate, setTodaysDate] = useState(dayjs());
+  const [categoryError, setCategoryError] = useState('');
   const { getCurrency, generateTransactionsID, addNewBill } = useFirestore();
-  const {
-    isBillModalOpen,
-    setIsBillModalOpen,
-    selectedGroup,
-    selectedCategory,
-    setSelectedCategory,
-    setIsCategoryModalOpen,
-  } = useInputData();
+  const { selectedGroup, selectedCategory, setSelectedCategory } =
+    useInputData();
+  const { setIsCategoryModalOpen, isBillModalOpen, setIsBillModalOpen } =
+    useUi();
   const {
     handleSubmit,
     register,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = async ({ title, category, date, amount }) => {
-    const id = await generateTransactionsID();
-    const currency = await getCurrency();
-    await addNewBill({
-      id,
-      title,
-      category,
-      categoryGroup: selectedGroup,
-      date: dayjs(date).format('YYYY-MM-DD'),
-      amount: parseFloat(amount),
-      isSpent,
-      currency,
-    });
-    setSelectedCategory('');
-    setIsBillModalOpen((snapshot) => !snapshot);
+  const onSubmit = async ({ title, date, amount }) => {
+    if (selectedCategory !== 'Not Selected...') {
+      const id = await generateTransactionsID();
+      const currency = await getCurrency();
+      await addNewBill({
+        id,
+        title,
+        category: selectedCategory,
+        categoryGroup: selectedGroup,
+        date: dayjs(date).format('YYYY-MM-DD'),
+        amount: parseFloat(amount),
+        isSpent,
+        currency,
+      });
+      setSelectedCategory('Not Selected...');
+      setIsBillModalOpen((snapshot) => !snapshot);
+    } else {
+      setCategoryError('Category is required');
+    }
   };
 
   const closeModalHandler = () => {
-    setSelectedCategory('');
+    setSelectedCategory('Not Selected...');
     setIsBillModalOpen(false);
   };
 
-  const handleDateChange = (value) => {
-    setTodaysDate(value);
-  };
-
   return (
-    <Modal
+    <ModalTemplate
       title="Add Bill"
       isOpen={isBillModalOpen}
       onClose={closeModalHandler}
@@ -82,27 +105,22 @@ const AddBillModal = () => {
             error={errors.title ? true : false}
             helperText={errors.title ? errors.title.message : ''}
           />
-          <Stack direction="row" spacing={2}>
-            <Input
-              {...register('category', {
-                required: 'Category is required',
-              })}
-              variant="filled"
-              label="Category"
-              value={selectedCategory ?? ''}
-              InputProps={{
-                readOnly: true,
-              }}
-              error={errors.category ? true : false}
-              helperText={errors.category ? errors.category.message : ''}
-            />
-            <Button
-              type="button"
-              variant="contained"
-              onClick={() => setIsCategoryModalOpen((snapshot) => !snapshot)}
-            >
-              SELECT
-            </Button>
+          <Stack>
+            <Stack direction="row" spacing={2}>
+              <Category error={categoryError}>
+                Category: <Color>{selectedCategory}</Color>
+              </Category>
+              <Button
+                type="button"
+                variant="contained"
+                onClick={() => setIsCategoryModalOpen(true)}
+              >
+                SELECT
+              </Button>
+            </Stack>
+            {categoryError && (
+              <CategoryErrorBox>{categoryError}</CategoryErrorBox>
+            )}
           </Stack>
           <Input
             {...register('amount', {
@@ -128,7 +146,7 @@ const AddBillModal = () => {
               label="Date of bill"
               variant="filled"
               value={todaysDate}
-              onChange={handleDateChange}
+              onChange={(value) => setTodaysDate(value)}
               renderInput={(params) => <Input variant="filled" {...params} />}
             />
           </LocalizationProvider>
@@ -138,7 +156,7 @@ const AddBillModal = () => {
           </Button>
         </Stack>
       </Form>
-    </Modal>
+    </ModalTemplate>
   );
 };
 

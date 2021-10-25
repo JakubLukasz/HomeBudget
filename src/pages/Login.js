@@ -3,12 +3,13 @@ import styled from 'styled-components';
 import { useAuth } from '../hooks/useAuth';
 import { Link, useHistory } from 'react-router-dom';
 import { devices } from '../assets/styles/devices';
-import Logo from '../components/Logo';
+import Logo from '../components/atoms/Logo';
 import { useForm } from 'react-hook-form';
-import GuestLogin from '../components/GuestLogin';
+import GuestLogin from '../components/molecules/GuestLogin';
 import { Stack, Typography, Alert } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
-import Input from '../components/Input';
+import Input from '../components/atoms/Input';
+import { styled as restyled } from '@mui/styles';
 
 const Container = styled.section`
   height: var(--app-height);
@@ -28,19 +29,21 @@ const Form = styled.form`
   }
 `;
 
-const BaseLink = styled(Link)`
-  color: ${({ theme }) => theme.color.primary};
-  text-decoration: none;
-`;
+const BaseLink = restyled(Link)(({ theme }) => ({
+  color: theme.palette.primary.main,
+  textDecoration: 'none',
+}));
 
 const ResetLink = styled(BaseLink)`
-  font-weight: ${({ theme }) => theme.font.weight.medium};
+  font-weight: 500;
   font-size: 0.9rem;
 `;
 
 const RedirectLink = styled(BaseLink)`
   margin-left: 5px;
-  font-weight: ${({ theme }) => theme.font.weight.semiBold};
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-align: center;
 `;
 
 const Login = () => {
@@ -112,10 +115,9 @@ const Login = () => {
           >
             log In
           </LoadingButton>
-          <Typography variant="subtitle2">
-            Want to create an account?
-            <RedirectLink to="/signup">Sign up</RedirectLink>
-          </Typography>
+          <RedirectLink to="/signup">
+            Want to create an account? Sign up
+          </RedirectLink>
         </Stack>
       </Form>
     </Container>

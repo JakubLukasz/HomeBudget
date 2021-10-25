@@ -1,10 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import { devices } from '../assets/styles/devices';
+import { devices } from '../../assets/styles/devices';
 import { Typography } from '@mui/material';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import { styled as restyled } from '@mui/styles';
 
 const Container = styled.div`
   display: flex;
@@ -17,16 +18,16 @@ const Container = styled.div`
   }
 `;
 
-const IconBox = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: ${({ theme }) => theme.color.primary};
-  color: #ffffff;
-  padding: 1rem;
-  border-radius: 10px;
-  margin-bottom: 2rem;
-`;
+const IconBox = restyled('div')(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  backgroundColor: theme.palette.primary.main,
+  color: '#ffffff',
+  padding: '1rem',
+  borderRadius: '10px',
+  marginBottom: '2rem',
+}));
 
 const ExpenseIcon = styled(AssignmentIcon)`
   font-size: 6.25rem;

@@ -1,16 +1,16 @@
 import styled from 'styled-components';
-import { devices } from '../assets/styles/devices';
+import { devices } from '../../assets/styles/devices';
 import React from 'react';
 import PropTypes from 'prop-types';
-import AddBill from './AddBill';
-import AddExpense from './AddExpense';
+import AddBill from '../atoms/AddBill';
+import AddExpense from '../atoms/AddExpense';
 import { Typography } from '@mui/material';
 
 const Heading = styled.h1`
   font-size: 1.7rem;
-  font-weight: ${({ theme }) => theme.font.weight.semiBold};
+  font-weight: 600;
   text-align: center;
-  color: ${({ moneyLeft }) => (moneyLeft < 0 ? 'red' : 'black')};
+  color: ${({ moneyLeft }) => (moneyLeft < 0 ? '#f44c4c' : '#000000')};
 
   @media ${devices.tablet} {
     padding: 0 10px;
@@ -30,7 +30,6 @@ const Controls = styled.div`
   align-items: flex-start;
   justify-content: center;
   padding: 20px 0px;
-  max-width: 300px;
 `;
 
 const TotalWrapper = ({ moneyLeft, currency }) => {

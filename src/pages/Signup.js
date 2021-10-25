@@ -4,11 +4,12 @@ import { useAuth } from '../hooks/useAuth';
 import { useFirestore } from '../hooks/useFirestore';
 import { Link, useHistory } from 'react-router-dom';
 import { devices } from '../assets/styles/devices';
-import Logo from '../components/Logo';
+import Logo from '../components/atoms/Logo';
 import { useForm } from 'react-hook-form';
 import { Typography, Stack, Alert } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
-import Input from '../components/Input';
+import Input from '../components/atoms/Input';
+import { styled as restyled } from '@mui/styles';
 
 const Container = styled.section`
   height: var(--app-height);
@@ -28,14 +29,16 @@ const Form = styled.form`
   }
 `;
 
-const BaseLink = styled(Link)`
-  color: ${({ theme }) => theme.color.primary};
-  text-decoration: none;
-`;
+const BaseLink = restyled(Link)(({ theme }) => ({
+  color: theme.palette.primary.main,
+  textDecoration: 'none',
+}));
 
 const RedirectLink = styled(BaseLink)`
   margin-left: 5px;
-  font-weight: ${({ theme }) => theme.font.weight.semiBold};
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-align: center;
 `;
 
 const Signup = () => {
@@ -129,10 +132,10 @@ const Signup = () => {
           >
             SIGN UP
           </LoadingButton>
-          <Typography variant="subtitle2" sx={{ textAlign: 'center' }}>
-            Already have an account?
-            <RedirectLink to="/login">Log In</RedirectLink>
-          </Typography>
+
+          <RedirectLink to="/login">
+            Already have an account? Log In
+          </RedirectLink>
         </Stack>
       </Form>
     </Container>

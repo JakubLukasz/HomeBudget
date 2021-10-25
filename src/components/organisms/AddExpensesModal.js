@@ -3,10 +3,10 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useFirestore } from '../../hooks/useFirestore';
 import PropTypes from 'prop-types';
-import Switch from '../SpentSwitch';
-import { useInputData } from '../../hooks/useInputData';
-import Modal from '../Modal';
-import Input from '../Input';
+import Switch from '../atoms/SpentSwitch';
+import { useUi } from '../../hooks/useUi';
+import ModalTemplate from '../../templates/ModalTemplate';
+import Input from '../atoms/Input';
 import {
   Stack,
   Checkbox,
@@ -15,17 +15,18 @@ import {
   Typography,
   Button,
 } from '@mui/material';
+import { styled as restyled } from '@mui/styles';
 
 const SCheckBox = styled(Checkbox)`
   padding: 3px 0;
   margin-left: 12px;
 `;
 
-const MonthsError = styled(Typography)`
-  color: #d32f2f;
-  font-size: 0.7rem;
-  margin-left: 12px;
-`;
+const MonthsError = restyled(Typography)(({ theme }) => ({
+  color: theme.palette.error.main,
+  fontSize: '0.75rem',
+  marginLeft: '12px',
+}));
 
 const Form = styled.form`
   width: 100%;
@@ -61,7 +62,7 @@ const AddExpensesModal = () => {
   } = useForm();
 
   const { getUserData, generateExpensesID, addNewExpense } = useFirestore();
-  const { isExpensesModalOpen, setIsExpensesModalOpen } = useInputData();
+  const { isExpensesModalOpen, setIsExpensesModalOpen } = useUi();
 
   const handleCheckboxChange = (e) => {
     setCheckedMonths({
@@ -86,7 +87,7 @@ const AddExpensesModal = () => {
   };
 
   return (
-    <Modal
+    <ModalTemplate
       margin
       title="Add Expense"
       isOpen={isExpensesModalOpen}
@@ -182,7 +183,7 @@ const AddExpensesModal = () => {
           </Button>
         </Stack>
       </Form>
-    </Modal>
+    </ModalTemplate>
   );
 };
 

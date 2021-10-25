@@ -89,6 +89,7 @@ export const GraphContextProvider = ({ children }) => {
     setupDoughnut(earnedMonthArray, setEarnedMonthCategoryData);
   };
 
+  // grouping all values with the same category
   const groupArrayByCategory = (rawArray) => {
     const array = [];
     rawArray.forEach(({ category, amount }) =>
@@ -110,22 +111,38 @@ export const GraphContextProvider = ({ children }) => {
     return result;
   };
 
-  const initGraph = async () => {
+  const initGraphs = async () => {
     const transactions = await getTransactions();
     handleTransactions(transactions);
   };
 
+  const graphs = [
+    {
+      title: 'SPENT GRAPH (ALL TIME)',
+      data: spentCategoryData,
+      dataLength: spentTransactions.length,
+    },
+    {
+      title: 'EARNED GRAPH (ALL TIME)',
+      data: earnedCategoryData,
+      dataLength: earnedTransactions.length,
+    },
+    {
+      title: 'SPENT GRAPH (THIS MONTH)',
+      data: spentMonthCategoryData,
+      dataLength: spentMonthTransactions.length,
+    },
+    {
+      title: 'EARNED GRAPH (THIS MONTH)',
+      data: earnedMonthCategoryData,
+      dataLength: earnedMonthTransactions.length,
+    },
+  ];
+
   const ctx = {
-    initGraph,
+    initGraphs,
+    graphs,
     transactions,
-    spentTransactions,
-    earnedTransactions,
-    spentMonthTransactions,
-    earnedMonthTransactions,
-    earnedCategoryData,
-    spentCategoryData,
-    spentMonthCategoryData,
-    earnedMonthCategoryData,
   };
 
   return <GraphContext.Provider value={ctx}>{children}</GraphContext.Provider>;

@@ -1,9 +1,10 @@
 import styled from 'styled-components';
-import { devices } from '../assets/styles/devices';
+import { devices } from '../../assets/styles/devices';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Typography, Stack } from '@mui/material';
-import { useInputData } from '../hooks/useInputData';
+import { useInputData } from '../../hooks/useInputData';
+import { styled as restyled } from '@mui/styles';
 
 const Container = styled.div`
   display: flex;
@@ -26,20 +27,20 @@ const Container = styled.div`
   }
 `;
 
-const IconBox = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-right: 20px;
-  border-radius: 50%;
-  background-color: ${({ theme }) => theme.color.lightSecondary};
-  padding: 10px;
-`;
+const IconBox = restyled('div')(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginRight: '20px',
+  borderRadius: '50%',
+  backgroundColor: theme.palette.secondary.light,
+  padding: '10px',
+}));
 
 const Price = styled.span`
-  color: ${({ isSpent }) => (isSpent ? 'red' : 'green')};
+  color: ${({ isSpent }) => (isSpent ? '#f44c4c' : '#21bf39')};
   font-size: 0.9rem;
-  font-weight: ${({ theme }) => theme.font.weight.medium};
+  font-weight: 500;
 `;
 
 const Transaction = ({

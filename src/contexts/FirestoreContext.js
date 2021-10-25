@@ -12,14 +12,30 @@ export const FirestoreContextProvider = ({ children }) => {
   const { currentUser } = useAuth();
   const [isConfigured, setIsConfigured] = useState(true);
 
-  const createUserData = ({ email, uid }) => {
+  const createUserData = async ({ email, uid }) => {
     const userDoc = db.collection('users').doc(uid);
     const userData = {
       uid,
       email,
       isConfigured: false,
     };
-    userDoc.set(userData);
+    await userDoc.set(userData);
+  };
+
+  const createGuestData = async ({ email, uid }, username) => {
+    const userDoc = db.collection('users').doc(uid);
+    const userData = {
+      uid,
+      email,
+      isConfigured: true,
+      payday: '01',
+      firstname: username,
+      earnings: 3000,
+      moneyLeft: 0,
+      paydayData: [],
+      currency: 'zł',
+    };
+    await userDoc.set(userData);
   };
 
   const setupUserData = (setupData) => {
@@ -248,6 +264,7 @@ export const FirestoreContextProvider = ({ children }) => {
     generateExpensesID,
     getExpensesSize,
     getTransactionsSize,
+    createGuestData,
   };
 
   return (

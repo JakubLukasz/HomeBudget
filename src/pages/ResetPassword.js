@@ -4,10 +4,10 @@ import { useAuth } from '../hooks/useAuth';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { devices } from '../assets/styles/devices';
-import Logo from '../components/Logo';
+import Logo from '../components/atoms/Logo';
 import { Typography, Stack, Alert } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
-import Input from '../components/Input';
+import Input from '../components/atoms/Input';
 
 const Container = styled.section`
   height: var(--app-height);
@@ -34,7 +34,9 @@ const BaseLink = styled(Link)`
 
 const RedirectLink = styled(BaseLink)`
   margin-left: 5px;
-  font-weight: ${({ theme }) => theme.font.weight.semiBold};
+  font-weight: 600;
+  font-size: 0.7rem;
+  text-align: center;
 `;
 
 const ResetPassword = () => {
@@ -95,9 +97,7 @@ const ResetPassword = () => {
           >
             RESET
           </LoadingButton>
-          <Typography variant="subtitle2" sx={{ textAlign: 'center' }}>
-            <RedirectLink to="/login">Log In </RedirectLink>with your account
-          </Typography>
+          <RedirectLink to="/login">Log In with your account</RedirectLink>
         </Stack>
       </Form>
     </Container>

@@ -2,8 +2,9 @@ import styled from 'styled-components';
 import { useInputData } from '../../hooks/useInputData';
 import React from 'react';
 import PropTypes from 'prop-types';
-import Modal from '../Modal';
+import ModalTemplate from '../../templates/ModalTemplate';
 import { Typography, Button, Stack } from '@mui/material';
+import { useUi } from '../../hooks/useUi';
 
 const CategoryButton = styled(Button)`
   justify-content: flex-start;
@@ -20,13 +21,16 @@ const CategoryButton = styled(Button)`
 const SubCategoryModal = () => {
   const {
     setSelectedCategory,
-    isSubCategoryModalOpen,
     selectedGroup,
-    setIsSubCategoryModalOpen,
-    setIsCategoryModalOpen,
     getCategoryIcon,
     getSubCategories,
   } = useInputData();
+
+  const {
+    isSubCategoryModalOpen,
+    setIsSubCategoryModalOpen,
+    setIsCategoryModalOpen,
+  } = useUi();
 
   const Icon = getCategoryIcon(selectedGroup);
   const subCategories = getSubCategories(selectedGroup);
@@ -38,7 +42,7 @@ const SubCategoryModal = () => {
   };
 
   return (
-    <Modal
+    <ModalTemplate
       title="Select Category"
       isOpen={isSubCategoryModalOpen}
       onClose={() => setIsSubCategoryModalOpen(false)}
@@ -58,7 +62,7 @@ const SubCategoryModal = () => {
           </CategoryButton>
         ))}
       </Stack>
-    </Modal>
+    </ModalTemplate>
   );
 };
 

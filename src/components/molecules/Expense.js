@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useFirestore } from '../hooks/useFirestore';
-import { useInputData } from '../hooks/useInputData';
+import { useFirestore } from '../../hooks/useFirestore';
+import { useInputData } from '../../hooks/useInputData';
 import { Stack, Typography, Grid, IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
@@ -14,16 +14,21 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: space-between;
   background-color: #ffffff;
-  border-radius: 15px;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px -10px 50px;
+`;
+
+const Title = styled(Typography)`
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  font-weight: '600';
 `;
 
 const Price = styled.p`
-  font-weight: ${({ theme }) => theme.font.weight.medium};
-  color: ${({ isSpent }) => (isSpent ? 'red' : 'green')};
+  font-weight: 500;
+  color: ${({ isSpent }) => (isSpent ? '#f44c4c' : '#21bf39')};
   font-size: 1.5rem;
   text-align: center;
-  margin: 20px 0 10px;
+  margin: 20px 0 0;
 `;
 
 const Expense = ({
@@ -48,9 +53,7 @@ const Expense = ({
       <Stack spacing={1}>
         <Stack>
           <Stack direction="row" justifyContent="space-between">
-            <Typography variant="h5" sx={{ fontWeight: '600' }}>
-              Title: {title}
-            </Typography>
+            <Title variant="h5">Title: {title}</Title>
             <IconButton variant="contained" onClick={() => removeExpense(id)}>
               <DeleteIcon color="primary" />
             </IconButton>

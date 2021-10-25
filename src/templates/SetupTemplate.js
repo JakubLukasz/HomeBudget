@@ -10,6 +10,7 @@ import { ThemeProvider as MuiThemeProvider } from '@mui/material';
 import { StyledEngineProvider } from '@mui/styled-engine';
 import { muiTheme } from '../assets/styles/muiTheme';
 import { GraphContextProvider } from '../contexts/GraphContext';
+import { UiContextProvider } from '../contexts/UiContext';
 
 const SetupTemplate = ({ children }) => {
   return (
@@ -17,12 +18,14 @@ const SetupTemplate = ({ children }) => {
       <FirestoreContextProvider>
         <GraphContextProvider>
           <InputDataContextProvider>
-            <StyledEngineProvider injectFirst>
-              <MuiThemeProvider theme={muiTheme}>
-                <GlobalStyle theme={theme} />
-                <ThemeProvider theme={theme}>{children}</ThemeProvider>
-              </MuiThemeProvider>
-            </StyledEngineProvider>
+            <UiContextProvider>
+              <StyledEngineProvider injectFirst>
+                <MuiThemeProvider theme={muiTheme}>
+                  <GlobalStyle theme={theme} />
+                  <ThemeProvider theme={theme}>{children}</ThemeProvider>
+                </MuiThemeProvider>
+              </StyledEngineProvider>
+            </UiContextProvider>
           </InputDataContextProvider>
         </GraphContextProvider>
       </FirestoreContextProvider>

@@ -9,10 +9,10 @@ LIVE: www.dailyprofit.jakublukaszewski.pl
 
 ## Screenshots
 
-<img src="./src/screenshots/screen1.jpg" alt="screenshot1" width="30%"/>
-<img src="./src/screenshots/screen2.jpg" alt="screenshot2" width="30%"/>
-<img src="./src/screenshots/screen3.jpg" alt="screenshot3" width="30%"/>
-<img src="./src/screenshots/screen4.jpg" alt="screenshot4" width="30%"/>
+<img src="./screenshots/screen1.jpg" alt="screenshot1" width="30%"/>
+<img src="./screenshots/screen2.jpg" alt="screenshot2" width="30%"/>
+<img src="./screenshots/screen3.jpg" alt="screenshot3" width="30%"/>
+<img src="./screenshots/screen4.jpg" alt="screenshot4" width="30%"/>
 
 ## Instalation
 
@@ -34,6 +34,6 @@ Project is created with:
 - Chart.js: 3.5.0
 - Dayjs: 1.10.7
 - Material UI: 5.0.4
-- React-router-dom: 5.2.0
-- React-hook-form: 7.15.4
-- Styled-components: 5.3.0
+- react-router-dom: 5.2.0
+- react-hook-form: 7.15.4
+- styled-components: 5.3.0

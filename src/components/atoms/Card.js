@@ -8,15 +8,16 @@ const Container = styled.div`
   box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
   border-radius: 15px;
   padding: 10px;
-  margin-bottom: 15px;
 `;
 
 const Card = ({ className, children, title }) => {
   return (
     <Container className={className}>
-      <Typography color="secondary" variant="subtitle2" component="p">
-        {title}
-      </Typography>
+      {title && (
+        <Typography color="secondary" variant="subtitle2" component="p">
+          {title}
+        </Typography>
+      )}
       {children}
     </Container>
   );

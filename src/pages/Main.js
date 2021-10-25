@@ -1,14 +1,15 @@
 import styled from 'styled-components';
-import TotalWrapper from '../components/TotalWrapper';
-import TransactionsWrapper from '../components/TransactionsWrapper';
+import TotalWrapper from '../components/organisms/TotalWrapper';
+import TransactionsWrapper from '../components/organisms/TransactionsWrapper';
 import React, { useEffect, useState } from 'react';
 import { devices } from '../assets/styles/devices';
 import { useFirestore } from '../hooks/useFirestore';
 import { db } from '../services/firebase';
 import { useAuth } from '../hooks/useAuth';
-import LoadingScreen from '../components/LoadingScreen';
-import SectionHeader from '../components/SectionHeader';
-import Card from '../components/Card';
+import LoadingScreen from '../components/organisms/LoadingScreen';
+import PageHeader from '../components/organisms/PageHeader';
+import Card from '../components/atoms/Card';
+import { Grid } from '@mui/material';
 
 const Container = styled.div`
   background-color: ${({ theme }) => theme.color.lightPrimary};
@@ -18,8 +19,6 @@ const Container = styled.div`
 `;
 
 const Content = styled.main`
-  display: flex;
-  flex-direction: column;
   padding: 15px 10px;
 
   @media ${devices.mobileM} {
@@ -28,31 +27,6 @@ const Content = styled.main`
 
   @media ${devices.mobileL} {
     padding: 15px 20px;
-  }
-  @media ${devices.laptop} {
-    flex-direction: row;
-    align-items: flex-start;
-  }
-`;
-
-const TransactionCard = styled(Card)`
-  @media ${devices.mobileM} {
-    padding: 10px 15px;
-  }
-
-  @media ${devices.laptop} {
-    flex: 3;
-  }
-`;
-
-const TotalCard = styled(Card)`
-  @media ${devices.mobileM} {
-    padding: 10px 15px;
-  }
-
-  @media ${devices.laptop} {
-    flex: 1;
-    margin-right: 15px;
   }
 `;
 
@@ -113,14 +87,23 @@ const Main = () => {
   else
     return (
       <Container>
-        <SectionHeader title="Dashboard" />
+        <PageHeader title="Dashboard" />
         <Content>
-          <TotalCard title="TOTAL">
-            <TotalWrapper transactions={transactions} {...total} />
-          </TotalCard>
-          <TransactionCard title="TRANSACTIONS">
-            <TransactionsWrapper total={total} transactions={transactions} />
-          </TransactionCard>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6} md={4}>
+              <Card title="TOTAL">
+                <TotalWrapper transactions={transactions} {...total} />
+              </Card>
+            </Grid>
+            <Grid item xs={12} sm={6} md={8}>
+              <Card title="TRANSACTIONS">
+                <TransactionsWrapper
+                  total={total}
+                  transactions={transactions}
+                />
+              </Card>
+            </Grid>
+          </Grid>
         </Content>
       </Container>
     );

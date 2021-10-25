@@ -2,7 +2,8 @@ import styled from 'styled-components';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useInputData } from '../../hooks/useInputData';
-import Modal from '../Modal';
+import { useUi } from '../../hooks/useUi';
+import ModalTemplate from '../../templates/ModalTemplate';
 import { Button, Stack, Typography } from '@mui/material';
 
 const CategoryButton = styled(Button)`
@@ -18,13 +19,13 @@ const CategoryButton = styled(Button)`
 `;
 
 const SelectCategoryModal = () => {
+  const { setSelectedGroup, mainCategories } = useInputData();
+
   const {
     isCategoryModalOpen,
     setIsCategoryModalOpen,
-    setSelectedGroup,
     setIsSubCategoryModalOpen,
-    mainCategories,
-  } = useInputData();
+  } = useUi();
 
   const openSubCategoryModalHandler = (title) => {
     setSelectedGroup(title);
@@ -32,7 +33,7 @@ const SelectCategoryModal = () => {
   };
 
   return (
-    <Modal
+    <ModalTemplate
       title="Select Category"
       isOpen={isCategoryModalOpen}
       onClose={() => setIsCategoryModalOpen(false)}
@@ -52,7 +53,7 @@ const SelectCategoryModal = () => {
           </CategoryButton>
         ))}
       </Stack>
-    </Modal>
+    </ModalTemplate>
   );
 };
 
