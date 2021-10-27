@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useInputData } from '../../hooks/useInputData';
-import { useUi } from '../../hooks/useUi';
-import ModalTemplate from '../../templates/ModalTemplate';
+import { useInputData } from '../hooks/useInputData';
+import { useUi } from '../hooks/useUi';
+import ModalTemplate from '../templates/ModalTemplate';
 import { Button, Stack, Typography } from '@mui/material';
 
 const CategoryButton = styled(Button)`
