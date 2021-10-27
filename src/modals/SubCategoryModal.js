@@ -1,10 +1,10 @@
 import styled from 'styled-components';
-import { useInputData } from '../../hooks/useInputData';
+import { useInputData } from '../hooks/useInputData';
 import React from 'react';
 import PropTypes from 'prop-types';
-import ModalTemplate from '../../templates/ModalTemplate';
+import ModalTemplate from '../templates/ModalTemplate';
 import { Typography, Button, Stack } from '@mui/material';
-import { useUi } from '../../hooks/useUi';
+import { useUi } from '../hooks/useUi';
 
 const CategoryButton = styled(Button)`
   justify-content: flex-start;

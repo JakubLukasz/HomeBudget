@@ -6,7 +6,9 @@ import { currentDate } from '../helpers/currentDate';
 import { uniqueKey } from '../helpers/uniqueKey';
 import dayjs from 'dayjs';
 
-export const FirestoreContext = createContext({});
+export const FirestoreContext = createContext({
+  // @TODO default value
+});
 
 export const FirestoreContextProvider = ({ children }) => {
   const { currentUser } = useAuth();

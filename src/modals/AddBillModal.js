@@ -1,17 +1,17 @@
 import styled from 'styled-components';
-import { useInputData } from '../../hooks/useInputData';
+import { useInputData } from '../hooks/useInputData';
 import React, { useState } from 'react';
-import { useFirestore } from '../../hooks/useFirestore';
+import { useFirestore } from '../hooks/useFirestore';
 import { useForm } from 'react-hook-form';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DateAdapter from '@mui/lab/AdapterDayjs';
 import DatePicker from '@mui/lab/DatePicker';
-import { useUi } from '../../hooks/useUi';
+import { useUi } from '../hooks/useUi';
 import { Button, Stack } from '@mui/material';
 import dayjs from 'dayjs';
-import ModalTemplate from '../../templates/ModalTemplate';
-import Input from '../atoms/Input';
-import SpentSwitch from '../atoms/SpentSwitch';
+import ModalTemplate from '../templates/ModalTemplate';
+import Input from '../components/atoms/Input';
+import SpentSwitch from '../components/atoms/SpentSwitch';
 import { styled as restyled } from '@mui/styles';
 
 const Form = styled.form`
