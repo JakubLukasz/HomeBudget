@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 import React, { useState } from 'react';
-import { useFirestore } from '../../hooks/useFirestore';
-import { devices } from '../../assets/styles/devices';
+import { useFirestore } from '@Hooks/useFirestore';
+import { devices } from '@Assets/styles/devices';
 import { useForm } from 'react-hook-form';
-import Logo from '../atoms/Logo';
-import Input from '../atoms/Input';
+import Logo from '@Components/atoms/Logo';
+import Input from '@Components/atoms/Input';
 import { Stack, Typography, Alert } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import MenuItem from '@mui/material/MenuItem';

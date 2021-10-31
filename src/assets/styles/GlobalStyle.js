@@ -1,10 +1,10 @@
 import { createGlobalStyle } from 'styled-components';
-import MontserratExtraBold from '../fonts/Montserrat-ExtraBold.ttf';
-import MontserratBold from '../fonts/Montserrat-Bold.ttf';
-import MontserratSemiBold from '../fonts/Montserrat-SemiBold.ttf';
-import MontserratMedium from '../fonts/Montserrat-Medium.ttf';
-import MontserratRegular from '../fonts/Montserrat-Regular.ttf';
-import MontserratLight from '../fonts/Montserrat-Light.ttf';
+import MontserratExtraBold from '@Assets/fonts/Montserrat-ExtraBold.ttf';
+import MontserratBold from '@Assets/fonts/Montserrat-Bold.ttf';
+import MontserratSemiBold from '@Assets/fonts/Montserrat-SemiBold.ttf';
+import MontserratMedium from '@Assets/fonts/Montserrat-Medium.ttf';
+import MontserratRegular from '@Assets/fonts/Montserrat-Regular.ttf';
+import MontserratLight from '@Assets/fonts/Montserrat-Light.ttf';
 
 const GlobalStyle = createGlobalStyle`
     *,*::before,*::after{

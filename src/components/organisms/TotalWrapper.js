@@ -1,9 +1,9 @@
 import styled from 'styled-components';
-import { devices } from '../../assets/styles/devices';
+import { devices } from '@Assets/styles/devices';
 import React from 'react';
 import PropTypes from 'prop-types';
-import AddBill from '../atoms/AddBill';
-import AddExpense from '../atoms/AddExpense';
+import AddBill from '@Components/atoms/AddBill';
+import AddExpense from '@Components/atoms/AddExpense';
 import { Typography } from '@mui/material';
 
 const Heading = styled.h1`

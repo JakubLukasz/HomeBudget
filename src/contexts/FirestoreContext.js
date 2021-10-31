@@ -1,9 +1,9 @@
 import React, { useState, createContext } from 'react';
-import { db } from '../services/firebase';
-import { useAuth } from '../hooks/useAuth';
+import { db } from '@Services/firebase';
+import { useAuth } from '@Hooks/useAuth';
 import PropTypes from 'prop-types';
-import { currentDate } from '../helpers/currentDate';
-import { uniqueKey } from '../helpers/uniqueKey';
+import { currentDate } from '@Helpers/currentDate';
+import { uniqueKey } from '@Helpers/uniqueKey';
 import dayjs from 'dayjs';
 
 export const FirestoreContext = createContext({});

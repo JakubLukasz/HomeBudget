@@ -1,15 +1,15 @@
 import styled from 'styled-components';
 import React, { useState, useEffect } from 'react';
-import { devices } from '../assets/styles/devices';
-import Expense from '../components/molecules/Expense';
-import { db } from '../services/firebase';
-import { useAuth } from '../hooks/useAuth';
-import LoadingScreen from '../components/organisms/LoadingScreen';
-import { useFirestore } from '../hooks/useFirestore';
-import NoData from '../components/molecules/NoData';
-import PageHeader from '../components/organisms/PageHeader';
+import { devices } from '@Assets/styles/devices';
+import Expense from '@Components/molecules/Expense';
+import { db } from '@Services/firebase';
+import { useAuth } from '@Hooks/useAuth';
+import LoadingScreen from '@Components/organisms/LoadingScreen';
+import { useFirestore } from '@Hooks/useFirestore';
+import NoData from '@Components/molecules/NoData';
+import PageHeader from '@Components/organisms/PageHeader';
 import { Grid } from '@mui/material';
-import Card from '../components/atoms/Card';
+import Card from '@Components/atoms/Card';
 
 const Container = styled.div`
   position: relative;

@@ -1,7 +1,7 @@
 import React, { createContext, useState } from 'react';
-import { useFirestore } from '../hooks/useFirestore';
+import { useFirestore } from '@Hooks/useFirestore';
 import PropTypes from 'prop-types';
-import { currentDate } from '../helpers/currentDate';
+import { currentDate } from '@Helpers/currentDate';
 
 export const GraphContext = createContext({});
 

@@ -1,14 +1,14 @@
 import styled from 'styled-components';
-import TotalWrapper from '../components/organisms/TotalWrapper';
-import TransactionsWrapper from '../components/organisms/TransactionsWrapper';
+import TotalWrapper from '@Components/organisms/TotalWrapper';
+import TransactionsWrapper from '@Components/organisms/TransactionsWrapper';
 import React, { useEffect, useState } from 'react';
-import { devices } from '../assets/styles/devices';
-import { useFirestore } from '../hooks/useFirestore';
-import { db } from '../services/firebase';
-import { useAuth } from '../hooks/useAuth';
-import LoadingScreen from '../components/organisms/LoadingScreen';
-import PageHeader from '../components/organisms/PageHeader';
-import Card from '../components/atoms/Card';
+import { devices } from '@Assets/styles/devices';
+import { useFirestore } from '@Hooks/useFirestore';
+import { db } from '@Services/firebase';
+import { useAuth } from '@Hooks/useAuth';
+import LoadingScreen from '@Components/organisms/LoadingScreen';
+import PageHeader from '@Components/organisms/PageHeader';
+import Card from '@Components/atoms/Card';
 import { Grid } from '@mui/material';
 
 const Container = styled.div`

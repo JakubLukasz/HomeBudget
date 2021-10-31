@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useFirestore } from '../../hooks/useFirestore';
-import { useInputData } from '../../hooks/useInputData';
+import { useFirestore } from '@Hooks/useFirestore';
+import { useInputData } from '@Hooks/useInputData';
 import { Stack, Typography, Grid, IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 

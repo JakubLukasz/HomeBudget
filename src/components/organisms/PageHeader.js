@@ -1,7 +1,7 @@
 import { Typography } from '@mui/material';
 import React from 'react';
 import styled from 'styled-components';
-import { devices } from '../../assets/styles/devices';
+import { devices } from '@Assets/styles/devices';
 import PropTypes from 'prop-types';
 
 const Header = styled.header`

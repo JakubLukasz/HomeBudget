@@ -1,9 +1,9 @@
 import styled from 'styled-components';
-import { devices } from '../../assets/styles/devices';
+import { devices } from '@Assets/styles/devices';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Typography, Stack } from '@mui/material';
-import { useInputData } from '../../hooks/useInputData';
+import { useInputData } from '@Hooks/useInputData';
 import { styled as restyled } from '@mui/styles';
 
 const Container = styled.div`

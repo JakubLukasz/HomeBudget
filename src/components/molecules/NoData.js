@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import { devices } from '../../assets/styles/devices';
+import { devices } from '@Assets/styles/devices';
 import { Typography } from '@mui/material';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import AssignmentIcon from '@mui/icons-material/Assignment';

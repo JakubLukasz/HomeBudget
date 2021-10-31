@@ -1,11 +1,11 @@
 import styled from 'styled-components';
-import Card from '../components/atoms/Card';
+import Card from '@Components/atoms/Card';
 import React, { useEffect } from 'react';
-import { devices } from '../assets/styles/devices';
+import { devices } from '@Assets/styles/devices';
 import { Doughnut } from 'react-chartjs-2';
-import NoData from '../components/molecules/NoData';
-import PageHeader from '../components/organisms/PageHeader';
-import { useGraph } from '../hooks/useGraph';
+import NoData from '@Components/molecules/NoData';
+import PageHeader from '@Components/organisms/PageHeader';
+import { useGraph } from '@Hooks/useGraph';
 import { Grid } from '@mui/material';
 
 const Container = styled.div`

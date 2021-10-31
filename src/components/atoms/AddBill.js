@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useUi } from '../../hooks/useUi';
-import { devices } from '../../assets/styles/devices';
+import { useUi } from '@Hooks/useUi';
+import { devices } from '@Assets/styles/devices';
 import AddIcon from '@mui/icons-material/Add';
 import { Typography } from '@mui/material';
 import { styled as restyled } from '@mui/styles';

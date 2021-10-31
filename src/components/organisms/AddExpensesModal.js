@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useFirestore } from '../../hooks/useFirestore';
+import { useFirestore } from '@Hooks/useFirestore';
 import PropTypes from 'prop-types';
-import Switch from '../atoms/SpentSwitch';
-import { useUi } from '../../hooks/useUi';
-import ModalTemplate from '../../templates/ModalTemplate';
-import Input from '../atoms/Input';
+import Switch from '@Components/atoms/SpentSwitch';
+import { useUi } from '@Hooks/useUi';
+import ModalTemplate from '@Components/templates/ModalTemplate';
+import Input from '@Components/atoms/Input';
 import {
   Stack,
   Checkbox,

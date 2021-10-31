@@ -1,18 +1,18 @@
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import Statistics from '../pages/Statistics';
-import Main from '../pages/Main';
+import Statistics from '@Pages/Statistics';
+import Main from '@Pages/Main';
 import React from 'react';
-import AppNav from '../components/organisms/Nav';
-import { useUi } from '../hooks/useUi';
-import AddBillModal from '../components/organisms/AddBillModal';
-import { useFirestore } from '../hooks/useFirestore';
-import SetupAccount from '../components/organisms/SetupAccount';
-import Expenses from '../pages/Expenses';
+import AppNav from '@Components/organisms/Nav';
+import { useUi } from '@Hooks/useUi';
+import AddBillModal from '@Components/organisms/AddBillModal';
+import { useFirestore } from '@Hooks/useFirestore';
+import SetupAccount from '@Components/organisms/SetupAccount';
+import Expenses from '@Pages/Expenses';
 import styled from 'styled-components';
-import { devices } from '../assets/styles/devices';
-import AddExpensesModal from '../components/organisms/AddExpensesModal';
-import SubCategoryModal from '../components/organisms/SubCategoryModal';
-import SelectCategoryModal from '../components/organisms/SelectCategoryModal';
+import { devices } from '@Assets/styles/devices';
+import AddExpensesModal from '@Components/organisms/AddExpensesModal';
+import SubCategoryModal from '@Components/organisms/SubCategoryModal';
+import SelectCategoryModal from '@Components/organisms/SelectCategoryModal';
 
 const Container = styled.div`
   max-width: 100vw;

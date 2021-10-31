@@ -1,8 +1,8 @@
 import React from 'react';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '@Hooks/useAuth';
 import { useHistory } from 'react-router-dom';
-import { uniqueKey } from '../../helpers/uniqueKey';
-import { useFirestore } from '../../hooks/useFirestore';
+import { uniqueKey } from '@Helpers/uniqueKey';
+import { useFirestore } from '@Hooks/useFirestore';
 import PropTypes from 'prop-types';
 import { Button } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';

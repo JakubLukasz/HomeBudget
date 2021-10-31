@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { UiContext } from '../contexts/UiContext';
+import { UiContext } from '@Contexts/UiContext';
 
 export const useUi = () => {
   return useContext(UiContext);

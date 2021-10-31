@@ -1,14 +1,14 @@
 import styled from 'styled-components';
 import React, { useState } from 'react';
-import { useAuth } from '../hooks/useAuth';
-import { useFirestore } from '../hooks/useFirestore';
+import { useAuth } from '@Hooks/useAuth';
+import { useFirestore } from '@Hooks/useFirestore';
 import { Link, useHistory } from 'react-router-dom';
-import { devices } from '../assets/styles/devices';
-import Logo from '../components/atoms/Logo';
+import { devices } from '@Assets/styles/devices';
+import Logo from '@Components/atoms/Logo';
 import { useForm } from 'react-hook-form';
 import { Typography, Stack, Alert } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
-import Input from '../components/atoms/Input';
+import Input from '@Components/atoms/Input';
 import { styled as restyled } from '@mui/styles';
 
 const Container = styled.section`

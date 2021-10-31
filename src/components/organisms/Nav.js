@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
-import { devices } from '../../assets/styles/devices';
-import { useAuth } from '../../hooks/useAuth';
+import { devices } from '@Assets/styles/devices';
+import { useAuth } from '@Hooks/useAuth';
 import { useHistory } from 'react-router-dom';
 import React from 'react';
 import HomeIcon from '@mui/icons-material/Home';

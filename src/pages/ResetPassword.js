@@ -1,13 +1,13 @@
 import styled from 'styled-components';
 import React, { useState } from 'react';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '@Hooks/useAuth';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-import { devices } from '../assets/styles/devices';
-import Logo from '../components/atoms/Logo';
+import { devices } from '@Assets/styles/devices';
+import Logo from '@Components/atoms/Logo';
 import { Typography, Stack, Alert } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
-import Input from '../components/atoms/Input';
+import Input from '@Components/atoms/Input';
 
 const Container = styled.section`
   height: var(--app-height);

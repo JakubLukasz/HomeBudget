@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { devices } from '../assets/styles/devices';
+import { devices } from '@Assets/styles/devices';
 import { Typography, Button } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import PropTypes from 'prop-types';
