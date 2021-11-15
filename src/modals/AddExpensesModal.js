@@ -1,57 +1,56 @@
-import styled from 'styled-components';
 import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { useFirestore } from '@Hooks/useFirestore';
-import PropTypes from 'prop-types';
-import Switch from '@Components/atoms/SpentSwitch';
-import { useUi } from '@Hooks/useUi';
-import ModalTemplate from '@Components/templates/ModalTemplate';
-import Input from '@Components/atoms/Input';
+import { styled } from '@mui/styles';
+
 import {
   Stack,
   Checkbox,
   FormControlLabel,
   Grid,
-  Typography,
-  Button,
 } from '@mui/material';
-import { styled as restyled } from '@mui/styles';
 
-const SCheckBox = styled(Checkbox)`
-  padding: 3px 0;
-  margin-left: 12px;
-`;
+import Button from '@Components/atoms/Button';
+import Input from '@Components/atoms/Input';
+import Switch from '@Components/atoms/SpentSwitch';
+import Text from '@Components/atoms/Text';
+import ModalTemplate from '@Components/templates/ModalTemplate';
 
-const MonthsError = restyled(Typography)(({ theme }) => ({
+import { monthNames } from '@Helpers/constantData';
+
+import { useFirestore } from '@Hooks/useFirestore';
+import { useUi } from '@Hooks/useUi';
+import { useForm } from 'react-hook-form';
+
+import ReactDom from 'react-dom';
+
+const CheckBoxLabel = styled(FormControlLabel)({
+  '& .MuiTypography-root': {
+    fontSize: '1rem',
+    marginLeft: '7px'
+  }
+})
+
+const StyledCheckBox = styled(Checkbox)({
+  padding: '3px 0',
+  marginLeft: '12px',
+})
+
+const MonthsError = styled(Text)(({ theme }) => ({
   color: theme.palette.error.main,
   fontSize: '0.75rem',
   marginLeft: '12px',
 }));
 
-const Form = styled.form`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-`;
+const Form = styled('form')({
+  width: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center'
+})
 
 const AddExpensesModal = () => {
-  const monthsNames = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
+  const monthsArray = monthNames.map(({ value }) => value)
   const [checkedMonths, setCheckedMonths] = useState(
-    new Array(monthsNames.length)
+    new Array(monthsArray.length)
   );
   const [isSpent, setIsSpent] = useState(true);
 
@@ -61,8 +60,19 @@ const AddExpensesModal = () => {
     formState: { errors },
   } = useForm();
 
-  const { getUserData, generateExpensesID, addNewExpense } = useFirestore();
-  const { isExpensesModalOpen, setIsExpensesModalOpen } = useUi();
+  const { getUserData, getCollectionId, addNewExpense } = useFirestore();
+  const { setIsExpensesModalOpen } = useUi();
+
+  const addMonthNames = (monthsNumbers) => {
+    const tmp = [];
+    monthsNumbers.forEach(monthNumber => {
+      tmp.push({
+        number: monthNumber,
+        name: monthNames.find(({ id }) => id === monthNumber).value
+      })
+    });
+    return tmp;
+  };
 
   const handleCheckboxChange = (e) => {
     setCheckedMonths({
@@ -71,12 +81,12 @@ const AddExpensesModal = () => {
   };
 
   const onSubmit = async ({ title, amount, day, months }) => {
-    const id = await generateExpensesID();
+    const id = await getCollectionId('expenses');
     const { currency } = await getUserData();
     addNewExpense({
       id,
       title,
-      months,
+      months: addMonthNames(months),
       dayOfCollection: parseFloat(day),
       amount: parseFloat(amount),
       isSpent,
@@ -86,48 +96,37 @@ const AddExpensesModal = () => {
     setIsExpensesModalOpen(false);
   };
 
-  return (
+  return ReactDom.createPortal(
     <ModalTemplate
-      margin
       title="Add Expense"
-      isOpen={isExpensesModalOpen}
       onClose={() => setIsExpensesModalOpen(false)}
     >
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={2}>
           <Input
-            {...register('title', {
+            Register={register('title', {
               required: 'Title is required',
             })}
-            label="Title"
-            variant="filled"
-            size="small"
-            type="text"
-            id="title"
-            name="title"
-            error={errors.title ? true : false}
-            helperText={errors.title ? errors.title.message : ''}
-          ></Input>
+            Label="Title"
+            Name="title"
+            Errors={errors.title}
+          />
           <Input
-            {...register('amount', {
+            Register={register('amount', {
               required: 'Amount is required',
               min: {
                 value: 1,
                 message: 'You must enter a number greater than 0',
               },
             })}
-            label="Amount"
-            variant="filled"
-            size="small"
-            type="number"
-            id="amount"
-            name="amount"
+            Label="Amount"
+            Name="amount"
+            Type="number"
+            Errors={errors.amount}
             step="0.01"
-            error={errors.amount ? true : false}
-            helperText={errors.amount ? errors.amount.message : ''}
-          ></Input>
+          />
           <Input
-            {...register('day', {
+            Register={register('day', {
               required: 'Day of collection is required',
               min: {
                 value: 1,
@@ -138,22 +137,18 @@ const AddExpensesModal = () => {
                 message: 'You must choose a number between 1 and 28',
               },
             })}
-            label="Day of collection ( 1 - 28 )"
-            variant="filled"
-            size="small"
-            type="number"
-            id="day"
-            name="day"
-            error={errors.day ? true : false}
-            helperText={errors.day ? errors.day.message : ''}
+            Label="Day of collection ( 1 - 28 )"
+            Type="number"
+            Name="day"
+            Errors={errors.day}
           />
           <Stack>
             <Grid container>
-              {monthsNames.map((month, index) => (
+              {monthsArray.map((month, index) => (
                 <Grid key={month} item xs={6}>
-                  <FormControlLabel
+                  <CheckBoxLabel
                     control={
-                      <SCheckBox
+                      <StyledCheckBox
                         name={month}
                         value={index < 9 ? `0${index + 1}` : `${index + 1}`}
                         {...register('months', {
@@ -172,23 +167,19 @@ const AddExpensesModal = () => {
               ))}
             </Grid>
             {errors.months && (
-              <MonthsError variant="subtitle2" component="p">
+              <MonthsError variant="p1" component="p">
                 {errors.months.message}
               </MonthsError>
             )}
           </Stack>
           <Switch isSpent={isSpent} setIsSpent={setIsSpent} />
-          <Button fullWidth variant="contained" type="submit">
+          <Button fullWidth type="submit">
             ADD EXPENSE
           </Button>
         </Stack>
       </Form>
-    </ModalTemplate>
+    </ModalTemplate>, document.getElementById("modals")
   );
-};
-
-AddExpensesModal.propTypes = {
-  setIsExpensesModalOpen: PropTypes.func,
 };
 
 export default AddExpensesModal;

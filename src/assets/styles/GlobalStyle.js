@@ -7,31 +7,8 @@ import MontserratRegular from '@Assets/fonts/Montserrat-Regular.ttf';
 import MontserratLight from '@Assets/fonts/Montserrat-Light.ttf';
 
 const GlobalStyle = createGlobalStyle`
-    *,*::before,*::after{
-        box-sizing:border-box;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        margin:0;
-        padding:0;
-    }
 
-    body, input, textarea, button,select{
-        font-family: ${({ theme }) => theme.font.family.montserrat};
-    }
-
-    button{
-        background: none;
-        border: none;
-        cursor: pointer;
-        outline: none;
-        -webkit-tap-highlight-color: transparent;
-    }
-
-    a{
-        -webkit-tap-highlight-color: transparent;
-    }
-
-    @font-face{
+@font-face{
         font-family: "Montserrat";
         font-style: normal;
         font-weight: 800;
@@ -71,6 +48,30 @@ const GlobalStyle = createGlobalStyle`
         font-style: normal;
         font-weight: 300;
         src: url(${MontserratLight}) format('truetype');
+    }
+
+    *,*::before,*::after{
+        box-sizing:border-box;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        margin:0;
+        padding:0;
+    }
+
+    body, input, textarea, button,select{
+        font-family: 'Montserrat';
+    }
+
+    button{
+        background: none;
+        border: none;
+        cursor: pointer;
+        outline: none;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    a{
+        -webkit-tap-highlight-color: transparent;
     }
 
     html{

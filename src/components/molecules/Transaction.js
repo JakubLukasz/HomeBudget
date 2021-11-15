@@ -1,74 +1,64 @@
-import styled from 'styled-components';
-import { devices } from '@Assets/styles/devices';
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Stack } from '@mui/material';
-import { useInputData } from '@Hooks/useInputData';
-import { styled as restyled } from '@mui/styles';
+import { styled } from '@mui/styles';
 
-const Container = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 20px 0 30px;
-  padding: 0px 5px;
+import { Stack } from '@mui/material';
 
-  &:last-child {
-    margin: 20px 0 10px;
-  }
+import Text from '@Components/atoms/Text';
+import Icon from '@Components/atoms/Icon';
 
-  @media ${devices.mobileM} {
-    padding: 0px 10px;
-  }
+const Container = styled('div')({
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+})
 
-  @media ${devices.laptop} {
-    padding: 0px 10px;
-    margin: 15px 0;
-  }
-`;
-
-const IconBox = restyled('div')(({ theme }) => ({
+const IconBox = styled('div')(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
   marginRight: '20px',
   borderRadius: '50%',
   backgroundColor: theme.palette.secondary.light,
-  padding: '10px',
+  padding: '12px',
 }));
 
-const Price = styled.span`
-  color: ${({ isSpent }) => (isSpent ? '#f44c4c' : '#21bf39')};
-  font-size: 0.9rem;
-  font-weight: 500;
-`;
+const Price = styled('p')((props) => ({
+  color: `${props.isspent ? '#f44c4c' : '#21bf39'}`,
+  fontWeight: 500,
+  fontSize: '0.8rem',
+}))
 
-const Transaction = ({
-  title,
-  amount,
-  date,
-  currency,
-  categoryGroup,
-  isSpent,
-}) => {
-  const { getCategoryIcon } = useInputData();
-  const Icon = getCategoryIcon(categoryGroup);
+const Title = styled(Text)({
+  fontWeight: 600,
+})
+
+const Transaction = (props) => {
+
+  const {
+    title,
+    amount,
+    date,
+    currency,
+    categoryGroup,
+    isSpent,
+  } = props;
 
   return (
     <Container>
       <Stack direction="row">
         <IconBox>
-          <Icon color="primary" />
+          <Icon type={categoryGroup} color="primary" />
         </IconBox>
         <div>
-          <Typography variant="h6" component="p">
+          <Title variant="p1">
             {title}
-          </Typography>
-          <Typography variant="body2">{date}</Typography>
+          </Title>
+          <Text variant="p2">{date}</Text>
         </div>
       </Stack>
       <Stack>
-        <Price isSpent={isSpent}>
+        <Price variant="p2" isspent={isSpent}>
           <span>
             {isSpent ? '-' : '+'}
             {amount}
@@ -77,8 +67,8 @@ const Transaction = ({
         </Price>
       </Stack>
     </Container>
-  );
-};
+  )
+}
 
 Transaction.propTypes = {
   title: PropTypes.string,

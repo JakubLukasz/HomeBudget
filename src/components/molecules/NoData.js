@@ -1,24 +1,24 @@
 import React from 'react';
-import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import { devices } from '@Assets/styles/devices';
-import { Typography } from '@mui/material';
-import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
-import AssignmentIcon from '@mui/icons-material/Assignment';
-import { styled as restyled } from '@mui/styles';
+import { styled } from '@mui/styles';
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 30px 0;
+import Icon from '@Components/atoms/Icon';
+import Text from '@Components/atoms/Text';
 
-  @media ${devices.laptop} {
-    margin: 100px 0;
+const Container = styled('div')({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  margin: '30px 0',
+  padding: '0 20px',
+  textAlign: 'center',
+
+  '@media screen and (min-width:1024px)': {
+    margin: '100px 0',
   }
-`;
+})
 
-const IconBox = restyled('div')(({ theme }) => ({
+const IconBox = styled('div')(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
@@ -29,36 +29,34 @@ const IconBox = restyled('div')(({ theme }) => ({
   marginBottom: '2rem',
 }));
 
-const ExpenseIcon = styled(AssignmentIcon)`
-  font-size: 6.25rem;
+const DataIcon = styled(Icon)({
+  fontSize: '6.25rem',
 
-  @media ${devices.laptop} {
-    font-size: 9rem;
+  '@media screen and (min-width:1024px)': {
+    fontSize: '9rem',
   }
-`;
+})
 
-const TransactionIcon = styled(AccountBalanceWalletIcon)`
-  font-size: 6.25rem;
+const Info = styled(Text)({
+  fontWeight: 600,
+})
 
-  @media ${devices.laptop} {
-    font-size: 9rem;
-  }
-`;
-
-const NoData = ({ text, expense }) => {
+const NoData = ({ text, icon }) => {
   return (
     <Container>
-      <IconBox>{expense ? <ExpenseIcon /> : <TransactionIcon />}</IconBox>
-      <Typography variant="subtitle1" component="p">
+      <IconBox>
+        <DataIcon type={icon} />
+      </IconBox>
+      <Info variant="p1">
         {text}
-      </Typography>
+      </Info>
     </Container>
   );
 };
 
 NoData.propTypes = {
   text: PropTypes.string,
-  expense: PropTypes.bool,
+  icon: PropTypes.string,
 };
 
 export default NoData;

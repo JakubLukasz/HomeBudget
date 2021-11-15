@@ -10,7 +10,8 @@ module.exports = {
       '@Hooks': path.resolve(__dirname,'src/hooks'),
       '@Pages': path.resolve(__dirname,'src/pages'),
       '@Services': path.resolve(__dirname,'src/services'),
-      '@Helpers': path.resolve(__dirname,'src/helpers')
+      '@Helpers': path.resolve(__dirname,'src/helpers'),
+      '@Modals': path.resolve(__dirname,'src/modals')
     }
   },
 };

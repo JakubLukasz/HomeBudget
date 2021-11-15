@@ -5,19 +5,16 @@ export const UiContext = createContext({});
 
 export const UiContextProvider = ({ children }) => {
   const [isBillModalOpen, setIsBillModalOpen] = useState(false);
-  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
-  const [isSubCategoryModalOpen, setIsSubCategoryModalOpen] = useState(false);
   const [isExpensesModalOpen, setIsExpensesModalOpen] = useState(false);
+  const [isEarningsModalOpen, setIsEarningsModalOpen] = useState(false);
 
   const ctx = {
     isBillModalOpen,
     setIsBillModalOpen,
-    isCategoryModalOpen,
-    setIsCategoryModalOpen,
-    isSubCategoryModalOpen,
-    setIsSubCategoryModalOpen,
     isExpensesModalOpen,
     setIsExpensesModalOpen,
+    isEarningsModalOpen,
+    setIsEarningsModalOpen,
   };
 
   return <UiContext.Provider value={ctx}>{children}</UiContext.Provider>;

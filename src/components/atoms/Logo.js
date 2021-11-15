@@ -1,14 +1,14 @@
 import React from 'react';
-import { Typography } from '@mui/material';
-import { styled as restyled } from '@mui/styles';
+import { styled } from '@mui/styles';
+import Text from '@Components/atoms/Text';
 
-const Text = restyled(Typography)(({ theme }) => ({
+const LogoText = styled(Text)(({ theme }) => ({
   fontWeight: '800',
   color: theme.palette.primary.main,
 }));
 
 const Logo = () => {
-  return <Text variant="h3">Daily Profit</Text>;
+  return <LogoText variant="h1">Daily Profit</LogoText>;
 };
 
 export default Logo;

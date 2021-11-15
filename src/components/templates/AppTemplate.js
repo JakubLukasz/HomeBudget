@@ -1,60 +1,33 @@
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import Statistics from '@Pages/Statistics';
-import Main from '@Pages/Main';
 import React from 'react';
-import AppNav from '@Components/organisms/Nav';
-import { useUi } from '@Hooks/useUi';
-import AddBillModal from '@Components/organisms/AddBillModal';
-import { useFirestore } from '@Hooks/useFirestore';
-import SetupAccount from '@Components/organisms/SetupAccount';
-import Expenses from '@Pages/Expenses';
-import styled from 'styled-components';
-import { devices } from '@Assets/styles/devices';
-import AddExpensesModal from '@Components/organisms/AddExpensesModal';
-import SubCategoryModal from '@Components/organisms/SubCategoryModal';
-import SelectCategoryModal from '@Components/organisms/SelectCategoryModal';
+import PropTypes from 'prop-types';
+import { styled } from '@mui/styles';
 
-const Container = styled.div`
-  max-width: 100vw;
-  height: var(--app-height);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
+import AppNav from '@Components/organisms/AppNav';
 
-  @media ${devices.laptop} {
-    flex-direction: row-reverse;
+const Container = styled('div')({
+  maxWidth: '100vw',
+  height: 'var(--app-height)',
+  overflow: 'hidden',
+  display: 'flex',
+  flexDirection: 'column-reverse',
+
+  '@media screen and (min-width:1024px)': {
+    flexDirection: 'row',
   }
-`;
+})
 
-const AppTemplate = () => {
-  const {
-    isBillModalOpen,
-    isExpensesModalOpen,
-    isSubCategoryModalOpen,
-    isCategoryModalOpen,
-  } = useUi();
-  const { isConfigured } = useFirestore();
+const AppTemplate = ({ children }) => {
   return (
     <Container>
-      <BrowserRouter>
-        {isBillModalOpen && <AddBillModal />}
-        {isExpensesModalOpen && <AddExpensesModal />}
-        {!isConfigured && <SetupAccount />}
-        {isCategoryModalOpen && <SelectCategoryModal />}
-        {isSubCategoryModalOpen && <SubCategoryModal />}
-        <Switch>
-          <Route exact path="/" component={Main} />
-        </Switch>
-        <Switch>
-          <Route path="/expenses" component={Expenses} />
-        </Switch>
-        <Switch>
-          <Route path="/statistics" component={Statistics} />
-        </Switch>
-        <AppNav />
-      </BrowserRouter>
+      <AppNav />
+      {children}
     </Container>
   );
 };
+
+AppTemplate.propTypes = {
+  title: PropTypes.string,
+  children: PropTypes.node,
+}
 
 export default AppTemplate;

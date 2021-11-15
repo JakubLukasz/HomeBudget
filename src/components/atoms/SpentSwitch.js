@@ -1,21 +1,19 @@
 import React from 'react';
-import styled from 'styled-components';
+import PropTypes from 'prop-types';
+import { styled } from '@mui/styles';
+
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import PropTypes from 'prop-types';
 
-const Switch = styled(ToggleButtonGroup)`
-  & button {
-    flex: 1;
+
+const Switch = styled(ToggleButtonGroup)({
+  '& button': {
+    flex: 1,
   }
-`;
+})
 
 const SpentSwitch = ({ isSpent, setIsSpent }) => {
-  const handleSwitch = (event, newAlignment) => {
-    if (newAlignment !== null) {
-      setIsSpent(newAlignment);
-    }
-  };
+  const handleSwitch = (e, newValue) => (newValue !== null) && setIsSpent(newValue);
 
   return (
     <Switch

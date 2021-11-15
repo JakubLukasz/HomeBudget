@@ -1,90 +1,78 @@
-import styled from 'styled-components';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { useFirestore } from '@Hooks/useFirestore';
-import { useInputData } from '@Hooks/useInputData';
-import { Stack, Typography, Grid, IconButton } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { styled } from '@mui/styles';
 
-const Container = styled.div`
-  width: 100%;
-  height: 100%;
-  padding: 15px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  background-color: #ffffff;
-`;
+import { Stack, Grid, IconButton } from '@mui/material';
 
-const Title = styled(Typography)`
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-  font-weight: '600';
-`;
+import Icon from '@Components/atoms/Icon';
+import Text from '@Components/atoms/Text';
 
-const Price = styled.p`
-  font-weight: 500;
-  color: ${({ isSpent }) => (isSpent ? '#f44c4c' : '#21bf39')};
-  font-size: 1.5rem;
-  text-align: center;
-  margin: 20px 0 0;
-`;
+const Container = styled('div')({
+  width: '100%',
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'space-between',
+  backgroundColor: '#ffffff',
+})
 
-const Expense = ({
-  id,
-  amount,
-  title,
-  isSpent,
-  currency,
-  dayOfCollection,
-  months,
-}) => {
-  const [monthNames, setMonthNames] = useState([]);
-  const { getMonthNames } = useInputData();
-  const { removeExpense } = useFirestore();
+const Title = styled(Text)({
+  textOverflow: 'ellipsis',
+  overflow: 'hidden',
+  whiteSpace: 'nowrap',
+  fontWeight: 600,
+})
 
-  useEffect(() => {
-    setMonthNames(getMonthNames(months));
-  }, []);
+const Price = styled(Text)((props) => ({
+  fontWeight: 500,
+  color: props.isspent ? '#f44c4c' : '#21bf39',
+  textAlign: 'center',
+  margin: '20px 0 0',
+}))
 
-  return (
-    <Container>
-      <Stack spacing={1}>
-        <Stack>
-          <Stack direction="row" justifyContent="space-between">
-            <Title variant="h5">Title: {title}</Title>
-            <IconButton variant="contained" onClick={() => removeExpense(id)}>
-              <DeleteIcon color="primary" />
-            </IconButton>
-          </Stack>
-          <Typography variant="h6">
-            Collection Day: {dayOfCollection}
-          </Typography>
-        </Stack>
-        <Stack>
-          <Typography variant="h6" sx={{ fontWeight: '600' }}>
-            Months
-          </Typography>
-          <Grid container>
-            {monthNames.map((monthName) => (
-              <Grid item xs={6} key={monthName}>
-                <Typography>{monthName}</Typography>
-              </Grid>
-            ))}
-          </Grid>
+const MonthsTitle = styled(Text)({
+  fontWeight: 600,
+  marginBottom: '10px'
+})
+
+const Expense = ({ handleRemove, dayOfCollection, currency, isSpent, title, amount, months }) => (
+  <Container>
+    <Stack spacing={1}>
+      <Stack>
+        <Stack direction="row" justifyContent="space-between">
+          <div>
+            <Title variant="h4">{title}</Title>
+            <Text variant="h6" >
+              Day: {dayOfCollection}
+            </Text>
+          </div>
+          <IconButton variant="contained" onClick={handleRemove}>
+            <Icon type="Delete" color="primary" />
+          </IconButton>
         </Stack>
       </Stack>
-      <Price variant="h6" isSpent={isSpent}>
-        <span>
-          {isSpent ? '-' : '+'}
-          {amount}
-        </span>{' '}
-        {currency}
-      </Price>
-    </Container>
-  );
-};
+      <Stack>
+        <MonthsTitle variant="h6" component="p">
+          Months ( {months.length}/12 )
+        </MonthsTitle>
+        <Grid container>
+          {months.map(({ name, number }) => (
+            <Grid item xs={6} key={number}>
+              <Text variant="p1">{name}</Text>
+            </Grid>
+          ))}
+        </Grid>
+      </Stack>
+    </Stack>
+    <Price variant="h4" component="p" isspent={isSpent}>
+      <span>
+        {isSpent ? '-' : '+'}
+        {amount}
+      </span>{' '}
+      {currency}
+    </Price>
+  </Container>
+);
 
 Expense.propTypes = {
   amount: PropTypes.number,
@@ -92,8 +80,8 @@ Expense.propTypes = {
   isSpent: PropTypes.bool,
   currency: PropTypes.string,
   dayOfCollection: PropTypes.number,
-  id: PropTypes.string,
   months: PropTypes.array,
+  handleRemove: PropTypes.func,
 };
 
 export default Expense;

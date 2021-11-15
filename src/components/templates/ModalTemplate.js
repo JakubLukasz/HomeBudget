@@ -1,77 +1,94 @@
 import React from 'react';
-import styled from 'styled-components';
-import { devices } from '@Assets/styles/devices';
-import { Typography, Button } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import { styled } from '@mui/styles';
 import PropTypes from 'prop-types';
 
-const Container = styled.div`
-  width: 94vw;
-  background-color: #ffffff;
-  position: fixed;
-  top: 3vw;
-  bottom: 3vw;
-  left: 3vw;
-  right: 3vw;
-  color: black;
-  z-index: 100;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: ${({ margin }) => (margin ? 'space-between' : '')};
-  border-radius: 15px;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
-  padding: 2rem;
+import Text from '@Components/atoms/Text';
+import Icon from '@Components/atoms/Icon';
+import Button from '@Components/atoms/Button';
 
-  @media ${devices.tablet} {
-    width: 500px;
-    height: 650px;
-    top: 50%;
-    left: 50%;
-    right: auto;
-    bottom: auto;
-    transform: translate(-50%, -50%);
+const Background = styled('div')({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  width: '100vw',
+  height: '100vh',
+  backgroundColor: 'rgba(112,112,112,0.4)',
+  zIndex: 99,
+})
+
+const Modal = styled('div')({
+  width: '94vw',
+  backgroundColor: '#ffffff',
+  position: 'fixed',
+  top: '3vw',
+  bottom: '3vw',
+  left: '3vw',
+  right: '3vw',
+  color: 'black',
+  zIndex: 100,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  borderRadius: '15px',
+  boxShadow: 'rgba(0, 0, 0, 0.1) 0px 10px 50px',
+  padding: '2rem',
+
+  '@media screen and (min-width: 768px)': {
+    width: '500px',
+    maxHeight: '90vh',
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    transform: 'translate(-50%, -50%)',
   }
-`;
+})
 
-const Header = styled.header`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2rem;
-`;
+const Header = styled('header')({
+  width: '100%',
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  marginBottom: '2rem',
+})
 
-const Content = styled.div`
-  width: 100%;
-  overflow: auto;
-`;
+const Content = styled('div')({
+  width: '100%',
+  height: '100%',
+  overflow: 'auto',
+})
 
-const SButton = styled(Button)`
-  min-width: auto;
-`;
+const Title = styled(Text)({
+  padding: "10px",
+})
 
-const ModalTemplate = ({ children, title, onClose, margin }) => {
+const CloseButton = styled(Button)({
+  minWidth: 'auto',
+})
+
+const ModalTemplate = ({ children, title, onClose }) => {
   return (
-    <Container margin={margin}>
-      <Header>
-        <Typography sx={{ p: 1 }} variant="h5">
-          {title}
-        </Typography>
-        <SButton onClick={onClose}>
-          <CloseIcon sx={{ fontSize: 30 }} />
-        </SButton>
-      </Header>
-      <Content>{children}</Content>
-    </Container>
+    <Background className="background" onClick={(e) => e.target.classList.contains('background') && onClose()}>
+      <Modal>
+        <Header>
+          <Title variant="h5">
+            {title}
+          </Title>
+          <CloseButton onClick={onClose} secondary>
+            <Icon type="Close" sx={{ fontSize: 30 }} />
+          </CloseButton>
+        </Header>
+        <Content>{children}</Content>
+      </Modal>
+    </Background>
   );
 };
 
 ModalTemplate.propTypes = {
   children: PropTypes.node,
   title: PropTypes.string,
+  isOpen: PropTypes.bool,
   onClose: PropTypes.func,
-  margin: PropTypes.bool,
 };
 
 export default ModalTemplate;

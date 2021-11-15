@@ -1,4 +1,4 @@
-import React, { useState, createContext } from 'react';
+import React, { useState, useEffect, createContext } from 'react';
 import { db } from '@Services/firebase';
 import { useAuth } from '@Hooks/useAuth';
 import PropTypes from 'prop-types';
@@ -9,8 +9,15 @@ import dayjs from 'dayjs';
 export const FirestoreContext = createContext({});
 
 export const FirestoreContextProvider = ({ children }) => {
-  const { currentUser } = useAuth();
   const [isConfigured, setIsConfigured] = useState(true);
+  const { currentUser } = useAuth();
+
+  useEffect(() => {
+    if (currentUser) {
+      checkIsUserConfigured().then((isConf) => setIsConfigured(isConf))
+    }
+    else setIsConfigured(true);
+  }, [currentUser])
 
   const createUserData = async ({ email, uid }) => {
     const userDoc = db.collection('users').doc(uid);
@@ -43,26 +50,28 @@ export const FirestoreContextProvider = ({ children }) => {
     userRef.update(setupData);
   };
 
-  const getExpenses = async () => {
+  const getCollectionData = async (collectionName) => {
+    const ref = db.collection("users").doc(currentUser.uid).collection(collectionName);
     const tmp = [];
-    const expensesRef = db
-      .collection('users')
-      .doc(currentUser.uid)
-      .collection('expenses');
-    const docs = await expensesRef.get();
-    docs.forEach((doc) => tmp.push(doc.data()));
+    const docs = await ref.get();
+    docs.forEach(doc => tmp.push(doc.data()))
     return tmp;
-  };
+  }
 
-  const getTransactions = async () => {
-    const tmp = [];
-    const transactionsRef = db
-      .collection('users')
-      .doc(currentUser.uid)
-      .collection('transactions');
-    const docs = await transactionsRef.get();
-    docs.forEach((doc) => tmp.push(doc.data()));
-    return tmp;
+  const getCollectionId = async (collectionName) => {
+    const collection = await getCollectionData(collectionName);
+    const randomId = getRandomId(collection);
+    return randomId;
+  }
+
+  const getRandomId = (array) => {
+    const randomId = uniqueKey();
+    array.forEach(({ id }) => {
+      if (id === randomId) {
+        return getRandomId(array);
+      }
+    });
+    return randomId;
   };
 
   const getUserData = async () => {
@@ -79,23 +88,20 @@ export const FirestoreContextProvider = ({ children }) => {
   const checkIsUserConfigured = async () => {
     const data = await getUserData();
     const { isConfigured } = data;
-    setIsConfigured(isConfigured);
+    return isConfigured;
   };
 
-  const isDateIncluded = (data, date) => {
-    return data.includes(date);
-  };
-
-  const executePayday = async (paydayData, paydayDate, earnings) => {
+  const executePayday = async (data, paydayCollectionDate) => {
     const userRef = db.collection('users').doc(currentUser.uid);
-    const ID = await generateTransactionsID();
+    const id = await getCollectionId("transactions");
     const currency = await getCurrency();
-    paydayData.push(paydayDate);
+    const { earnings, paydayData } = data;
+    paydayData.push(paydayCollectionDate);
     userRef.update({
       paydayData,
     });
     addNewBill({
-      id: ID,
+      id,
       title: 'Payday',
       category: 'Payday',
       categoryGroup: 'Payday',
@@ -106,115 +112,57 @@ export const FirestoreContextProvider = ({ children }) => {
     });
   };
 
-  const setupPayday = (data, payday) => {
-    const { currentMonth, currentYear } = currentDate();
-    const { paydayData, earnings } = data;
-    const paydayDate = `${currentYear}-${currentMonth}-${payday}`;
-    const paydayResp = isDateIncluded(paydayData, paydayDate);
-    if (!paydayResp) executePayday(paydayData, paydayDate, earnings);
-  };
+  const updateEarnings = (earnings) => {
+    const userRef = db.collection('users').doc(currentUser.uid);
+    userRef.update({ earnings })
+  }
 
   const checkPayday = async () => {
-    const { currentDay } = currentDate();
-    const userRef = db.collection('users').doc(currentUser.uid);
-    const resp = await userRef.get();
-    const data = resp.data();
-    const { payday } = data;
-    if (currentDay >= payday) setupPayday(data, payday);
+    const { currentDay, currentMonth, currentYear } = currentDate();
+    const data = await getUserData();
+    const { paydayData, payday } = data;
+    const paydayCollectionDate = `${currentYear}-${currentMonth}-${payday}`;
+    const isPaydayCollected = paydayData.includes(paydayCollectionDate);
+    if (currentDay >= payday && !isPaydayCollected) executePayday(data, paydayCollectionDate);
   };
 
-  const executeExpense = async (
-    expenseCollection,
-    dayOfCollection,
-    expense
-  ) => {
-    const { currentMonth, currentYear } = currentDate();
-    const { title, amount, isSpent, id } = expense;
+  const executeExpense = async (expense, expenseCollectionDate) => {
+    const { title, amount, isSpent, id, expenseCollection } = expense;
     const userRef = db.collection('users').doc(currentUser.uid);
     const expenseRef = userRef.collection('expenses').doc(id);
-    const expenseDate = `${currentYear}-${currentMonth}-${dayOfCollection}`;
-    expenseCollection.push(expenseDate);
+    expenseCollection.push(expenseCollectionDate);
     expenseRef.update({
       expenseCollection,
     });
-    const ID = await generateTransactionsID();
+    const ID = await getCollectionId("transactions");
     const currency = await getCurrency();
     addNewBill({
       id: ID,
       title,
       category: title,
       categoryGroup: 'Expense',
-      date: dayjs().format('YYYY-MM-DD'),
+      date: dayjs(expenseCollectionDate).format('YYYY-MM-DD'),
       amount: parseFloat(amount),
       isSpent,
       currency,
     });
   };
 
-  const setupExpense = async (expense) => {
-    const { currentMonth, currentYear } = currentDate();
-    const { expenseCollection, dayOfCollection } = expense;
-    const expenseDate = `${currentYear}-${currentMonth}-${dayOfCollection}`;
-    const expenseResp = isDateIncluded(expenseCollection, expenseDate);
-    if (!expenseResp)
-      executeExpense(expenseCollection, dayOfCollection, expense);
-  };
-
   const checkExpense = (expense) => {
-    const { currentMonth, currentDay } = currentDate();
-    const { dayOfCollection, months } = expense;
-    const monthResp = isDateIncluded(months, currentMonth);
-    if (currentDay >= dayOfCollection && monthResp) setupExpense(expense);
+    const { currentDay, currentMonth, currentYear } = currentDate();
+    const { dayOfCollection, months, expenseCollection } = expense;
+    const expenseCollectionDate = `${currentYear}-${currentMonth}-${dayOfCollection}`;
+    const isMonthIncluded = months.includes(currentMonth);
+    const isMonthCollected = expenseCollection.includes(expenseCollectionDate)
+    if (currentDay >= dayOfCollection && isMonthIncluded && !isMonthCollected) executeExpense(expense, expenseCollectionDate);
   };
 
-  const removeExpense = (id) => {
-    const expensesRef = db
+  const removeFromCollection = (collectionName, id) => {
+    const ref = db
       .collection('users')
       .doc(currentUser.uid)
-      .collection('expenses');
-    expensesRef.doc(id).delete();
-  };
-
-  const checkId = (array) => {
-    const randomId = uniqueKey();
-    array.forEach(({ id }) => {
-      if (id === randomId) {
-        return checkId(array);
-      }
-    });
-    return randomId;
-  };
-
-  const generateExpensesID = async () => {
-    const expenses = await getExpenses();
-    const generatedID = checkId(expenses);
-    return generatedID;
-  };
-
-  const generateTransactionsID = async () => {
-    const transactions = await getTransactions();
-    const generatedID = checkId(transactions);
-    return generatedID;
-  };
-
-  const getExpensesSize = async () => {
-    const expensesRef = db
-      .collection('users')
-      .doc(currentUser.uid)
-      .collection('expenses');
-    const snapshot = await expensesRef.get();
-    const count = snapshot.size;
-    return count;
-  };
-
-  const getTransactionsSize = async () => {
-    const transactionsRef = db
-      .collection('users')
-      .doc(currentUser.uid)
-      .collection('transactions');
-    const snapshot = await transactionsRef.get();
-    const count = snapshot.size;
-    return count;
+      .collection(collectionName);
+    ref.doc(id).delete();
   };
 
   const addNewBill = (bill) => {
@@ -248,22 +196,19 @@ export const FirestoreContextProvider = ({ children }) => {
   const ctx = {
     createUserData,
     setupUserData,
-    isConfigured,
-    setIsConfigured,
     checkIsUserConfigured,
     getUserData,
     getCurrency,
-    getTransactions,
-    getExpenses,
     checkPayday,
-    removeExpense,
+    isConfigured,
+    setIsConfigured,
     checkExpense,
     addNewExpense,
+    updateEarnings,
     addNewBill,
-    generateTransactionsID,
-    generateExpensesID,
-    getExpensesSize,
-    getTransactionsSize,
+    removeFromCollection,
+    getCollectionId,
+    getCollectionData,
     createGuestData,
   };
 

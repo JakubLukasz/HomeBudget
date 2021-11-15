@@ -1,45 +1,28 @@
 import React from 'react';
-import { useAuth } from '@Hooks/useAuth';
-import { useHistory } from 'react-router-dom';
-import { uniqueKey } from '@Helpers/uniqueKey';
-import { useFirestore } from '@Hooks/useFirestore';
 import PropTypes from 'prop-types';
-import { Button } from '@mui/material';
-import PersonIcon from '@mui/icons-material/Person';
+import { styled } from '@mui/styles';
 
-const GuestLogin = ({ setFormError }) => {
-  const { signup } = useAuth();
-  const { createGuestData } = useFirestore();
-  const history = useHistory();
+import Button from '@Components/atoms/Button';
+import Icon from '@Components/atoms/Icon';
 
-  const handleTestLogin = async () => {
-    try {
-      const id = await uniqueKey();
-      const email = `guest_${id}@gmail.com`;
-      const username = `guest_${id}@gmail.com`;
-      const password = `guest_${id}`;
-      const { user } = await signup(email, password);
-      await createGuestData(user, username);
-      history.push('/');
-    } catch (error) {
-      setFormError(error.message);
-    }
-  };
+const StyledButton = styled(Button)({
+  margin: '40px 0',
+})
+
+const GuestLogin = ({ handleTestLogin }) => {
 
   return (
-    <Button
-      sx={{ m: 6 }}
-      variant="contained"
-      startIcon={<PersonIcon />}
+    <StyledButton
+      startIcon={<Icon type="Person" />}
       onClick={handleTestLogin}
     >
       login as Guest
-    </Button>
+    </StyledButton>
   );
 };
 
 GuestLogin.propTypes = {
-  setFormError: PropTypes.func,
+  handleTestLogin: PropTypes.func
 };
 
 export default GuestLogin;

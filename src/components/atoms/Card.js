@@ -1,24 +1,35 @@
 import React from 'react';
-import styled from 'styled-components';
+import { styled } from '@mui/styles';
 import PropTypes from 'prop-types';
-import { Typography } from '@mui/material';
+import Text from '@Components/atoms/Text';
 
-const Container = styled.div`
-  background-color: #ffffff;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
-  border-radius: 15px;
-  padding: 10px;
-`;
+const Container = styled('div')({
+  backgroundColor: '#ffffff',
+  boxShadow: 'rgba(0, 0, 0, 0.1) 0px 10px 50px;',
+  borderRadius: '15px',
+  padding: '10px'
+});
+
+const Content = styled('div')((props) => ({
+  padding: props.noMargin ? '15px 0' : '15px 10px',
+}))
+
+const Title = styled(Text)(({ theme }) => ({
+  fontWeight: 700,
+  color: theme.palette.secondary.main
+}))
 
 const Card = ({ className, children, title }) => {
   return (
     <Container className={className}>
       {title && (
-        <Typography color="secondary" variant="subtitle2" component="p">
+        <Title variant="p2">
           {title}
-        </Typography>
+        </Title>
       )}
-      {children}
+      <Content>
+        {children}
+      </Content>
     </Container>
   );
 };

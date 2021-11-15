@@ -1,8 +1,10 @@
+import dayjs from "dayjs";
+
 export const currentDate = () => {
-  const today = new Date();
-  const currentDay = String(today.getDate()).padStart(2, '0');
-  const currentMonth = String(today.getMonth() + 1).padStart(2, '0');
-  const currentYear = String(today.getFullYear());
-  const date = `${currentDay}.${currentMonth}.${currentYear}`;
+  const todaysDate = dayjs().format('YYYY-MM-DD').split('-');
+  const currentDay = todaysDate[2];
+  const currentMonth = todaysDate[1];
+  const currentYear = todaysDate[0];
+  const date = `${currentYear}.${currentMonth}.${currentDay}`;
   return { currentDay, currentMonth, currentYear, date };
 };

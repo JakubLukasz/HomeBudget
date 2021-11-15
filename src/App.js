@@ -1,15 +1,36 @@
-import React,{useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import PrivateRoute from '@Components/atoms/PrivateRoute';
+
 import AppTemplate from '@Components/templates/AppTemplate';
-import SetupTemplate from '@Components/templates/SetupTemplate';
-import ResetPassword from '@Pages/ResetPassword';
-import Login from '@Pages/Login';
-import Signup from '@Pages/Signup';
+
+import AddBillModal from '@Modals/AddBillModal';
+import SetupAccount from '@Modals/SetupAccount';
+import AddExpensesModal from '@Modals/AddExpensesModal';
+import UpdateEarningsModal from '@Modals/UpdateEarningsModal';
+
+import ExepensesPage from '@Pages/ExpensesPage';
+import StatisticsPage from '@Pages/StatisticsPage';
+import ResetPasswordPage from '@Pages/ResetPasswordPage';
+import LoginPage from '@Pages/LoginPage';
+import SignupPage from '@Pages/SignupPage';
+import MainPage from '@Pages/MainPage';
+
+import { useUi } from '@Hooks/useUi';
+import { useFirestore } from '@Hooks/useFirestore';
+
+import PrivateRoute from '@/PrivateRoute';
 
 const App = () => {
-  // fix for 100vh problem on phones (url bar not included in 100vh)
 
+  const {
+    isEarningsModalOpen,
+    isBillModalOpen,
+    isExpensesModalOpen,
+  } = useUi();
+
+  const { isConfigured } = useFirestore();
+
+  // @HACK for 100vh problem on phones (url bar not included in 100vh)
   useEffect(() => {
     const fixMobileHeight = () => {
       const appHeight = () => {
@@ -21,19 +42,36 @@ const App = () => {
     };
 
     fixMobileHeight();
-  },[])
+  }, [])
+
   return (
-    <SetupTemplate>
-      <Router>
-        <Switch>
-          <PrivateRoute exact path="/" component={AppTemplate} />
-          <Route path="/signup" component={Signup} />
-          <Route path="/login" component={Login} />
-          <Route path="/reset-password" component={ResetPassword} />
-        </Switch>
-      </Router>
-    </SetupTemplate>
+    <Router>
+      {!isConfigured && <SetupAccount />}
+      {isBillModalOpen && <AddBillModal />}
+      {isEarningsModalOpen && <UpdateEarningsModal />}
+      {isExpensesModalOpen && <AddExpensesModal />}
+      <Switch>
+        <PrivateRoute exact path="/" component={() => (
+          <AppTemplate>
+            <MainPage />
+          </AppTemplate>
+        )} />
+        <PrivateRoute exact path="/expenses" component={() => (
+          <AppTemplate>
+            <ExepensesPage />
+          </AppTemplate>
+        )} />
+        <PrivateRoute exact path="/statistics" component={() => (
+          <AppTemplate>
+            <StatisticsPage />
+          </AppTemplate>
+        )} />
+        <Route path="/signup" component={SignupPage} />
+        <Route path="/login" component={LoginPage} />
+        <Route path="/reset-password" component={ResetPasswordPage} />
+      </Switch>
+    </Router>
   );
 };
 
-export default App;
+export default React.memo(App);

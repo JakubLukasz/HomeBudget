@@ -1,43 +1,39 @@
-import styled from 'styled-components';
 import React, { useState } from 'react';
+import { styled } from '@mui/styles';
+
+import { Stack, Alert } from '@mui/material';
+
+import Logo from '@Components/atoms/Logo';
+import Input from '@Components/atoms/Input';
+import Text from '@Components/atoms/Text';
+import Link from '@Components/atoms/Link';
+import Button from '@Components/atoms/Button';
+
 import { useAuth } from '@Hooks/useAuth';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
-import { devices } from '@Assets/styles/devices';
-import Logo from '@Components/atoms/Logo';
-import { Typography, Stack, Alert } from '@mui/material';
-import LoadingButton from '@mui/lab/LoadingButton';
-import Input from '@Components/atoms/Input';
 
-const Container = styled.section`
-  height: var(--app-height);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
+const Container = styled('div')({
+  height: 'var(--app-height)',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center'
+})
 
-const Form = styled.form`
-  width: 100%;
-  padding: 0 20px;
-  max-width: 500px;
+const Form = styled('form')({
+  width: '100%',
+  padding: '0 20px',
+  maxWidth: '500px',
 
-  @media ${devices.mobileM} {
-    padding: 0 40px;
+  '@media screen and (min-width: 375px)': {
+    padding: '0 40px',
   }
-`;
+});
 
-const BaseLink = styled(Link)`
-  color: ${({ theme }) => theme.color.primary};
-  text-decoration: none;
-`;
-
-const RedirectLink = styled(BaseLink)`
-  margin-left: 5px;
-  font-weight: 600;
-  font-size: 0.7rem;
-  text-align: center;
-`;
+const StyledLink = styled(Link)({
+  fontWeight: 500,
+  fontSize: '0.9rem',
+})
 
 const ResetPassword = () => {
   const { resetPassword } = useAuth();
@@ -66,38 +62,33 @@ const ResetPassword = () => {
   return (
     <Container>
       <Logo />
-      <Typography variant="h6" component="p" sx={{ mb: 8 }}>
+      <Text variant="h6" component="p" sx={{ mb: 8 }}>
         Reset Password
-      </Typography>
+      </Text>
       <Form onSubmit={handleSubmit(submitFormHandler)}>
         <Stack spacing={3}>
           {formError && <Alert severity="error">{formError}</Alert>}
           {formMessage && <Alert severity="success">{formMessage}</Alert>}
           <Input
-            {...register('email', {
+            Register={register('email', {
               required: 'Email is Required',
               pattern: {
                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                 message: 'Invalid email address',
               },
             })}
-            label="Email"
-            variant="filled"
-            size="small"
-            type="text"
-            name="email"
-            error={errors.email ? true : false}
-            helperText={errors.email ? errors.email.message : ''}
+            Label="Email"
+            Name="email"
+            Errors={errors.email}
           />
-          <LoadingButton
-            variant="contained"
+          <Button
             fullWidth
-            loading={isLoading}
+            disabled={isLoading}
             type="submit"
           >
             RESET
-          </LoadingButton>
-          <RedirectLink to="/login">Log In with your account</RedirectLink>
+          </Button>
+          <StyledLink to="/login">Log In with your account</StyledLink>
         </Stack>
       </Form>
     </Container>
